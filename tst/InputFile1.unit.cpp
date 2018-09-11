@@ -70,6 +70,9 @@ TEST_F(TestFile1, Test1)
     const auto & productName = par.productName();
     EXPECT_EQ("Generic Clear Glass", productName);
 
+	const auto & productType = par.productType();
+	EXPECT_EQ("Monolithic", productType);
+
     const auto measurements = par.measurements();
     std::vector<OpticsParser::WLData> correctResults{{0.300, 0.0020, 0.0470, 0.0480},
                                                      {0.305, 0.0030, 0.0470, 0.0480},

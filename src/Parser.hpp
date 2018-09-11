@@ -30,6 +30,7 @@ namespace OpticsParser
         double backEmissivity() const;
 		int nfrcid() const;
 		const std::string & productName() const;
+		const std::string & productType() const;
 		std::vector<WLData> measurements() const;
 	private:
         void parseHeaderLine(const std::string & line);
@@ -40,6 +41,7 @@ namespace OpticsParser
         void parseEmissivities(const std::string & line);
         void parseNFRCID(const std::string & line);
         void parseProductName(const std::string & line);
+        void parseProductType(const std::string & line);
         double m_Thickness;
         double m_Conductivity;
         double m_IRTransmittance;
@@ -47,6 +49,7 @@ namespace OpticsParser
         double m_BackEmissivity;
         int m_NFRCID;
         std::string m_ProductName;
+        std::string m_Type;
         std::vector<WLData> m_WLData;
     };
 

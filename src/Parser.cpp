@@ -24,7 +24,9 @@ OpticsParser::Parser::Parser(const std::string & inputFile) :
     m_IRTransmittance{-1},
     m_FrontEmissivity{-1},
     m_BackEmissivity{-1},
-    m_NFRCID{-1}
+    m_NFRCID{-1},
+    m_ProductName{""},
+    m_Type{""}
 {
     std::ifstream inFile(inputFile);
     std::string line;
@@ -51,6 +53,7 @@ void OpticsParser::Parser::parseHeaderLine(const std::string & line)
     parsePropertyAtTheEnd("IR Transmittance", "TIR=", line, m_IRTransmittance);
     parseEmissivities(line);
     parseProductName(line);
+    parseProductType(line);
     parseNFRCID(line);
 }
 
@@ -149,21 +152,38 @@ void OpticsParser::Parser::parseNFRCID(const std::string & line)
     }
 }
 
-void OpticsParser::Parser::parseProductName( const std::string & line )
+void OpticsParser::Parser::parseProductName(const std::string & line)
 {
-	if(line.find("Product Name") != std::string::npos)
-	{
-		std::string str = line.substr(line.find("Name:") + 5);
-		auto erasePos = str.find('}');
-		str.erase(erasePos, 1);
-		// Removes all spaces from the beginning of the string
-		while(str.size() && isspace(str.front()))
-			str.erase(str.begin());
-		// Remove all spaces from the end of the string.
-		while(str.size() && isspace(str.back()))
-			str.pop_back();
-		m_ProductName = str;
-	}
+    if(line.find("Product Name") != std::string::npos)
+    {
+        std::string str = line.substr(line.find("Name:") + 5);
+        auto erasePos = str.find('}');
+        str.erase(erasePos, 1);
+        // Removes all spaces from the beginning of the string
+        while(str.size() && isspace(str.front()))
+            str.erase(str.begin());
+        // Remove all spaces from the end of the string.
+        while(str.size() && isspace(str.back()))
+            str.pop_back();
+        m_ProductName = str;
+    }
+}
+
+void OpticsParser::Parser::parseProductType(const std::string & line)
+{
+    if(line.find("Type") != std::string::npos)
+    {
+        std::string str = line.substr(line.find("Type:") + 5);
+        auto erasePos = str.find('}');
+        str.erase(erasePos, 1);
+        // Removes all spaces from the beginning of the string
+        while(str.size() && isspace(str.front()))
+            str.erase(str.begin());
+        // Remove all spaces from the end of the string.
+        while(str.size() && isspace(str.back()))
+            str.pop_back();
+        m_Type = str;
+    }
 }
 
 int OpticsParser::Parser::nfrcid() const
@@ -181,6 +201,12 @@ std::vector<OpticsParser::WLData> OpticsParser::Parser::measurements() const
     return m_WLData;
 }
 
-const std::string & OpticsParser::Parser::productName() const {
-	return m_ProductName;
+const std::string & OpticsParser::Parser::productName() const
+{
+    return m_ProductName;
+}
+
+const std::string & OpticsParser::Parser::productType() const
+{
+    return m_Type;
 }
