@@ -18,7 +18,7 @@ protected:
                                    "{ Ef_Source: Material }\n"
                                    "{ Eb_Source: Material }\n"
                                    "{ IGDB_Checksum: -1717699038 }\n"
-                                   "{ Product Name: Generic Clear Glass }\n"
+                                   "{ Product Name: }\n"
                                    "{ Manufacturer: Generic }\n"
                                    "{ NFRC ID: 102 }\n"
                                    "{ Type: Monolithic }\n"
@@ -66,6 +66,9 @@ TEST_F(TestInvertedEmissivities, Test1)
 
     const auto NFRCID = par.nfrcid();
     EXPECT_EQ(102, NFRCID);
+
+	const auto & productName = par.productName();
+	EXPECT_EQ("", productName);
 
     const auto measurements = par.measurements();
     std::vector<OpticsParser::WLData> correctResults{{0.300, 0.0020, 0.0470, 0.0480},

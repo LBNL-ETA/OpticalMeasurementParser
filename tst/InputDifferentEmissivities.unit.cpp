@@ -67,6 +67,9 @@ TEST_F(TestDifferentEmissivities, Test1)
     const auto NFRCID = par.nfrcid();
     EXPECT_EQ(102, NFRCID);
 
+	const auto & productName = par.productName();
+	EXPECT_EQ("Generic Clear Glass", productName);
+
     const auto measurements = par.measurements();
     std::vector<OpticsParser::WLData> correctResults{{0.300, 0.0020, 0.0470, 0.0480},
                                                      {0.305, 0.0030, 0.0470, 0.0480},

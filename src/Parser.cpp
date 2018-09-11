@@ -18,9 +18,15 @@ std::ostream & OpticsParser::operator<<(std::ostream & os, const OpticsParser::W
     return os;
 }
 
-OpticsParser::Parser::Parser(const std::string & inputFile) : m_Thickness{-1}, m_IRTransmittance{-1}
+OpticsParser::Parser::Parser(const std::string & inputFile) :
+    m_Thickness{-1},
+    m_Conductivity{-1},
+    m_IRTransmittance{-1},
+    m_FrontEmissivity{-1},
+    m_BackEmissivity{-1},
+    m_NFRCID{-1}
 {
-	std::ifstream inFile(inputFile);
+    std::ifstream inFile(inputFile);
     std::string line;
     while(std::getline(inFile, line))
     {
@@ -44,6 +50,7 @@ void OpticsParser::Parser::parseHeaderLine(const std::string & line)
     parsePropertyAtTheEnd("Conductivity", "}", line, m_Conductivity);
     parsePropertyAtTheEnd("IR Transmittance", "TIR=", line, m_IRTransmittance);
     parseEmissivities(line);
+    parseProductName(line);
     parseNFRCID(line);
 }
 
@@ -142,15 +149,38 @@ void OpticsParser::Parser::parseNFRCID(const std::string & line)
     }
 }
 
+void OpticsParser::Parser::parseProductName( const std::string & line )
+{
+	if(line.find("Product Name") != std::string::npos)
+	{
+		std::string str = line.substr(line.find("Name:") + 5);
+		auto erasePos = str.find('}');
+		str.erase(erasePos, 1);
+		// Removes all spaces from the beginning of the string
+		while(str.size() && isspace(str.front()))
+			str.erase(str.begin());
+		// Remove all spaces from the end of the string.
+		while(str.size() && isspace(str.back()))
+			str.pop_back();
+		m_ProductName = str;
+	}
+}
+
 int OpticsParser::Parser::nfrcid() const
 {
     return m_NFRCID;
 }
 
-double OpticsParser::Parser::conductivity() const {
-	return m_Conductivity;
+double OpticsParser::Parser::conductivity() const
+{
+    return m_Conductivity;
 }
 
-std::vector< OpticsParser::WLData > OpticsParser::Parser::measurements() const {
-	return m_WLData;
+std::vector<OpticsParser::WLData> OpticsParser::Parser::measurements() const
+{
+    return m_WLData;
+}
+
+const std::string & OpticsParser::Parser::productName() const {
+	return m_ProductName;
 }
