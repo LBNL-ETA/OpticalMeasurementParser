@@ -4,7 +4,7 @@
 
 #include "OpticsParser.hpp"
 
-class TestFile1 : public testing::Test
+class TestDifferentEmissivities : public testing::Test
 {
 protected:
     void SetUp() override
@@ -13,7 +13,7 @@ protected:
                                    "{ Thickness } 3.048 \n"
                                    "{ Conductivity } 1\n"
                                    "{ IR Transmittance } TIR=0\n"
-                                   "{ Emissivity, front back } Emis= 0.84 0.84\n"
+                                   "{ Emissivity, front back } Emis= 0.5 0.84\n"
                                    "{ }\n"
                                    "{ Ef_Source: Material }\n"
                                    "{ Eb_Source: Material }\n"
@@ -38,15 +38,15 @@ protected:
                                    "0.320    0.1000    0.0470    0.0480\n"
                                    "0.325    0.2180    0.0490    0.0500";
 
-        std::ofstream out("InputFile1.dat");
+        std::ofstream out("InputDifferentEmissivities.dat");
         out << inputContent;
         out.close();
     }
 };
 
-TEST_F(TestFile1, Test1)
+TEST_F(TestDifferentEmissivities, Test1)
 {
-    const std::string inputFile = R"(InputFile1.dat)";
+    const std::string inputFile = R"(InputDifferentEmissivities.dat)";
     OpticsParser::Parser par(inputFile);
 
     const auto thickness = par.thickness();
@@ -59,7 +59,7 @@ TEST_F(TestFile1, Test1)
     EXPECT_NEAR(0, irTransmittance, 1e-6);
 
     const auto frontEmissivity = par.frontEmissivity();
-    EXPECT_NEAR(0.84, frontEmissivity, 1e-6);
+    EXPECT_NEAR(0.5, frontEmissivity, 1e-6);
 
     const auto backEmissivity = par.backEmissivity();
     EXPECT_NEAR(0.84, backEmissivity, 1e-6);
