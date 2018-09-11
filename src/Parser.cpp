@@ -20,7 +20,7 @@ std::ostream & OpticsParser::operator<<(std::ostream & os, const OpticsParser::W
 
 OpticsParser::Parser::Parser(const std::string & inputFile) : m_Thickness{-1}, m_IRTransmittance{-1}
 {
-    std::ifstream inFile(inputFile);
+	std::ifstream inFile(inputFile);
     std::string line;
     while(std::getline(inFile, line))
     {
@@ -149,4 +149,8 @@ int OpticsParser::Parser::nfrcid() const
 
 double OpticsParser::Parser::conductivity() const {
 	return m_Conductivity;
+}
+
+std::vector< OpticsParser::WLData > OpticsParser::Parser::measurements() const {
+	return m_WLData;
 }

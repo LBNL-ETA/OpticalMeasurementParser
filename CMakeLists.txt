@@ -14,10 +14,10 @@ include( cmake/WCECompilerFlags.cmake )
 get_directory_property(hasParent PARENT_DIRECTORY)
 
 if(hasParent)
-  set( BUILD_WCE_TESTING OFF )
+  set( BUILD_PAR_TESTING OFF )
   set( DOWNLOAD_GTEST OFF )
   if( BUILD_TESTING STREQUAL ON ) # EnergyPlus testing is ON
-    set( BUILD_WCE_TESTING ON )
+    set( BUILD_PAR_TESTING ON )
   endif()
 	set( SINGLE_PROJECT ON )
 else()
@@ -50,19 +50,19 @@ if( DOWNLOAD_GTEST STREQUAL ON ) # Do not need gtest since it will be processed 
     include_directories( ${CMAKE_BINARY_DIR}/googletest-src/include )
 endif ()
 
-include_directories( include )
-
-if( BUILD_WCE_TESTING )
-    file( GLOB all_test_src RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" tst/*.cpp )
-    set( test_src ${all_test_src} )
-    CREATE_TEST_TARGETS_WCE( ${target_name} "${test_src}" "" )
-endif ()
-
 file( GLOB SOURCES_CPP "src/*.cpp" )
 file( GLOB SOURCES_HPP "src/*.hpp" )
 
 LIST(APPEND SOURCES ${SOURCES_HPP} ${SOURCES_CPP} )
 
-add_executable(${target_name} main.cpp ${SOURCES})
+add_library( ${target_name} STATIC ${SOURCES} )
 
-config_compiler_and_linker_wce()
+include_directories( include )
+
+if( BUILD_PAR_TESTING )
+    file( GLOB all_test_src RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" tst/*.cpp )
+    set( test_src ${all_test_src} )
+    CREATE_TEST_TARGETS_PAR( ${target_name} "${test_src}" "" )
+endif ()
+
+config_compiler_and_linker_par()

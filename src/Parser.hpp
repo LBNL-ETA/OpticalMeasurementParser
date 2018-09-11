@@ -6,13 +6,12 @@
 
 namespace OpticsParser
 {
-    class WLData
+    struct WLData
     {
     public:
-        explicit WLData(double wavelength, double T, double frontR, double backR);
+        WLData(double wavelength, double T, double frontR, double backR);
         friend std::ostream & operator<<(std::ostream & os, const WLData & data);
 
-    private:
         double wavelength;
         double T;
         double frontR;
@@ -30,6 +29,7 @@ namespace OpticsParser
         double frontEmissivity() const;
         double backEmissivity() const;
 		int nfrcid() const;
+		std::vector<WLData> measurements() const;
 	private:
         void parseHeaderLine(const std::string & line);
         void parseMeasurementLine(const std::string & line);
