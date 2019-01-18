@@ -90,3 +90,33 @@ TEST_F(TestFile1, Test1)
         EXPECT_NEAR(correctResults[i].backR, measurements[i].backR, 1e-6);
     }
 }
+
+TEST_F(TestFile1, TestParseFile)
+{
+    const std::string inputFile = R"(InputFile1.dat)";
+    OpticsParser::ProductData productData = OpticsParser::parseFile(inputFile);
+    
+    EXPECT_NEAR(3.048, productData.thickness, 1e-6);    
+    EXPECT_NEAR(1, productData.conductivity, 1e-6);    
+    EXPECT_NEAR(0, productData.IRTransmittance, 1e-6);    
+    EXPECT_NEAR(0.84, productData.frontEmissivity, 1e-6);    
+    EXPECT_NEAR(0.84, productData.backEmissivity, 1e-6);    
+    EXPECT_EQ(102, productData.nfrcid);
+    EXPECT_EQ("Generic Clear Glass", productData.productName);
+    EXPECT_EQ("Monolithic", productData.productType);
+    std::vector<OpticsParser::WLData> correctResults{{0.300, 0.0020, 0.0470, 0.0480},
+                                                     {0.305, 0.0030, 0.0470, 0.0480},
+                                                     {0.310, 0.0090, 0.0470, 0.0480},
+                                                     {0.315, 0.0350, 0.0470, 0.0480},
+                                                     {0.320, 0.1000, 0.0470, 0.0480},
+                                                     {0.325, 0.2180, 0.0490, 0.0500}};
+
+    EXPECT_EQ(correctResults.size(), productData.measurements.size());
+    for(auto i = 0u; i < correctResults.size(); ++i)
+    {
+        EXPECT_NEAR(correctResults[i].wavelength, productData.measurements[i].wavelength, 1e-6);
+        EXPECT_NEAR(correctResults[i].T, productData.measurements[i].T, 1e-6);
+        EXPECT_NEAR(correctResults[i].frontR, productData.measurements[i].frontR, 1e-6);
+        EXPECT_NEAR(correctResults[i].backR, productData.measurements[i].backR, 1e-6);
+    }
+}

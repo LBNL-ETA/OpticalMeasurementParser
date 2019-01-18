@@ -210,3 +210,41 @@ const std::string & OpticsParser::Parser::productType() const
 {
     return m_Type;
 }
+
+OpticsParser::ProductData::ProductData(std::string const & productName,
+                                       std::string const & productType,
+                                       int nfrcid,
+                                       double thickness,
+                                       double conductivity,
+                                       double IRTransmittance,
+                                       double frontEmissivity,
+                                       double backEmissivity,
+                                       std::vector<WLData> const & measurements) 
+	:
+    productName(productName),
+    productType(productType),
+    nfrcid(nfrcid),
+    thickness(thickness),
+    conductivity(conductivity),
+    IRTransmittance(IRTransmittance),
+    frontEmissivity(frontEmissivity),
+    backEmissivity(backEmissivity),
+    measurements(measurements)
+{}
+
+OpticsParser::ProductData OpticsParser::parseFile(std::string const & fname)
+{
+    OpticsParser::Parser parser(fname);
+
+	OpticsParser::ProductData productData(parser.productName(),
+                                          parser.productType(),
+                                          parser.nfrcid(),
+                                          parser.thickness(),
+                                          parser.conductivity(),
+                                          parser.IRTransmittance(),
+                                          parser.frontEmissivity(),
+                                          parser.backEmissivity(),
+                                          parser.measurements());
+
+	return productData;
+}

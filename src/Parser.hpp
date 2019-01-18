@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <ostream>
+#include <limits>
 
 namespace OpticsParser
 {
@@ -17,6 +18,29 @@ namespace OpticsParser
         double frontR;
         double backR;
     };
+    struct ProductData
+    {
+        ProductData() = default;
+        ProductData(std::string const & productName,
+                    std::string const & productType,
+                    int nfrcid,
+                    double thickness,
+                    double conductivity,
+                    double IRTransmittance,
+                    double frontEmissivity,
+                    double backEmissivity,
+                    std::vector<WLData> const & measurements);
+
+		std::string productName;
+        std::string productType;
+        int nfrcid;
+        double thickness;
+        double conductivity = std::numeric_limits<double>::quiet_NaN();
+        double IRTransmittance = std::numeric_limits<double>::quiet_NaN();
+        double frontEmissivity = std::numeric_limits<double>::quiet_NaN();
+        double backEmissivity = std::numeric_limits<double>::quiet_NaN();                
+        std::vector<WLData> measurements;
+    };
     class Parser
     {
     public:
@@ -24,20 +48,22 @@ namespace OpticsParser
         friend std::ostream & operator<<(std::ostream & os, const Parser & parser);
 
         double thickness() const;
-		double conductivity() const;
-		double IRTransmittance() const;
+        double conductivity() const;
+        double IRTransmittance() const;
         double frontEmissivity() const;
         double backEmissivity() const;
-		int nfrcid() const;
-		const std::string & productName() const;
-		const std::string & productType() const;
-		std::vector<WLData> measurements() const;
-	private:
+        int nfrcid() const;
+        const std::string & productName() const;
+        const std::string & productType() const;
+        std::vector<WLData> measurements() const;
+
+    private:
         void parseHeaderLine(const std::string & line);
         void parseMeasurementLine(const std::string & line);
-        void parsePropertyAtTheEnd( const std::string & searchString,
-									const std::string & behind,
-									const std::string & line, double & property );
+        void parsePropertyAtTheEnd(const std::string & searchString,
+                                   const std::string & behind,
+                                   const std::string & line,
+                                   double & property);
         void parseEmissivities(const std::string & line);
         void parseNFRCID(const std::string & line);
         void parseProductName(const std::string & line);
@@ -52,5 +78,7 @@ namespace OpticsParser
         std::string m_Type;
         std::vector<WLData> m_WLData;
     };
+
+	ProductData parseFile(std::string const& fname);
 
 }   // namespace OpticsParser
