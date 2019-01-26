@@ -4,13 +4,6 @@
 #include <sstream>
 #include <iostream>
 
-OpticsParser::WLData::WLData(double wavelength, double T, double frontR, double backR) :
-    wavelength(wavelength),
-    T(T),
-    frontR(frontR),
-    backR(backR)
-{}
-
 std::ostream & OpticsParser::operator<<(std::ostream & os, const OpticsParser::WLData & data)
 {
     os << data.wavelength << ", " << data.T << ", " << data.frontR << ", " << data.backR
@@ -211,26 +204,6 @@ const std::string & OpticsParser::Parser::productType() const
     return m_Type;
 }
 
-OpticsParser::ProductData::ProductData(std::string const & productName,
-                                       std::string const & productType,
-                                       int nfrcid,
-                                       double thickness,
-                                       double conductivity,
-                                       double IRTransmittance,
-                                       double frontEmissivity,
-                                       double backEmissivity,
-                                       std::vector<WLData> const & measurements) 
-	:
-    productName(productName),
-    productType(productType),
-    nfrcid(nfrcid),
-    thickness(thickness),
-    conductivity(conductivity),
-    IRTransmittance(IRTransmittance),
-    frontEmissivity(frontEmissivity),
-    backEmissivity(backEmissivity),
-    measurements(measurements)
-{}
 
 OpticsParser::ProductData OpticsParser::parseFile(std::string const & fname)
 {
