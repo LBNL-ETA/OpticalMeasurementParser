@@ -46,9 +46,10 @@ endif ()
 include_directories(include)
 
 file( GLOB SOURCES_CPP "src/*.cpp" )
-file( GLOB SOURCES_HPP "src/*.h" )
-file( GLOB INTERFACE_HPP "include/windows_standards/*.h" )
-LIST(APPEND SOURCES ${SOURCES_HPP} ${SOURCES_CPP} ${INTERFACE_HPP})
+#file( GLOB SOURCES_HPP "src/*.h" )
+#file( GLOB INTERFACE_HPP "include/*.h*" )
+#LIST(APPEND SOURCES ${SOURCES_HPP} ${SOURCES_CPP} ${INTERFACE_HPP})
+LIST(APPEND SOURCES ${SOURCES_CPP})
 
 add_library( ${target_name} STATIC ${SOURCES} )
 
