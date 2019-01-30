@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 namespace OpticsParser
 {
@@ -32,10 +33,10 @@ namespace OpticsParser
         std::string productType;
         int nfrcid;
         double thickness;
-        double conductivity = std::numeric_limits<double>::quiet_NaN();
-        double IRTransmittance = std::numeric_limits<double>::quiet_NaN();
-        double frontEmissivity = std::numeric_limits<double>::quiet_NaN();
-        double backEmissivity = std::numeric_limits<double>::quiet_NaN();
+        double conductivity;
+        double IRTransmittance;
+        double frontEmissivity;
+        double backEmissivity;
         std::vector<WLData> measurements;
     };
 }   // namespace OpticsParser
