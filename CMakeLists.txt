@@ -24,6 +24,15 @@ if(NOT "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
 endif()
 
+# Check to see if this project is included in another via add_subdirectoru
+# If it is, do not download GTest since it will create errors in the client
+# if the client also uses GTest
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(DOWNLOAD_GTEST ON)
+else()
+    set(DOWNLOAD_GTEST OFF)
+endif()
+
 add_subdirectory( src )
 
 target_include_directories(${LIB_NAME}

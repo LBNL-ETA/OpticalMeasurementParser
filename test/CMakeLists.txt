@@ -2,14 +2,6 @@ include_directories("${PROJECT_SOURCE_DIR}")
 
 set(PROJECT_TEST_NAME ${LIB_NAME}-test)
 
-get_directory_property(hasParent PARENT_DIRECTORY)
-
-set(DOWNLOAD_GTEST OFF)
-
-if(hasParent)
-	set(DOWNLOAD_GTEST ON)
-endif()
-
 if(DOWNLOAD_GTEST STREQUAL "ON")
 	# Download and unpack googletest at configure time
 	configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
