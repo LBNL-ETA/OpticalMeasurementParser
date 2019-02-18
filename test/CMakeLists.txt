@@ -2,7 +2,7 @@ include_directories("${PROJECT_SOURCE_DIR}")
 
 set(PROJECT_TEST_NAME ${LIB_NAME}-test)
 
-if(DOWNLOAD_GTEST STREQUAL "ON")
+if(DOWNLOAD_GTEST STREQUAL ON)
 	# Download and unpack googletest at configure time
 	configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 	execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
