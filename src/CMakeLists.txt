@@ -16,5 +16,12 @@ if(fPIC)
   set_property(TARGET ${LIB_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
-target_compile_options(${LIB_NAME} PRIVATE -Werror)
+
+if ( CMAKE_COMPILER_IS_GNUCC )
+    target_compile_options(${LIB_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+endif()
+if ( MSVC )
+    target_compile_options(${LIB_NAME} PRIVATE /W4 /WX)
+endif()
+
 
