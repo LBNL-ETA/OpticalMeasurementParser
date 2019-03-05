@@ -33,11 +33,12 @@ add_executable(${PROJECT_TEST_NAME}
 		InputDifferentEmissivities.unit.cpp
 		InputInvertedEmissivities.unit.cpp
 		InputFile1.unit.cpp
-		main.cpp )
+		main.cpp 
+		paths.h )
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(${PROJECT_TEST_NAME} gmock_main ${LIB_NAME})
 
-add_test(NAME ${PROJECT_TEST_NAME}-runner COMMAND ${PROJECT_TEST_NAME})
+add_test(NAME ${PROJECT_TEST_NAME}-runner COMMAND ${PROJECT_TEST_NAME} "${CMAKE_CURRENT_LIST_DIR}")
 
