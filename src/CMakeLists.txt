@@ -6,7 +6,7 @@ add_library( ${LIB_NAME}
 		ProductData.hpp
 		ProductData.cpp)
 
-
+target_link_libraries(${LIB_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
 if(NOT "${fPIC}")
   set(fPIC ON)
@@ -25,3 +25,4 @@ if ( MSVC )
 endif()
 
 
+target_compile_features(${LIB_NAME} PRIVATE cxx_std_17)

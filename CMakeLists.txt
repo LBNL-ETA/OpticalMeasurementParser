@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.8)
 
 project( OpticalMeasurementParser VERSION 1.0.1 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
@@ -32,6 +32,8 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
 else()
     set(DOWNLOAD_GTEST OFF)
 endif()
+
+include(CMakeLists-nlohmann_json.txt)
 
 add_subdirectory( src )
 
