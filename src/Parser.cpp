@@ -211,7 +211,7 @@ OpticsParser::ProductData OpticsParser::parseFile(std::string const & fname)
 {
     OpticsParser::Parser parser(fname);
 
-	OpticsParser::ProductData productData(parser.productName(),
+    OpticsParser::ProductData productData(parser.productName(),
                                           parser.productType(),
                                           parser.nfrcid(),
                                           parser.thickness(),
@@ -221,24 +221,56 @@ OpticsParser::ProductData OpticsParser::parseFile(std::string const & fname)
                                           parser.backEmissivity(),
                                           parser.measurements());
 
-	return productData;
+    return productData;
 }
 
-OpticsParser::ProductData parseJSONString(std::string const & json)
+OpticsParser::ProductData OpticsParser::parseJSONString(std::string const & json_str)
 {
-	OpticsParser::Parser parser(json);
+    nlohmann::json product_json = nlohmann::json::parse(json_str);
 
-	nlohmann::json j;
+    std::string product_name = product_json.at("name").get<std::string>();
+    std::string product_type = product_json.at("type").get<std::string>();
+    int nfrc_id = product_json.value("nfrc_id", -1);
 
-	OpticsParser::ProductData productData(parser.productName(),
-                                          parser.productType(),
-                                          parser.nfrcid(),
-                                          parser.thickness(),
-                                          parser.conductivity(),
-                                          parser.IRTransmittance(),
-                                          parser.frontEmissivity(),
-                                          parser.backEmissivity(),
-                                          parser.measurements());
+    nlohmann::json measured_data_json = product_json.at("measured_data");
 
-	return productData;
+    double thickness = measured_data_json.at("thickness").get<double>();
+    double conductivity = measured_data_json.at("conductivity").get<double>();
+    double tir_front = measured_data_json.at("tir_front").get<double>();
+    double emissivity_front = measured_data_json.at("emissivity_front").get<double>();
+    double emissivity_back = measured_data_json.at("emissivity_back").get<double>();
+
+    nlohmann::json spectral_data_json = product_json.at("spectral_data").at("spectral_data");
+
+    std::vector<OpticsParser::WLData> measurements;
+
+    for(auto & [key, val] : spectral_data_json.items())
+    {
+        double wl = val.at("wavelength").get<double>();
+        double t = val.at("T").get<double>();
+        double rf = val.at("Rf").get<double>();
+        double rb = val.at("Rb").get<double>();
+        measurements.push_back(OpticsParser::WLData(wl, t, rf, rb));
+    }
+
+
+    OpticsParser::ProductData productData(product_name,
+                                          product_type,
+                                          nfrc_id,
+                                          thickness,
+                                          conductivity,
+                                          tir_front,
+                                          emissivity_front,
+                                          emissivity_back,
+                                          measurements);
+
+    return productData;
+}
+
+
+OpticsParser::ProductData OpticsParser::parseJSONFile(std::string const & fname)
+{
+    std::ifstream fin(fname);
+    std::string content((std::istreambuf_iterator<char>(fin)), (std::istreambuf_iterator<char>()));
+    return parseJSONString(content);
 }

@@ -25,3 +25,4 @@ if ( MSVC )
 endif()
 
 
+target_compile_features(${LIB_NAME} PRIVATE cxx_std_17)
