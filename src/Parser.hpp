@@ -49,5 +49,6 @@ namespace OpticsParser
 
 	std::ostream & operator<<(std::ostream & os, const OpticsParser::WLData & data);
 	ProductData parseFile(std::string const& fname);
+	ProductData parseJSONString(std::string const& json);
 
 }   // namespace OpticsParser

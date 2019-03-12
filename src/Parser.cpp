@@ -1,8 +1,10 @@
-#include "Parser.hpp"
-
 #include <fstream>
 #include <sstream>
 #include <iostream>
+
+#include <nlohmann/json.hpp>
+
+#include "Parser.hpp"
 
 std::ostream & OpticsParser::operator<<(std::ostream & os, const OpticsParser::WLData & data)
 {
@@ -208,6 +210,25 @@ const std::string & OpticsParser::Parser::productType() const
 OpticsParser::ProductData OpticsParser::parseFile(std::string const & fname)
 {
     OpticsParser::Parser parser(fname);
+
+	OpticsParser::ProductData productData(parser.productName(),
+                                          parser.productType(),
+                                          parser.nfrcid(),
+                                          parser.thickness(),
+                                          parser.conductivity(),
+                                          parser.IRTransmittance(),
+                                          parser.frontEmissivity(),
+                                          parser.backEmissivity(),
+                                          parser.measurements());
+
+	return productData;
+}
+
+OpticsParser::ProductData parseJSONString(std::string const & json)
+{
+	OpticsParser::Parser parser(json);
+
+	nlohmann::json j;
 
 	OpticsParser::ProductData productData(parser.productName(),
                                           parser.productType(),

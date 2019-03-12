@@ -33,6 +33,8 @@ else()
     set(DOWNLOAD_GTEST OFF)
 endif()
 
+include(CMakeLists-nlohmann_json.txt)
+
 add_subdirectory( src )
 
 target_include_directories(${LIB_NAME}
