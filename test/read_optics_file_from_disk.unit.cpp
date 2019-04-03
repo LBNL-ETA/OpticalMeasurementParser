@@ -4,7 +4,7 @@
 #include <sstream>
 #include <filesystem>
 
-#include "parser.hpp"
+#include "Parser.hpp"
 
 #include "paths.h"
 
