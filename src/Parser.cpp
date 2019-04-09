@@ -6,13 +6,6 @@
 
 #include "Parser.hpp"
 
-std::ostream & OpticsParser::operator<<(std::ostream & os, const OpticsParser::WLData & data)
-{
-    os << data.wavelength << ", " << data.T << ", " << data.frontR << ", " << data.backR
-       << std::endl;
-    return os;
-}
-
 OpticsParser::Parser::Parser(const std::string & inputFile) :
     m_Thickness{-1},
     m_Conductivity{-1},
@@ -65,15 +58,6 @@ void OpticsParser::Parser::parseMeasurementLine(const std::string & line)
     }
 
     m_WLData.emplace_back(result[0], result[1], result[2], result[3]);
-}
-
-std::ostream & OpticsParser::operator<<(std::ostream & os, const OpticsParser::Parser & parser)
-{
-    for(const auto & val : parser.m_WLData)
-    {
-        os << val;
-    }
-    return os;
 }
 
 double OpticsParser::Parser::thickness() const

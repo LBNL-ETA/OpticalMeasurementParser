@@ -13,7 +13,6 @@ namespace OpticsParser
     {
     public:
         explicit Parser(const std::string & inputFile);
-        friend std::ostream & operator<<(std::ostream & os, const Parser & parser);
 
         double thickness() const;
         double conductivity() const;
@@ -47,7 +46,6 @@ namespace OpticsParser
         std::vector<WLData> m_WLData;
     };
 
-	std::ostream & operator<<(std::ostream & os, const OpticsParser::WLData & data);
 	ProductData parseFile(std::string const& fname);
 	ProductData parseJSONString(std::string const& json);
     ProductData parseJSONFile(std::string const & fname);
