@@ -44,9 +44,5 @@ target_link_libraries(${PROJECT_TEST_NAME} gmock_main ${LIB_NAME})
 
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_std_17)
 
-if ( CMAKE_COMPILER_IS_GNUCC )    
-	target_link_libraries(${PROJECT_TEST_NAME} PRIVATE stdc++fs) # For filesystem on gcc < 9
-endif()
-
 add_test(NAME ${PROJECT_TEST_NAME}-runner COMMAND ${PROJECT_TEST_NAME} "${CMAKE_CURRENT_LIST_DIR}")
 
