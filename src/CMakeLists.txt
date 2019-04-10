@@ -17,7 +17,7 @@ if(fPIC)
 endif()
 
 
-if ( CMAKE_COMPILER_IS_GNUCC )
+if ( CMAKE_COMPILER_IS_GNUCC OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
     target_compile_options(${LIB_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
 	target_link_libraries(${LIB_NAME} PRIVATE stdc++fs) # For filesystem on gcc < 9
 endif()
