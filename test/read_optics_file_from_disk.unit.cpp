@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <memory>
 #include <sstream>
-#include <filesystem>
+//#include <filesystem>
 
 #include "Parser.hpp"
 
@@ -23,11 +23,11 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadClear3)
 {
     SCOPED_TRACE("Begin Test: Load CLEAR_3.DAT from disk.");
 
-    std::filesystem::path clear_3_path(test_dir);
-    clear_3_path /= "products";
-    clear_3_path /= "CLEAR_3.DAT";
+    std::string clear_3_path(test_dir);
+    clear_3_path += "/products";
+    clear_3_path += "/CLEAR_3.DAT";
 
-    OpticsParser::ProductData product = OpticsParser::parseFile(clear_3_path.string());
+    OpticsParser::ProductData product = OpticsParser::parseFile(clear_3_path);
     EXPECT_EQ(product.nfrcid, 102);
     EXPECT_EQ(product.productName, "Generic Clear Glass");
     EXPECT_EQ(product.productType, "Monolithic");
@@ -45,4 +45,14 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadClear3)
     EXPECT_EQ(product.measurements[110].T, 0.822);
     EXPECT_EQ(product.measurements[110].frontR, 0.068);
     EXPECT_EQ(product.measurements[110].backR, 0.068);
+    EXPECT_EQ(product.frontEmissivitySource, "Material");
+    EXPECT_EQ(product.backEmissivitySource, "Material");
+    EXPECT_EQ(product.manufacturer, "Generic");
+    EXPECT_EQ(product.material, "Glass");
+    EXPECT_EQ(product.coatingName, "N/A");
+    EXPECT_EQ(product.coatedSide, "Neither");
+    EXPECT_EQ(product.substrateFilename, "N/A");
+    EXPECT_EQ(product.appearance, "Clear");
+    EXPECT_EQ(product.acceptance, "#");
+
 }

@@ -10,7 +10,7 @@
 
 extern std::string test_dir;
 
-
+#if 0
 class TestLoadJSONFromDisk : public testing::Test
 {
 protected:
@@ -48,3 +48,4 @@ TEST_F(TestLoadJSONFromDisk, TestLoadClear3JSON)
     EXPECT_EQ(product.measurements[110].frontR, 0.068);
     EXPECT_EQ(product.measurements[110].backR, 0.068);
 }
+#endif

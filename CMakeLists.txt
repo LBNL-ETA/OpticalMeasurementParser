@@ -33,7 +33,7 @@ else()
     set(DOWNLOAD_GTEST OFF)
 endif()
 
-include(CMakeLists-nlohmann_json.txt)
+#include(CMakeLists-nlohmann_json.txt)
 
 add_subdirectory( src )
 
