@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iostream>
 
-//#include <nlohmann/json.hpp>
+#include <nlohmann/json.hpp>
 
 #include "Parser.hpp"
 
@@ -293,8 +293,6 @@ OpticsParser::ProductData OpticsParser::parseFile(std::string const & fname)
     return productData;
 }
 
-#if 0
-
 OpticsParser::ProductData OpticsParser::parseJSONString(std::string const & json_str)
 {
     nlohmann::json product_json = nlohmann::json::parse(json_str);
@@ -361,4 +359,3 @@ OpticsParser::ProductData OpticsParser::parseJSONFile(std::string const & fname)
     return parseJSONString(content);
 }
 
-#endif
