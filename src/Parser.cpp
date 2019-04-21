@@ -316,6 +316,8 @@ OpticsParser::ProductData OpticsParser::parseJSONString(std::string const & json
     double tir_front = measured_data_json.at("tir_front").get<double>();
     double emissivity_front = measured_data_json.at("emissivity_front").get<double>();
     double emissivity_back = measured_data_json.at("emissivity_back").get<double>();
+    std::string emissivity_front_source = measured_data_json.at("emissivity_front_source").get<std::string>();
+    std::string emissivity_back_source = measured_data_json.at("emissivity_back_source").get<std::string>();
 
     nlohmann::json spectral_data_json = product_json.at("spectral_data").at("spectral_data");
 
@@ -339,6 +341,8 @@ OpticsParser::ProductData OpticsParser::parseJSONString(std::string const & json
                                           tir_front,
                                           emissivity_front,
                                           emissivity_back,
+                                          emissivity_front_source,
+                                          emissivity_back_source,
                                           manufacturer,
                                           material_name,
                                           coating_name,
