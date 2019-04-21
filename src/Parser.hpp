@@ -66,6 +66,6 @@ namespace OpticsParser
     };
 
     ProductData parseFile(std::string const& fname);
-//    ProductData parseJSONString(std::string const& json);
-//    ProductData parseJSONFile(std::string const & fname);
+    ProductData parseJSONString(std::string const& json);
+    ProductData parseJSONFile(std::string const & fname);
 }   // namespace OpticsParser
