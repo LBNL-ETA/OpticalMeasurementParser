@@ -33,6 +33,8 @@ else()
     set(DOWNLOAD_GTEST OFF)
 endif()
 
+set( JSON_BuildTests OFF CACHE BOOL "")
+
 include(CMakeLists-nlohmann_json.txt)
 
 add_subdirectory( src )
