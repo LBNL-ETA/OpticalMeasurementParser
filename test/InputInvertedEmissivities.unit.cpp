@@ -48,7 +48,7 @@ TEST_F(TestInvertedEmissivities, Test1)
 {
     const std::string inputFile = R"(InputInvertedEmissivites.dat)";
     OpticsParser::Parser parser;
-    OpticsParser::ProductData product = parser.parse_file(inputFile);
+    OpticsParser::ProductData product = parser.parseFile(inputFile);
 
     EXPECT_NEAR(3.048, product.thickness, 1e-6);
     EXPECT_NEAR(1, product.conductivity, 1e-6);

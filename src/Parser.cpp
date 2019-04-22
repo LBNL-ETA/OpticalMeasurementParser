@@ -6,36 +6,7 @@
 
 #include "Parser.hpp"
 
-/*
-OpticsParser::Parser::Parser(const std::string & inputFile) :
-    m_Thickness{-1},
-    m_Conductivity{-1},
-    m_IRTransmittance{-1},
-    m_FrontEmissivity{-1},
-    m_BackEmissivity{-1},
-    m_NFRCID{-1},
-    m_ProductName{""},
-    m_Type{""}
-{
-    std::ifstream inFile(inputFile);
-    std::string line;
-    while(std::getline(inFile, line))
-    {
-        if(line.find('{') != std::string::npos)
-        {
-            parseHeaderLine(line);
-        }
-        else
-        {
-            if(!line.empty())
-            {
-                parseMeasurementLine(line);
-            }
-        }
-    }
-}*/
-
-OpticsParser::ProductData OpticsParser::Parser::parse_file(const std::string & inputFile)
+OpticsParser::ProductData OpticsParser::Parser::parseFile(const std::string & inputFile)
 {
     ProductData product;
     std::ifstream inFile(inputFile);
@@ -92,27 +63,6 @@ void OpticsParser::Parser::parseMeasurementLine(const std::string & line, Produc
     product.measurements.emplace_back(result[0], result[1], result[2], result[3]);
 }
 
-/*
-double OpticsParser::Parser::thickness() const
-{
-    return m_Thickness;
-}
-
-double OpticsParser::Parser::IRTransmittance() const
-{
-    return m_IRTransmittance;
-}
-
-double OpticsParser::Parser::frontEmissivity() const
-{
-    return m_FrontEmissivity;
-}
-
-double OpticsParser::Parser::backEmissivity() const
-{
-    return m_BackEmissivity;
-}
-*/
 
 void OpticsParser::Parser::parsePropertyAtTheEnd(const std::string & searchString,
                                                  const std::string & behind,
@@ -169,24 +119,6 @@ void OpticsParser::Parser::parseNFRCID(const std::string & line, OpticsParser::P
     }
 }
 
-#if 0
-void OpticsParser::Parser::parseProductName(const std::string & line)
-{
-    if(line.find("Product Name") != std::string::npos)
-    {
-        std::string str = line.substr(line.find("Name:") + 5);
-        auto erasePos = str.find('}');
-        str.erase(erasePos, 1);
-        // Removes all spaces from the beginning of the string
-        while(str.size() && isspace(str.front()))
-            str.erase(str.begin());
-        // Remove all spaces from the end of the string.
-        while(str.size() && isspace(str.back()))
-            str.pop_back();
-        m_ProductName = str;
-    }
-}
-#endif
 
 void OpticsParser::Parser::parseStringPropertyInsideBraces(const std::string & line, std::string search, std::string & property)
 {
@@ -207,102 +139,7 @@ void OpticsParser::Parser::parseStringPropertyInsideBraces(const std::string & l
     }
 }
 
-#if 0
-void OpticsParser::Parser::parseProductType(const std::string & line)
-{
-    if(line.find("Type") != std::string::npos)
-    {
-        std::string str = line.substr(line.find("Type:") + 5);
-        auto erasePos = str.find('}');
-        str.erase(erasePos, 1);
-        // Removes all spaces from the beginning of the string
-        while(str.size() && isspace(str.front()))
-            str.erase(str.begin());
-        // Remove all spaces from the end of the string.
-        while(str.size() && isspace(str.back()))
-            str.pop_back();
-        m_Type = str;
-    }
-}
-#endif
-/*
-int OpticsParser::Parser::nfrcid() const
-{
-    return m_NFRCID;
-}
-
-double OpticsParser::Parser::conductivity() const
-{
-    return m_Conductivity;
-}
-
-std::vector<OpticsParser::WLData> OpticsParser::Parser::measurements() const
-{
-    return m_WLData;
-}
-
-std::string OpticsParser::Parser::productName() const
-{
-    return m_ProductName;
-}
-
-std::string OpticsParser::Parser::productType() const
-{
-    return m_Type;
-}
-
-std::string OpticsParser::Parser::frontEmissivitySource() const
-{
- return m_FrontEmissivitySource;
-}
-
-std::string OpticsParser::Parser::backEmissivitySource() const
-{
- return m_BackEmissivitySource;
-}
-
-std::string OpticsParser::Parser::manufacturer() const
-{
- return m_Manufacturer;
-}
-
-std::string OpticsParser::Parser::material() const
-{
- return m_Material;
-}
-
-std::string OpticsParser::Parser::coatingName() const
-{
- return m_CoatingName;
-}
-
-std::string OpticsParser::Parser::coatedSide() const
-{
- return m_CoatedSide;
-}
-
-std::string OpticsParser::Parser::substrateFilename() const
-{
- return m_SubstrateFilename;
-}
-
-std::string OpticsParser::Parser::appearance() const
-{
- return m_Appearance;
-}
-
-std::string OpticsParser::Parser::acceptance() const
-{
- return m_Acceptance;
-}
-*/
-OpticsParser::ProductData OpticsParser::parseFile(std::string const & fname)
-{
-    OpticsParser::Parser parser;
-    return parser.parse_file(fname);
-}
-
-OpticsParser::ProductData OpticsParser::parseJSONString(std::string const & json_str)
+OpticsParser::ProductData OpticsParser::Parser::parseJSONString(std::string const & json_str)
 {
     nlohmann::json product_json = nlohmann::json::parse(json_str);
 
@@ -372,7 +209,7 @@ OpticsParser::ProductData OpticsParser::parseJSONString(std::string const & json
 }
 
 
-OpticsParser::ProductData OpticsParser::parseJSONFile(std::string const & fname)
+OpticsParser::ProductData OpticsParser::Parser::parseJSONFile(std::string const & fname)
 {
     std::ifstream fin(fname);
     std::string content((std::istreambuf_iterator<char>(fin)), (std::istreambuf_iterator<char>()));

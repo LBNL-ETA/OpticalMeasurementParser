@@ -48,7 +48,7 @@ TEST_F(TestFile1, Test1)
 {
     const std::string inputFile = R"(InputFile1.dat)";
     OpticsParser::Parser parser;
-    OpticsParser::ProductData product = parser.parse_file(inputFile);
+    OpticsParser::ProductData product = parser.parseFile(inputFile);
 
     EXPECT_NEAR(3.048, product.thickness, 1e-6);
     EXPECT_NEAR(1, product.conductivity, 1e-6);
@@ -79,7 +79,8 @@ TEST_F(TestFile1, Test1)
 TEST_F(TestFile1, TestParseFile)
 {
     const std::string inputFile = R"(InputFile1.dat)";
-    OpticsParser::ProductData productData = OpticsParser::parseFile(inputFile);
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData productData = parser.parseFile(inputFile);
     
     EXPECT_NEAR(3.048, productData.thickness, 1e-6);    
     EXPECT_NEAR(1, productData.conductivity, 1e-6);    

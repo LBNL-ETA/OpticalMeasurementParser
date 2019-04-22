@@ -27,7 +27,8 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadClear3)
     clear_3_path += "/products";
     clear_3_path += "/CLEAR_3.DAT";
 
-    OpticsParser::ProductData product = OpticsParser::parseFile(clear_3_path);
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData product = parser.parseFile(clear_3_path);
     EXPECT_EQ(product.nfrcid, 102);
     EXPECT_EQ(product.productName, "Generic Clear Glass");
     EXPECT_EQ(product.productType, "Monolithic");
