@@ -12,8 +12,11 @@ namespace OpticsParser
     class Parser
     {
     public:
-        explicit Parser(const std::string & inputFile);
+        //explicit Parser(const std::string & inputFile);
 
+	ProductData parse_file(const std::string & inputFile);
+
+/*
         double thickness() const;
         double conductivity() const;
         double IRTransmittance() const;
@@ -32,19 +35,22 @@ namespace OpticsParser
         std::string substrateFilename() const;
         std::string appearance() const;
         std::string acceptance() const;
-
+        std::string fileName() const;
+*/
     private:
-        void parseHeaderLine(const std::string & line);
-        void parseMeasurementLine(const std::string & line);
+        void parseHeaderLine(const std::string & line, ProductData & product);
+        void parseMeasurementLine(const std::string & line, ProductData & product);
         void parsePropertyAtTheEnd(const std::string & searchString,
                                    const std::string & behind,
                                    const std::string & line,
                                    double & property);
-        void parseEmissivities(const std::string & line);
-        void parseNFRCID(const std::string & line);
+        void parseEmissivities(const std::string & line, ProductData & product);
+        void parseNFRCID(const std::string & line, ProductData & product);
 //        void parseProductName(const std::string & line);
 //        void parseProductType(const std::string & line);
 	void parseStringPropertyInsideBraces(const std::string & line, std::string search, std::string & property);
+        //ProductData 
+/*
         double m_Thickness;
         double m_Conductivity;
         double m_IRTransmittance;
@@ -63,6 +69,7 @@ namespace OpticsParser
         std::string m_Appearance;
         std::string m_Acceptance;
         std::vector<WLData> m_WLData;
+*/
     };
 
     ProductData parseFile(std::string const& fname);
