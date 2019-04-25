@@ -47,8 +47,11 @@ target_include_directories(${LIB_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+Option(BUILD_Optical_Measurement_Parser_Tests "Build tests for optical measurement parsing." ON)
 
-enable_testing()
-add_subdirectory( test )
+if(BUILD_Optical_Measurement_Parser_Tests)
+	enable_testing()
+	add_subdirectory( test )
+endif()
 
 
