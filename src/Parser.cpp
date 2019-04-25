@@ -83,7 +83,13 @@ void OpticsParser::Parser::parseEmissivities(const std::string & line,
 {
     if(line.find("Emissivity") != std::string::npos)
     {
-        std::string str = line.substr(line.find("Emis=") + 5);
+        size_t emis_values_idx = line.find("Emis=");
+        if(emis_values_idx == std::string::npos)
+        {
+            //If there is a Emissivity header field but no values that is OK, just return
+            return;
+        }
+        std::string str = line.substr(emis_values_idx + 5);
         std::vector<double> result;
         std::istringstream iss(str);
         for(std::string s; iss >> s;)
