@@ -8,6 +8,7 @@
 
 OpticsParser::ProductData OpticsParser::Parser::parseFile(const std::string & inputFile)
 {
+    std::string fileName = inputFile.substr(inputFile.find_last_of("/\\") + 1);
     ProductData product;
     std::ifstream inFile(inputFile);
     std::string line;
@@ -25,6 +26,9 @@ OpticsParser::ProductData OpticsParser::Parser::parseFile(const std::string & in
             }
         }
     }
+    product.fileName = fileName;
+    product.token = fileName;
+
     return product;
 }
 
