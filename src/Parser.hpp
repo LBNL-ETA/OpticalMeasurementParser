@@ -12,7 +12,7 @@ namespace OpticsParser
     class Parser
     {
     public:
-	ProductData parseFile(const std::string & inputFile);
+        ProductData parseFile(const std::string & inputFile);
         ProductData parseJSONString(std::string const& json);
         ProductData parseJSONFile(std::string const & fname);
     private:
@@ -23,7 +23,8 @@ namespace OpticsParser
                                    const std::string & line,
                                    double & property);
         void parseEmissivities(const std::string & line, ProductData & product);
+        void parseUnits(const std::string & line, ProductData & product);
         void parseNFRCID(const std::string & line, ProductData & product);
-	void parseStringPropertyInsideBraces(const std::string & line, std::string search, std::string & property);
+        void parseStringPropertyInsideBraces(const std::string & line, std::string search, std::string & property);
     };
 }   // namespace OpticsParser

@@ -33,6 +33,7 @@ TEST_F(TestConvertOpticsFile, TestConveretClear3)
     
     EXPECT_EQ(product_json.at("nfrc_id").get<int>(), 102);
     EXPECT_EQ(product_json.at("name").get<std::string>(), "Generic Clear Glass");
+    EXPECT_EQ(product_json.at("unit_system").get<std::string>(), "SI");
     EXPECT_EQ(product_json.at("product_type").get<std::string>(), "Monolithic");
     EXPECT_EQ(product_json.at("measured_data").at("thickness").get<double>(), 3.048);
     EXPECT_EQ(product_json.at("measured_data").at("material_bulk_properties_overrides").at("thermal_conductivity").get<double>(), 1.0);
@@ -41,7 +42,7 @@ TEST_F(TestConvertOpticsFile, TestConveretClear3)
     EXPECT_EQ(product_json.at("measured_data").at("emissivity_back").get<double>(), 0.84);
 
     nlohmann::json spectral_data = product_json.at("measured_data").at("spectral_data");
-    //EXPECT_EQ(spectral_data.at("unit").get<std::string>(), "nanometer");
+    EXPECT_EQ(spectral_data.at("unit").get<std::string>(), "Microns");
     EXPECT_EQ(spectral_data.at("number_incidence_angles").get<int>(), 1);
 
     nlohmann::json angle_block = spectral_data.at("angle_block")[0];

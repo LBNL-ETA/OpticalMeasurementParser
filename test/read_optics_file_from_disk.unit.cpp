@@ -55,5 +55,6 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadClear3)
     EXPECT_EQ(product.substrateFilename, "N/A");
     EXPECT_EQ(product.appearance, "Clear");
     EXPECT_EQ(product.acceptance, "#");
-
+    EXPECT_EQ(product.unitSystem, "SI");
+    EXPECT_EQ(product.wavelengthUnit, "Microns");
 }
