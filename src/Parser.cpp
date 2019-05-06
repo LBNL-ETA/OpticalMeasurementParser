@@ -27,7 +27,7 @@ OpticsParser::ProductData OpticsParser::Parser::parseFile(const std::string & in
         }
     }
     product.fileName = fileName;
-    product.token = fileName;
+    //product.token = fileName;
 
     return product;
 }
