@@ -19,7 +19,7 @@ protected:
 };
 
 
-TEST_F(TestConvertOpticsFile, TestConveretClear3)
+TEST_F(TestConvertOpticsFile, TestConvertClear3)
 {
     SCOPED_TRACE("Begin Test: Convert CLEAR_3.DAT to json.");
 
@@ -32,11 +32,11 @@ TEST_F(TestConvertOpticsFile, TestConveretClear3)
     nlohmann::json product_json = product;
     
     EXPECT_EQ(product_json.at("nfrc_id").get<int>(), 102);
-    EXPECT_EQ(product_json.at("name").get<std::string>(), "Generic Clear Glass");
+    EXPECT_EQ(product_json.at("product_name").get<std::string>(), "Generic Clear Glass");
     EXPECT_EQ(product_json.at("unit_system").get<std::string>(), "SI");
-    EXPECT_EQ(product_json.at("product_type").get<std::string>(), "Monolithic");
+    EXPECT_EQ(product_json.at("product_type").get<std::string>(), "monolithic");
     EXPECT_EQ(product_json.at("measured_data").at("thickness").get<double>(), 3.048);
-    EXPECT_EQ(product_json.at("measured_data").at("material_bulk_properties_overrides").at("thermal_conductivity").get<double>(), 1.0);
+    EXPECT_EQ(product_json.at("measured_data").at("bulk_properties_override").at("thermal_conductivity").get<double>(), 1.0);
     EXPECT_EQ(product_json.at("measured_data").at("tir_front").get<double>(), 0.0);
     EXPECT_EQ(product_json.at("measured_data").at("emissivity_front").get<double>(), 0.84);
     EXPECT_EQ(product_json.at("measured_data").at("emissivity_back").get<double>(), 0.84);
@@ -50,7 +50,7 @@ TEST_F(TestConvertOpticsFile, TestConveretClear3)
     EXPECT_EQ(angle_block.at("incidence_angle").get<int>(), 0);
     EXPECT_EQ(angle_block.at("number_wavelengths").get<int>(), 111);
 
-    nlohmann::json measurements = angle_block.at("solar_optical_spectral_data");
+    nlohmann::json measurements = angle_block.at("wavelength_data");
 
 
     EXPECT_EQ(measurements[0].at("w").get<double>(), 0.3);

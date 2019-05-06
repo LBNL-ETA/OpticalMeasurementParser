@@ -36,6 +36,7 @@ add_executable(${PROJECT_TEST_NAME}
 		read_json_file_from_disk.unit.cpp
 		read_optics_file_from_disk.unit.cpp
 		convert_optics_to_json.unit.cpp
+		read_checker_tool_json_file.unit.cpp
 		main.cpp 
 		paths.h )
 
