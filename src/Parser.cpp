@@ -355,3 +355,21 @@ OpticsParser::ProductData OpticsParser::Parser::parseJSONFile(std::string const 
     std::string content((std::istreambuf_iterator<char>(fin)), (std::istreambuf_iterator<char>()));
     return parseJSONString(content);
 }
+
+OpticsParser::ProductData OpticsParser::parseFile(const std::string & inputFile)
+{
+    OpticsParser::Parser parser;
+    return parser.parseFile(inputFile);
+}
+
+OpticsParser::ProductData OpticsParser::parseJSONString(std::string const & json)
+{
+    OpticsParser::Parser parser;
+    return parser.parseJSONString(json);
+}
+
+OpticsParser::ProductData OpticsParser::parseJSONFile(std::string const & fname)
+{
+    OpticsParser::Parser parser;
+    return parser.parseJSONFile(fname);
+}

@@ -27,4 +27,8 @@ namespace OpticsParser
         void parseNFRCID(const std::string & line, ProductData & product);
         void parseStringPropertyInsideBraces(const std::string & line, std::string search, std::string & property);
     };
+
+	ProductData parseFile(const std::string & inputFile);
+    ProductData parseJSONString(std::string const & json);
+    ProductData parseJSONFile(std::string const & fname);
 }   // namespace OpticsParser
