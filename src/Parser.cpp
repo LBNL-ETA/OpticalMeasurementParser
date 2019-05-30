@@ -254,7 +254,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
     std::string product_name = product_json.at("name").get<std::string>();
     std::string product_type = product_json.at("type").get<std::string>();
     int nfrc_id = product_json.value("nfrc_id", -1);
-    std::string manufacturer = product_json.at("manufacturer").get<std::string>();
+    std::string manufacturer = product_json.at("manufacturer_name").get<std::string>();
     std::string material_name =
       product_json.at("material_bulk_properties").at("name").get<std::string>();
     std::string coating_name =
