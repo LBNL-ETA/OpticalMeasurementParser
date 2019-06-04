@@ -18,12 +18,10 @@ endif()
 
 
 if (CMAKE_COMPILER_IS_GNUCC)
-    target_compile_options(${LIB_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
-    target_link_libraries(${LIB_NAME} PRIVATE stdc++fs) # For filesystem on gcc < 9
+    target_compile_options(${LIB_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)    
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     target_compile_options(${LIB_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
-    target_link_libraries(${LIB_NAME} PRIVATE c++fs) # For filesystem on clang < 9
 endif()
 if (MSVC)
     target_compile_options(${LIB_NAME} PRIVATE /W4 /WX)
