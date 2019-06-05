@@ -1,13 +1,10 @@
 #include "ProductData.hpp"
 
+#include <sstream>
+
 OpticsParser::WLData::WLData(double wavelength, double T, double frontR, double backR) :
-    wavelength(wavelength),
-    T(T),
-    frontR(frontR),
-    backR(backR)
+    wavelength(wavelength), T(T), frontR(frontR), backR(backR)
 {}
-
-
 
 
 OpticsParser::ProductData::ProductData(std::string const & productName,
@@ -18,6 +15,18 @@ OpticsParser::ProductData::ProductData(std::string const & productName,
                                        double IRTransmittance,
                                        double frontEmissivity,
                                        double backEmissivity,
+                                       std::string frontEmissivitySource,
+                                       std::string backEmissivitySource,
+                                       std::string manufacturer,
+                                       std::string material,
+                                       std::string coatingName,
+                                       std::string coatedSide,
+                                       std::string substrateFilename,
+                                       std::string appearance,
+                                       std::string acceptance,
+                                       std::string fileName,
+                                       std::string unitSystem,
+                                       std::string wavelengthUnit,
                                        std::vector<WLData> const & measurements) :
     productName(productName),
     productType(productType),
@@ -27,5 +36,87 @@ OpticsParser::ProductData::ProductData(std::string const & productName,
     IRTransmittance(IRTransmittance),
     frontEmissivity(frontEmissivity),
     backEmissivity(backEmissivity),
+    frontEmissivitySource(frontEmissivitySource),
+    backEmissivitySource(backEmissivitySource),
+    manufacturer(manufacturer),
+    material(material),
+    coatingName(coatingName),
+    coatedSide(coatedSide),
+    substrateFilename(substrateFilename),
+    appearance(appearance),
+    acceptance(acceptance),
+    fileName(fileName),
+    unitSystem(unitSystem),
+    wavelengthUnit(wavelengthUnit),
     measurements(measurements)
 {}
+
+void OpticsParser::to_json(nlohmann::json & j, OpticsParser::WLData const & wl)
+{
+    j = nlohmann::json{{"w", wl.wavelength}, {"tf", wl.T}, {"rf", wl.frontR}, {"rb", wl.backR}};
+}
+
+std::string convert_product_type(std::string const & optics_product_type)
+{
+    std::map<std::string, std::string> optics_types_to_new_types;
+    optics_types_to_new_types["Monolithic"] = "monolithic";
+    optics_types_to_new_types["Coated"] = "coated-glass";
+    optics_types_to_new_types["Laminate"] = "laminate";
+
+    std::map<std::string, std::string>::iterator itr =
+      optics_types_to_new_types.find(optics_product_type);
+
+    if(itr != optics_types_to_new_types.end())
+    {
+        return itr->second;
+    }
+    else
+    {
+        std::stringstream err_msg;
+        err_msg << "Unknown type in optics file: " << optics_product_type;
+        throw std::runtime_error(err_msg.str());
+    }
+}
+
+void OpticsParser::to_json(nlohmann::json & j, OpticsParser::ProductData const & p)
+{
+    nlohmann::json bulk_properties{{"thermal_conductivity", p.conductivity}};
+    nlohmann::json angle_block{{"incidence_angle", 0},
+                               {"number_wavelengths", p.measurements.size()},
+                               {"wavelength_data", p.measurements}};
+    nlohmann::json spectral_data{{"unit", p.wavelengthUnit},
+                                 {"number_incidence_angles", 1},
+                                 {"angle_block", std::vector<nlohmann::json>{angle_block}}};
+
+    nlohmann::json measured_data{{"thickness", p.thickness},
+                                 {"bulk_properties_override", bulk_properties},
+                                 {"tir_front", p.IRTransmittance},
+                                 {"tir_back", p.IRTransmittance},
+                                 {"emissivity_front", p.frontEmissivity},
+                                 {"emissivity_back", p.backEmissivity},
+                                 {"spectral_data", spectral_data},
+                                 {"is_specular", true}};
+
+
+    nlohmann::json coating_properties{{"coating_name", p.coatingName},
+                                      {"coated_side", p.coatedSide}};
+
+    std::string product_type = convert_product_type(p.productType);
+
+    j = nlohmann::json{{"product_name", p.productName},
+                       {"filename", p.fileName},
+                       {"token", p.fileName},
+                       {"version", 1},
+                       {"unit_system", p.unitSystem},
+                       {"appearance", p.appearance},
+                       {"acceptance", p.acceptance},
+                       {"nfrc_id", p.nfrcid},
+                       {"owner", p.manufacturer},
+                       {"manufacturer", p.manufacturer},
+                       {"type", "Glazing"},
+                       {"specularity", "Specular"},
+                       {"product_type", product_type},
+                       {"coating_properties", coating_properties},
+                       {"measured_data", measured_data},
+                       {"active", true}};
+}

@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 
+#include <nlohmann/json.hpp>
+
 namespace OpticsParser
 {
     struct WLData
@@ -27,6 +29,18 @@ namespace OpticsParser
                     double IRTransmittance,
                     double frontEmissivity,
                     double backEmissivity,
+                    std::string frontEmissivitySource,
+                    std::string backEmissivitySource,
+                    std::string manufacturer,
+                    std::string material,
+                    std::string coatingName,
+                    std::string coatedSide,
+                    std::string substrateFilename,
+                    std::string appearance,
+                    std::string acceptance,
+                    std::string fileName,
+                    std::string unitSystem,
+                    std::string wavelengthUnit,
                     std::vector<WLData> const & measurements);
 
         std::string productName;
@@ -37,6 +51,21 @@ namespace OpticsParser
         double IRTransmittance;
         double frontEmissivity;
         double backEmissivity;
+	std::string frontEmissivitySource;
+        std::string backEmissivitySource;
+        std::string manufacturer;
+        std::string material;
+        std::string coatingName;
+        std::string coatedSide;
+        std::string substrateFilename;
+        std::string appearance;
+        std::string acceptance;
+        std::string fileName;
+        std::string unitSystem;
+        std::string wavelengthUnit;
         std::vector<WLData> measurements;
     };
+
+    void to_json(nlohmann::json & j, WLData const& wl);
+    void to_json(nlohmann::json & j, ProductData const& wl);
 }   // namespace OpticsParser

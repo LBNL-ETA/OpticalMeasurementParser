@@ -47,33 +47,18 @@ protected:
 TEST_F(TestInvertedEmissivities, Test1)
 {
     const std::string inputFile = R"(InputInvertedEmissivites.dat)";
-    OpticsParser::Parser par(inputFile);
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData product = parser.parseFile(inputFile);
 
-    const auto thickness = par.thickness();
-    EXPECT_NEAR(3.048, thickness, 1e-6);
+    EXPECT_NEAR(3.048, product.thickness, 1e-6);
+    EXPECT_NEAR(1, product.conductivity, 1e-6);
+    EXPECT_NEAR(0, product.IRTransmittance, 1e-6);
+    EXPECT_NEAR(0.84, product.frontEmissivity, 1e-6);
+    EXPECT_NEAR(0.5, product.backEmissivity, 1e-6);
+    EXPECT_EQ(102, product.nfrcid);
+    EXPECT_EQ("", product.productName);
+    EXPECT_EQ("Monolithic", product.productType);
 
-    const auto conductivity = par.conductivity();
-    EXPECT_NEAR(1, conductivity, 1e-6);
-
-    const auto irTransmittance = par.IRTransmittance();
-    EXPECT_NEAR(0, irTransmittance, 1e-6);
-
-    const auto frontEmissivity = par.frontEmissivity();
-    EXPECT_NEAR(0.84, frontEmissivity, 1e-6);
-
-    const auto backEmissivity = par.backEmissivity();
-    EXPECT_NEAR(0.5, backEmissivity, 1e-6);
-
-    const auto NFRCID = par.nfrcid();
-    EXPECT_EQ(102, NFRCID);
-
-	const auto & productName = par.productName();
-	EXPECT_EQ("", productName);
-
-	const auto & productType = par.productType();
-	EXPECT_EQ("Monolithic", productType);
-
-    const auto measurements = par.measurements();
     std::vector<OpticsParser::WLData> correctResults{{0.300, 0.0020, 0.0470, 0.0480},
                                                      {0.305, 0.0030, 0.0470, 0.0480},
                                                      {0.310, 0.0090, 0.0470, 0.0480},
@@ -81,12 +66,12 @@ TEST_F(TestInvertedEmissivities, Test1)
                                                      {0.320, 0.1000, 0.0470, 0.0480},
                                                      {0.325, 0.2180, 0.0490, 0.0500}};
 
-    EXPECT_EQ(correctResults.size(), measurements.size());
+    EXPECT_EQ(correctResults.size(), product.measurements.size());
     for(auto i = 0u; i < correctResults.size(); ++i)
     {
-        EXPECT_NEAR(correctResults[i].wavelength, measurements[i].wavelength, 1e-6);
-        EXPECT_NEAR(correctResults[i].T, measurements[i].T, 1e-6);
-        EXPECT_NEAR(correctResults[i].frontR, measurements[i].frontR, 1e-6);
-        EXPECT_NEAR(correctResults[i].backR, measurements[i].backR, 1e-6);
+        EXPECT_NEAR(correctResults[i].wavelength, product.measurements[i].wavelength, 1e-6);
+        EXPECT_NEAR(correctResults[i].T, product.measurements[i].T, 1e-6);
+        EXPECT_NEAR(correctResults[i].frontR, product.measurements[i].frontR, 1e-6);
+        EXPECT_NEAR(correctResults[i].backR, product.measurements[i].backR, 1e-6);
     }
 }
