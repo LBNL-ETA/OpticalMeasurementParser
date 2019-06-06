@@ -184,12 +184,12 @@ OpticsParser::ProductData parseCheckerToolJson(nlohmann::json const & product_js
     std::string product_type = product_json.at("product_type").get<std::string>();
     int nfrc_id = product_json.value("nfrc_id", -1);
     std::string manufacturer = product_json.at("manufacturer").get<std::string>();
-    std::string material_name = ""; //TODO
+    std::string material_name = "";   // TODO
     std::string coating_name =
       product_json.at("coating_properties").at("coating_name").get<std::string>();
     std::string coated_side =
       product_json.at("coating_properties").at("coated_side").get<std::string>();
-    std::string substrate_filename = ""; // TODO
+    std::string substrate_filename = "";   // TODO
     std::string appearance = product_json.at("appearance").get<std::string>();
     std::string acceptance = product_json.at("acceptance").get<std::string>();
 
@@ -197,15 +197,15 @@ OpticsParser::ProductData parseCheckerToolJson(nlohmann::json const & product_js
     nlohmann::json measured_data_json = product_json.at("measured_data");
 
     double thickness = measured_data_json.at("thickness").get<double>();
-    double conductivity = -1; // TODO
+    double conductivity = -1;   // TODO
     double tir_front = measured_data_json.at("tir_front").get<double>();
     double emissivity_front = measured_data_json.at("emissivity_front").get<double>();
     double emissivity_back = measured_data_json.at("emissivity_back").get<double>();
-    std::string emissivity_front_source = ""; // TODO      
-    std::string emissivity_back_source = "";   // TODO
-    std::string filename = ""; // TODO
-    std::string unit_system = ""; // TODO
-    std::string wavelength_units = ""; // TODO
+    std::string emissivity_front_source = "";   // TODO
+    std::string emissivity_back_source = "";    // TODO
+    std::string filename = "";                  // TODO
+    std::string unit_system = "";               // TODO
+    std::string wavelength_units = "";          // TODO
 
 
     nlohmann::json spectral_data_json = measured_data_json.at("spectral_data");
@@ -214,8 +214,11 @@ OpticsParser::ProductData parseCheckerToolJson(nlohmann::json const & product_js
 
     std::vector<OpticsParser::WLData> measurements;
 
-    for(auto & [key, val] : wavelength_data_json.items())
+    for(nlohmann::json::iterator itr = wavelength_data_json.begin();
+        itr != wavelength_data_json.end();
+        ++itr)
     {
+        auto val = itr.value();
         double wl = val.at("w").get<double>();
         double t = val.at("tf").get<double>();
         double rf = val.at("rf").get<double>();
@@ -278,9 +281,9 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
       measured_data_json.at("emissivity_front_source").get<std::string>();
     std::string emissivity_back_source =
       measured_data_json.at("emissivity_back_source").get<std::string>();
-    std::string filename = ""; // TODO
-    std::string unit_system = ""; // TODO
-    std::string wavelength_units = ""; // TODO
+    std::string filename = "";           // TODO
+    std::string unit_system = "";        // TODO
+    std::string wavelength_units = "";   // TODO
 
 
     nlohmann::json spectral_data_json = measured_data_json.at("spectral_data");
@@ -288,8 +291,11 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
 
     std::vector<OpticsParser::WLData> measurements;
 
-    for(auto & [key, val] : wavelength_data_json.items())
+    for(nlohmann::json::iterator itr = wavelength_data_json.begin();
+        itr != wavelength_data_json.end();
+        ++itr)
     {
+        auto val = itr.value();
         double wl = val.at("wavelength").get<double>();
         double t = val.at("T").get<double>();
         double rf = val.at("Rf").get<double>();
