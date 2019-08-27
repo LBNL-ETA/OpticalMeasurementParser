@@ -51,7 +51,7 @@ TEST_F(TestFile1, Test1)
     OpticsParser::ProductData product = parser.parseFile(inputFile);
 
     EXPECT_NEAR(3.048, product.thickness, 1e-6);
-    EXPECT_NEAR(1, product.conductivity, 1e-6);
+    EXPECT_NEAR(1, product.conductivity.value(), 1e-6);
     EXPECT_NEAR(0, product.IRTransmittance, 1e-6);
     EXPECT_NEAR(0.84, product.frontEmissivity, 1e-6);
     EXPECT_NEAR(0.84, product.backEmissivity, 1e-6);
@@ -83,7 +83,7 @@ TEST_F(TestFile1, TestParseFile)
     OpticsParser::ProductData productData = parser.parseFile(inputFile);
     
     EXPECT_NEAR(3.048, productData.thickness, 1e-6);    
-    EXPECT_NEAR(1, productData.conductivity, 1e-6);    
+    EXPECT_NEAR(1, productData.conductivity.value(), 1e-6);    
     EXPECT_NEAR(0, productData.IRTransmittance, 1e-6);    
     EXPECT_NEAR(0.84, productData.frontEmissivity, 1e-6);    
     EXPECT_NEAR(0.84, productData.backEmissivity, 1e-6);    

@@ -51,7 +51,7 @@ TEST_F(TestInvertedEmissivities, Test1)
     OpticsParser::ProductData product = parser.parseFile(inputFile);
 
     EXPECT_NEAR(3.048, product.thickness, 1e-6);
-    EXPECT_NEAR(1, product.conductivity, 1e-6);
+    EXPECT_NEAR(1, product.conductivity.value(), 1e-6);
     EXPECT_NEAR(0, product.IRTransmittance, 1e-6);
     EXPECT_NEAR(0.84, product.frontEmissivity, 1e-6);
     EXPECT_NEAR(0.5, product.backEmissivity, 1e-6);
