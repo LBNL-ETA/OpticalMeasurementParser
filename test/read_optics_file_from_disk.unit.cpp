@@ -39,13 +39,13 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadClear3)
     EXPECT_EQ(product.backEmissivity, 0.84);
     EXPECT_EQ(product.measurements.size(), 111);
     EXPECT_EQ(product.measurements[0].wavelength, 0.3);
-    EXPECT_EQ(product.measurements[0].T, 0.002);
-    EXPECT_EQ(product.measurements[0].frontR, 0.047);
-    EXPECT_EQ(product.measurements[0].backR, 0.048);
+    EXPECT_EQ(product.measurements[0].directComponent.tf, 0.002);
+    EXPECT_EQ(product.measurements[0].directComponent.rf, 0.047);
+    EXPECT_EQ(product.measurements[0].directComponent.rb, 0.048);
     EXPECT_EQ(product.measurements[110].wavelength, 2.5);
-    EXPECT_EQ(product.measurements[110].T, 0.822);
-    EXPECT_EQ(product.measurements[110].frontR, 0.068);
-    EXPECT_EQ(product.measurements[110].backR, 0.068);
+    EXPECT_EQ(product.measurements[110].directComponent.tf, 0.822);
+    EXPECT_EQ(product.measurements[110].directComponent.rf, 0.068);
+    EXPECT_EQ(product.measurements[110].directComponent.rb, 0.068);
     EXPECT_EQ(product.frontEmissivitySource, "Material");
     EXPECT_EQ(product.backEmissivitySource, "Material");
     EXPECT_EQ(product.manufacturer, "Generic");
@@ -55,6 +55,56 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadClear3)
     EXPECT_EQ(product.substrateFilename, "N/A");
     EXPECT_EQ(product.appearance, "Clear");
     EXPECT_EQ(product.acceptance, "#");
+    EXPECT_EQ(product.unitSystem, "SI");
+    EXPECT_EQ(product.wavelengthUnit, "Microns");
+}
+
+TEST_F(TestLoadOpticsFileFromDisk, TestLoadDiffuseData)
+{
+    SCOPED_TRACE("Begin Test: Load a file with diffuse data from disk (diffuse_optics_file_2.txt).");
+
+    std::string product_path(test_dir);
+    product_path += "/products";
+    product_path += "/diffuse_optics_file_2.txt";
+
+    OpticsParser::Parser parser;
+    OpticsParser::ProductData product = parser.parseFile(product_path);
+    EXPECT_EQ(product.nfrcid, std::optional<int>());
+    EXPECT_EQ(product.productName, "Generic frit 38mm aperture");
+    EXPECT_EQ(product.productType, "Coated");
+    EXPECT_EQ(product.thickness, 6.0);
+    EXPECT_EQ(product.conductivity, 1.0);
+    EXPECT_EQ(product.IRTransmittance, 0.0);
+    EXPECT_EQ(product.frontEmissivity, 0.86);
+    EXPECT_EQ(product.backEmissivity, 0.86);
+    EXPECT_EQ(product.measurements.size(), 451);
+    EXPECT_EQ(product.measurements[0].wavelength, 0.250);
+    EXPECT_EQ(product.measurements[0].directComponent.tf, 0.001);
+    EXPECT_EQ(product.measurements[0].directComponent.tb, 0.006);
+    EXPECT_EQ(product.measurements[0].directComponent.rf, 0.011);
+    EXPECT_EQ(product.measurements[0].directComponent.rb, 0.006);
+    EXPECT_EQ(product.measurements[0].diffuseComponent.value().tf, 0.002);
+    EXPECT_EQ(product.measurements[0].diffuseComponent.value().tb, 0.076);
+    EXPECT_EQ(product.measurements[0].diffuseComponent.value().rf, 0.087);
+    EXPECT_EQ(product.measurements[0].diffuseComponent.value().rb, 0.131);
+    EXPECT_EQ(product.measurements[450].wavelength, 2.5);
+    EXPECT_EQ(product.measurements[450].directComponent.tf, 0.520);
+    EXPECT_EQ(product.measurements[450].directComponent.tb, 0.528);
+    EXPECT_EQ(product.measurements[450].directComponent.rf, 0.000);
+    EXPECT_EQ(product.measurements[450].directComponent.rb, 0.000);
+    EXPECT_EQ(product.measurements[450].diffuseComponent.value().tf, 0.238);
+    EXPECT_EQ(product.measurements[450].diffuseComponent.value().tb, 0.240);
+    EXPECT_EQ(product.measurements[450].diffuseComponent.value().rf, 0.0970);
+    EXPECT_EQ(product.measurements[450].diffuseComponent.value().rb, 0.0940);
+    EXPECT_EQ(product.frontEmissivitySource, std::optional<std::string>());
+    EXPECT_EQ(product.backEmissivitySource, std::optional<std::string>());
+    EXPECT_EQ(product.manufacturer, "LBNL demo");
+    EXPECT_EQ(product.material, std::optional<std::string>());
+    EXPECT_EQ(product.coatingName, "Generic clear frit");
+    EXPECT_EQ(product.coatedSide, "Back");
+    EXPECT_EQ(product.substrateFilename, "CLEAR_6.DAT");
+    EXPECT_EQ(product.appearance, "Hazy");
+    EXPECT_EQ(product.acceptance, std::optional<std::string>());
     EXPECT_EQ(product.unitSystem, "SI");
     EXPECT_EQ(product.wavelengthUnit, "Microns");
 }

@@ -21,15 +21,14 @@ protected:
 TEST_F(TestLoadJSONFromDisk, TestLoadCheckerToolJSON)
 {
     SCOPED_TRACE("Begin Test: Load checker tool json format.");
-
     std::filesystem::path product_path(test_dir);
     product_path /= "products";
     product_path /= "checker_tool_input_example.json";
 
-	OpticsParser::Parser parser;
+    OpticsParser::Parser parser;
 
     OpticsParser::ProductData product = parser.parseJSONFile(product_path.string());
-//    EXPECT_EQ(product.nfrcid, 102);
+    //    EXPECT_EQ(product.nfrcid, 102);
     EXPECT_EQ(product.productName, "CGD89_092661");
     EXPECT_EQ(product.productType, "coated-glass");
     EXPECT_EQ(product.coatingName, "CGD89_092661");
@@ -42,11 +41,11 @@ TEST_F(TestLoadJSONFromDisk, TestLoadCheckerToolJSON)
     EXPECT_EQ(product.backEmissivity, 0.149);
     EXPECT_EQ(product.measurements.size(), 462);
     EXPECT_EQ(product.measurements[0].wavelength, 0.3);
-    EXPECT_EQ(product.measurements[0].T, 0.0);
-    EXPECT_EQ(product.measurements[0].frontR, 0.021);
-    EXPECT_EQ(product.measurements[0].backR, 0.021);
+    EXPECT_EQ(product.measurements[0].directComponent.tf, 0.0);
+    EXPECT_EQ(product.measurements[0].directComponent.rf, 0.021);
+    EXPECT_EQ(product.measurements[0].directComponent.rb, 0.021);
     EXPECT_EQ(product.measurements[461].wavelength, 25.0);
-    EXPECT_EQ(product.measurements[461].T, 0.0);
-    EXPECT_EQ(product.measurements[461].frontR, 0.8894);
-    EXPECT_EQ(product.measurements[461].backR, 0.8894);
+    EXPECT_EQ(product.measurements[461].directComponent.tf, 0.0);
+    EXPECT_EQ(product.measurements[461].directComponent.rf, 0.8894);
+    EXPECT_EQ(product.measurements[461].directComponent.rb, 0.8894);
 }

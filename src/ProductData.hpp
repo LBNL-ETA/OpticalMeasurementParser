@@ -8,15 +8,36 @@
 
 namespace OpticsParser
 {
+    struct MeasurementComponent
+    {
+        double tf;
+        double tb;
+        double rf;
+        double rb;
+    };
+
     struct WLData
     {
     public:
-        WLData(double wavelength, double T, double frontR, double backR);
+        WLData(double wavelength,
+               MeasurementComponent directComponent,
+               std::optional<MeasurementComponent> diffuseComponent =
+                 std::optional<MeasurementComponent>());
 
-        double wavelength;
-        double T;
-        double frontR;
-        double backR;
+        WLData(double wavelength, double tDirect, double rfDirect, double rbDiffuse);
+        WLData(double wavelength,
+               double tfDirect,
+               double tfDiffuse,
+               double tbDirect,
+               double tbDiffuse,
+               double rfDirect,
+               double rfDiffuse,
+               double rbDirect,
+               double rbDiffuse);
+
+          double wavelength;
+        MeasurementComponent directComponent;
+        std::optional<MeasurementComponent> diffuseComponent;
     };
 
     struct ProductData

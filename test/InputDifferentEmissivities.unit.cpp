@@ -70,8 +70,11 @@ TEST_F(TestDifferentEmissivities, Test1)
     for(auto i = 0u; i < correctResults.size(); ++i)
     {
         EXPECT_NEAR(correctResults[i].wavelength, product.measurements[i].wavelength, 1e-6);
-        EXPECT_NEAR(correctResults[i].T, product.measurements[i].T, 1e-6);
-        EXPECT_NEAR(correctResults[i].frontR, product.measurements[i].frontR, 1e-6);
-        EXPECT_NEAR(correctResults[i].backR, product.measurements[i].backR, 1e-6);
+        EXPECT_NEAR(
+          correctResults[i].directComponent.tf, product.measurements[i].directComponent.tf, 1e-6);
+        EXPECT_NEAR(
+          correctResults[i].directComponent.rf, product.measurements[i].directComponent.rf, 1e-6);
+        EXPECT_NEAR(
+          correctResults[i].directComponent.rb, product.measurements[i].directComponent.rb, 1e-6);
     }
 }

@@ -2,8 +2,32 @@
 
 #include <sstream>
 
-OpticsParser::WLData::WLData(double wavelength, double T, double frontR, double backR) :
-    wavelength(wavelength), T(T), frontR(frontR), backR(backR)
+OpticsParser::WLData::WLData(double wavelength,
+                             MeasurementComponent directComponent,
+                             std::optional<MeasurementComponent> diffuseComponent) :
+    wavelength(wavelength),
+    directComponent(directComponent),
+    diffuseComponent(diffuseComponent)
+{}
+
+OpticsParser::WLData::WLData(double wavelength, double tDirect, double rfDirect, double rbDiffuse) :
+    wavelength(wavelength),
+    directComponent(MeasurementComponent{tDirect, tDirect, rfDirect, rbDiffuse}),
+    diffuseComponent(std::optional<MeasurementComponent>())
+{}
+
+OpticsParser::WLData::WLData(double wavelength,
+                             double tfDirect,
+                             double tfDiffuse,
+                             double tbDirect,
+                             double tbDiffuse,
+                             double rfDirect,
+                             double rfDiffuse,
+                             double rbDirect,
+                             double rbDiffuse) :
+    wavelength(wavelength),
+    directComponent(MeasurementComponent{tfDirect, tbDirect, rfDirect, rbDirect}),
+    diffuseComponent(MeasurementComponent{tfDiffuse, tbDiffuse, rfDiffuse, rbDiffuse})
 {}
 
 
@@ -53,7 +77,10 @@ OpticsParser::ProductData::ProductData(std::string const & productName,
 
 void OpticsParser::to_json(nlohmann::json & j, OpticsParser::WLData const & wl)
 {
-    j = nlohmann::json{{"w", wl.wavelength}, {"tf", wl.T}, {"rf", wl.frontR}, {"rb", wl.backR}};
+    j = nlohmann::json{{"w", wl.wavelength},
+                       {"tf", wl.directComponent.tf},
+                       {"rf", wl.directComponent.rf},
+                       {"rb", wl.directComponent.rb}};
 }
 
 std::string convert_product_type(std::string const & optics_product_type)

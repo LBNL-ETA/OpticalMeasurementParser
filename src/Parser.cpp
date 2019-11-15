@@ -54,6 +54,35 @@ void OpticsParser::Parser::parseHeaderLine(const std::string & line,
     parseNFRCID(line, product);
 }
 
+OpticsParser::WLData parseDirectMeasurementLine(std::vector<double> const & values)
+{
+    double wl = values[0];
+    double tf = values[1];
+    double tb = tf;
+    double rf = values[2];
+    double rb = values[3];
+    OpticsParser::MeasurementComponent directValues{tf, tb, rf, rb};
+    return OpticsParser::WLData(wl, directValues);
+}
+
+OpticsParser::WLData parseDiffuseMeasurementLine(std::vector<double> const & values)
+{
+    double wl = values[0];
+    double tfDirect = values[1];
+    double tbDirect = values[3];
+    double rfDirect = values[5];
+    double rbDirect = values[7];
+    double tfDiffuse = values[2];
+    double tbDiffuse = values[4];
+    double rfDiffuse = values[6];
+    double rbDiffuse = values[8];
+
+    OpticsParser::MeasurementComponent directValues{tfDirect, tbDirect, rfDirect, rbDirect};
+    OpticsParser::MeasurementComponent diffuseValues{tfDiffuse, tbDiffuse, rfDiffuse, rbDiffuse};
+    return OpticsParser::WLData(wl, directValues, diffuseValues);
+}
+
+
 void OpticsParser::Parser::parseMeasurementLine(const std::string & line, ProductData & product)
 {
     std::vector<double> result;
@@ -61,14 +90,24 @@ void OpticsParser::Parser::parseMeasurementLine(const std::string & line, Produc
     for(std::string s; iss >> s;)
         result.push_back(std::stod(s));
 
-    if(result.size() != 4)
+    std::map<size_t, std::function<OpticsParser::WLData(std::vector<double> const &)>>
+      measuredValueToParser;
+    measuredValueToParser[4] = &parseDirectMeasurementLine;
+    measuredValueToParser[9] = &parseDiffuseMeasurementLine;
+
+
+    auto parser = measuredValueToParser.find(result.size());
+
+    if(parser != measuredValueToParser.end())
     {
-        throw std::runtime_error("Measurement contain line with incorrect number of data.");
+        auto parsedValues = parser->second(result);
+        product.measurements.push_back(parsedValues);
     }
-
-    product.measurements.emplace_back(result[0], result[1], result[2], result[3]);
+    else
+    {
+        throw std::runtime_error("Unknown measured data line format.");
+    }
 }
-
 
 
 void OpticsParser::Parser::parseEmissivities(const std::string & line,
@@ -270,11 +309,11 @@ OpticsParser::ProductData parseCheckerToolJson(nlohmann::json const & product_js
     nlohmann::json measured_data_json = product_json.at("measured_data");
 
     product.thickness = measured_data_json.at("thickness").get<double>();
-	if(measured_data_json.count("bulk_properties_override"))
-	{
-            product.conductivity = get_optional_field<double>(
-              measured_data_json.at("bulk_properties_override"), "thermal_conductivity");
-	}
+    if(measured_data_json.count("bulk_properties_override"))
+    {
+        product.conductivity = get_optional_field<double>(
+          measured_data_json.at("bulk_properties_override"), "thermal_conductivity");
+    }
 
     product.IRTransmittance = measured_data_json.at("tir_front").get<double>();
     product.frontEmissivity = measured_data_json.at("emissivity_front").get<double>();
@@ -302,7 +341,8 @@ OpticsParser::ProductData parseCheckerToolJson(nlohmann::json const & product_js
         double t = val.at("tf").get<double>();
         double rf = val.at("rf").get<double>();
         double rb = val.at("rb").get<double>();
-        product.measurements.push_back(OpticsParser::WLData(wl, t, rf, rb));
+        OpticsParser::MeasurementComponent directValues{t, t, rf, rb};
+        product.measurements.push_back(OpticsParser::WLData(wl, directValues));
     }
 
     return product;
@@ -369,7 +409,8 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         double t = val.at("T").get<double>();
         double rf = val.at("Rf").get<double>();
         double rb = val.at("Rb").get<double>();
-        product.measurements.push_back(OpticsParser::WLData(wl, t, rf, rb));
+        OpticsParser::MeasurementComponent directValues{t, t, rf, rb};
+        product.measurements.push_back(OpticsParser::WLData(wl, directValues));
     }
 
     return product;
