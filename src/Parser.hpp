@@ -22,6 +22,16 @@ namespace OpticsParser
         void parseEmissivities(const std::string & line, ProductData & product);
         void parseUnits(const std::string & line, ProductData & product);
         void parseNFRCID(const std::string & line, ProductData & product);
+        void parseAERCID(const std::string & line, ProductData & product);
+
+		void parseBoolPropertyInsideBraces(const std::string & line,
+                                           std::string search,
+                                           std::optional<bool> & property);
+
+		void parseDoublePropertyInsideBraces(const std::string & line,
+                                                   std::string search,
+                                                   std::optional<double> & property);
+
 
         template<typename T>
         void parsePropertyAtTheEnd(const std::string & searchString,

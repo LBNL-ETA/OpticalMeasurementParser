@@ -51,7 +51,11 @@ void OpticsParser::Parser::parseHeaderLine(const std::string & line,
     parseStringPropertyInsideBraces(line, "Substrate Filename", product.substrateFilename);
     parseStringPropertyInsideBraces(line, "Appearance", product.appearance);
     parseStringPropertyInsideBraces(line, "Acceptance", product.acceptance);
+    parseStringPropertyInsideBraces(line, "Extrapolation", product.extrapolation);
+    parseBoolPropertyInsideBraces(line, "Specularity", product.specularity);
+    parseDoublePropertyInsideBraces(line, "Permeability Factor", product.permeabilityFactor);
     parseNFRCID(line, product);
+    parseAERCID(line, product);
 }
 
 OpticsParser::WLData parseDirectMeasurementLine(std::vector<double> const & values)
@@ -184,6 +188,59 @@ void OpticsParser::Parser::parseNFRCID(const std::string & line,
     }
 }
 
+void OpticsParser::Parser::parseAERCID(const std::string & line,
+                                       OpticsParser::ProductData & product)
+{
+    if(line.find("AERC") != std::string::npos)
+    {
+        std::string str = line.substr(line.find("ID:") + 3);
+        auto erasePos = str.find('}');
+        str.erase(erasePos, 1);
+        product.aercID = std::stoi(str);
+    }
+}
+
+void OpticsParser::Parser::parseBoolPropertyInsideBraces(const std::string & line,
+                                                         std::string search,
+                                                         std::optional<bool> & property)
+{
+    std::string val("");
+    parseStringPropertyInsideBraces(line, search, val);
+    if(val.length() > 1)
+    {
+        std::string upperCase = val;
+#pragma warning(push)
+#pragma warning(disable : 4244)
+        std::for_each(upperCase.begin(), upperCase.end(), [](char & c) { c = ::toupper(c); });
+#pragma warning(pop)
+        if(upperCase == "TRUE")
+        {
+            property = true;
+        }
+        else if(upperCase == "FALSE")
+        {
+            property = false;
+        }
+        else
+        {
+            std::stringstream msg;
+            msg << "Unable to convert " << val << " to a boolean when parsing field: " << search;
+            throw std::runtime_error(msg.str());
+        }
+    }
+}
+
+void OpticsParser::Parser::parseDoublePropertyInsideBraces(const std::string & line,
+                                                           std::string search,
+                                                           std::optional<double> & property)
+{
+    std::string val("");
+    parseStringPropertyInsideBraces(line, search, val);
+    if(val.length() > 0)
+    {
+        property = std::stod(val);
+    }
+}
 
 template<typename T>
 std::optional<T> get_optional_field(nlohmann::json const & json, std::string const & field_name)

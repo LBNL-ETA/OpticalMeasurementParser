@@ -10,6 +10,7 @@
 { Coating Name: Generic clear frit }
 { Coated Side: Back }
 { Substrate Filename: CLEAR_6.DAT }
+{ Permeability Factor: 0.0}
 { Extrapolation: Glass }
 { Appearance: Hazy}
 0.250    0.0010    0.0020    0.0060    0.0760    0.0110    0.0870    0.0060    0.1310

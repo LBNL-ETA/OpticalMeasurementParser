@@ -107,4 +107,5 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadDiffuseData)
     EXPECT_EQ(product.acceptance, std::optional<std::string>());
     EXPECT_EQ(product.unitSystem, "SI");
     EXPECT_EQ(product.wavelengthUnit, "Microns");
+    EXPECT_EQ(product.permeabilityFactor, 0.0);
 }

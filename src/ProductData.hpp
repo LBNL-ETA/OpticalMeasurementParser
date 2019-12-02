@@ -86,6 +86,10 @@ namespace OpticsParser
         std::optional<std::string> unitSystem;
         std::optional<std::string> wavelengthUnit;
         std::vector<WLData> measurements;
+        std::optional<std::string> extrapolation;
+        std::optional<int> aercID;
+        std::optional<bool> specularity;
+        std::optional<double> permeabilityFactor;
     };
 
     void to_json(nlohmann::json & j, WLData const & wl);
