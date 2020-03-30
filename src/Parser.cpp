@@ -5,11 +5,10 @@
 #include <nlohmann/json.hpp>
 
 #include "Parser.hpp"
-
-OpticsParser::ProductData OpticsParser::Parser::parseFile(const std::string & inputFile)
+std::shared_ptr<OpticsParser::ProductData> OpticsParser::Parser::parseFile(const std::string & inputFile)
 {
     std::string fileName = inputFile.substr(inputFile.find_last_of("/\\") + 1);
-    ProductData product;
+    std::shared_ptr<OpticsParser::ProductData> product(new OpticsParser::ProductData);
     std::ifstream inFile(inputFile);
     std::string line;
     while(std::getline(inFile, line))
@@ -26,34 +25,34 @@ OpticsParser::ProductData OpticsParser::Parser::parseFile(const std::string & in
             }
         }
     }
-    product.fileName = fileName;
-    // product.token = fileName;
+    product->fileName = fileName;
+    // product->token = fileName;
 
     return product;
 }
 
 void OpticsParser::Parser::parseHeaderLine(const std::string & line,
-                                           OpticsParser::ProductData & product)
+                                           std::shared_ptr<OpticsParser::ProductData> product)
 {
     parseUnits(line, product);
-    parsePropertyAtTheEnd("Thickness", "}", line, product.thickness);
-    parsePropertyAtTheEnd("Conductivity", "}", line, product.conductivity);
-    parsePropertyAtTheEnd("IR Transmittance", "TIR=", line, product.IRTransmittance);
+    parsePropertyAtTheEnd("Thickness", "}", line, product->thickness);
+    parsePropertyAtTheEnd("Conductivity", "}", line, product->conductivity);
+    parsePropertyAtTheEnd("IR Transmittance", "TIR=", line, product->IRTransmittance);
     parseEmissivities(line, product);
-    parseStringPropertyInsideBraces(line, "Product Name", product.productName);
-    parseStringPropertyInsideBraces(line, "Type", product.productType);
-    parseStringPropertyInsideBraces(line, "Ef_Source", product.frontEmissivitySource);
-    parseStringPropertyInsideBraces(line, "Eb_Source", product.backEmissivitySource);
-    parseStringPropertyInsideBraces(line, "Manufacturer", product.manufacturer);
-    parseStringPropertyInsideBraces(line, "Material", product.material);
-    parseStringPropertyInsideBraces(line, "Coating Name", product.coatingName);
-    parseStringPropertyInsideBraces(line, "Coated Side", product.coatedSide);
-    parseStringPropertyInsideBraces(line, "Substrate Filename", product.substrateFilename);
-    parseStringPropertyInsideBraces(line, "Appearance", product.appearance);
-    parseStringPropertyInsideBraces(line, "Acceptance", product.acceptance);
-    parseStringPropertyInsideBraces(line, "Extrapolation", product.extrapolation);
-    parseBoolPropertyInsideBraces(line, "Specularity", product.specularity);
-    parseDoublePropertyInsideBraces(line, "Permeability Factor", product.permeabilityFactor);
+    parseStringPropertyInsideBraces(line, "Product Name", product->productName);
+    parseStringPropertyInsideBraces(line, "Type", product->productType);
+    parseStringPropertyInsideBraces(line, "Ef_Source", product->frontEmissivitySource);
+    parseStringPropertyInsideBraces(line, "Eb_Source", product->backEmissivitySource);
+    parseStringPropertyInsideBraces(line, "Manufacturer", product->manufacturer);
+    parseStringPropertyInsideBraces(line, "Material", product->material);
+    parseStringPropertyInsideBraces(line, "Coating Name", product->coatingName);
+    parseStringPropertyInsideBraces(line, "Coated Side", product->coatedSide);
+    parseStringPropertyInsideBraces(line, "Substrate Filename", product->substrateFilename);
+    parseStringPropertyInsideBraces(line, "Appearance", product->appearance);
+    parseStringPropertyInsideBraces(line, "Acceptance", product->acceptance);
+    parseStringPropertyInsideBraces(line, "Extrapolation", product->extrapolation);
+    parseBoolPropertyInsideBraces(line, "Specularity", product->specularity);
+    parseDoublePropertyInsideBraces(line, "Permeability Factor", product->permeabilityFactor);
     parseNFRCID(line, product);
     parseAERCID(line, product);
 }
@@ -87,7 +86,8 @@ OpticsParser::WLData parseDiffuseMeasurementLine(std::vector<double> const & val
 }
 
 
-void OpticsParser::Parser::parseMeasurementLine(const std::string & line, ProductData & product)
+void OpticsParser::Parser::parseMeasurementLine(const std::string & line,
+                                                std::shared_ptr<OpticsParser::ProductData> product)
 {
     std::vector<double> result;
     std::istringstream iss(line);
@@ -105,7 +105,7 @@ void OpticsParser::Parser::parseMeasurementLine(const std::string & line, Produc
     if(parser != measuredValueToParser.end())
     {
         auto parsedValues = parser->second(result);
-        product.measurements.push_back(parsedValues);
+        product->measurements.push_back(parsedValues);
     }
     else
     {
@@ -115,7 +115,7 @@ void OpticsParser::Parser::parseMeasurementLine(const std::string & line, Produc
 
 
 void OpticsParser::Parser::parseEmissivities(const std::string & line,
-                                             OpticsParser::ProductData & product)
+                                             std::shared_ptr<OpticsParser::ProductData> product)
 {
     if(line.find("Emissivity") != std::string::npos)
     {
@@ -148,12 +148,13 @@ void OpticsParser::Parser::parseEmissivities(const std::string & line,
             eb = result[0];
             ef = result[1];
         }
-        product.frontEmissivity = ef;
-        product.backEmissivity = eb;
+        product->frontEmissivity = ef;
+        product->backEmissivity = eb;
     }
 }
 
-void OpticsParser::Parser::parseUnits(const std::string & line, OpticsParser::ProductData & product)
+void OpticsParser::Parser::parseUnits(const std::string & line,
+                                      std::shared_ptr<OpticsParser::ProductData> product)
 {
     if(line.find("Units, Wavelength Units") != std::string::npos)
     {
@@ -171,32 +172,32 @@ void OpticsParser::Parser::parseUnits(const std::string & line, OpticsParser::Pr
             throw std::runtime_error("Units line has incorrect number of values.");
         }
 
-        product.unitSystem = result[0];
-        product.wavelengthUnit = result[1];
+        product->unitSystem = result[0];
+        product->wavelengthUnit = result[1];
     }
 }
 
 void OpticsParser::Parser::parseNFRCID(const std::string & line,
-                                       OpticsParser::ProductData & product)
+                                       std::shared_ptr<OpticsParser::ProductData> product)
 {
     if(line.find("NFRC") != std::string::npos)
     {
         std::string str = line.substr(line.find("ID:") + 3);
         auto erasePos = str.find('}');
         str.erase(erasePos, 1);
-        product.nfrcid = std::stoi(str);
+        product->nfrcid = std::stoi(str);
     }
 }
 
 void OpticsParser::Parser::parseAERCID(const std::string & line,
-                                       OpticsParser::ProductData & product)
+                                       std::shared_ptr<OpticsParser::ProductData> product)
 {
     if(line.find("AERC") != std::string::npos)
     {
         std::string str = line.substr(line.find("ID:") + 3);
         auto erasePos = str.find('}');
         str.erase(erasePos, 1);
-        product.aercID = std::stoi(str);
+        product->aercID = std::stoi(str);
     }
 }
 
@@ -329,60 +330,60 @@ OpticsParser::ProductData parseCheckerToolJson_OLD(nlohmann::json const & produc
 }
 #endif
 
-OpticsParser::ProductData parseCheckerToolJson(nlohmann::json const & product_json)
+std::shared_ptr<OpticsParser::ProductData> parseCheckerToolJson(nlohmann::json const & product_json)
 {
-    OpticsParser::ProductData product;
-    product.productName = product_json.at("product_name").get<std::string>();
-    product.productType = product_json.at("product_type").get<std::string>();
+    std::shared_ptr<OpticsParser::ProductData> product(new OpticsParser::ProductData);
+    product->productName = product_json.at("product_name").get<std::string>();
+    product->productType = product_json.at("product_type").get<std::string>();
 
-    product.nfrcid = get_optional_field<int>(product_json, "nfrc_id");
-    product.manufacturer = product_json.at("manufacturer").get<std::string>();
+    product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
+    product->manufacturer = product_json.at("manufacturer").get<std::string>();
     if(product_json.count("material_bulk_properties"))
     {
-        product.material =
+        product->material =
           get_optional_field<std::string>(product_json.at("material_bulk_properties"), "name");
     }
 
     if(product_json.count("coating_properties"))
     {
-        product.coatingName =
+        product->coatingName =
           get_optional_field<std::string>(product_json.at("coating_properties"), "coating_name");
-        product.coatedSide =
+        product->coatedSide =
           get_optional_field<std::string>(product_json.at("coating_properties"), "coated_side");
     }
 
     if(product_json.count("interlayer_properties"))
     {
-        product.substrateFilename = get_optional_field<std::string>(
+        product->substrateFilename = get_optional_field<std::string>(
           product_json.at("interlayer_properties"), "interlayer_name");
     }
 
 
-    product.appearance = get_optional_field<std::string>(product_json, "appearance");
-    product.acceptance = get_optional_field<std::string>(product_json, "acceptance");
-    product.fileName = get_optional_field<std::string>(product_json, "filename");
-    product.unitSystem = get_optional_field<std::string>(product_json, "unit_system");
+    product->appearance = get_optional_field<std::string>(product_json, "appearance");
+    product->acceptance = get_optional_field<std::string>(product_json, "acceptance");
+    product->fileName = get_optional_field<std::string>(product_json, "filename");
+    product->unitSystem = get_optional_field<std::string>(product_json, "unit_system");
 
     nlohmann::json measured_data_json = product_json.at("measured_data");
 
-    product.thickness = measured_data_json.at("thickness").get<double>();
+    product->thickness = measured_data_json.at("thickness").get<double>();
     if(measured_data_json.count("bulk_properties_override"))
     {
-        product.conductivity = get_optional_field<double>(
+        product->conductivity = get_optional_field<double>(
           measured_data_json.at("bulk_properties_override"), "thermal_conductivity");
     }
 
-    product.IRTransmittance = measured_data_json.at("tir_front").get<double>();
-    product.frontEmissivity = measured_data_json.at("emissivity_front").get<double>();
-    product.backEmissivity = measured_data_json.at("emissivity_back").get<double>();
+    product->IRTransmittance = measured_data_json.at("tir_front").get<double>();
+    product->frontEmissivity = measured_data_json.at("emissivity_front").get<double>();
+    product->backEmissivity = measured_data_json.at("emissivity_back").get<double>();
 
-    product.frontEmissivitySource =
+    product->frontEmissivitySource =
       get_optional_field<std::string>(measured_data_json, "emissivity_front_source");
 
-    product.backEmissivitySource =
+    product->backEmissivitySource =
       get_optional_field<std::string>(measured_data_json, "emissivity_back_source");
 
-    product.backEmissivitySource =
+    product->backEmissivitySource =
       get_optional_field<std::string>(measured_data_json, "wavelength_units");
 
     nlohmann::json spectral_data_json = measured_data_json.at("spectral_data");
@@ -399,58 +400,58 @@ OpticsParser::ProductData parseCheckerToolJson(nlohmann::json const & product_js
         double rf = val.at("rf").get<double>();
         double rb = val.at("rb").get<double>();
         OpticsParser::MeasurementComponent directValues{t, t, rf, rb};
-        product.measurements.push_back(OpticsParser::WLData(wl, directValues));
+        product->measurements.push_back(OpticsParser::WLData(wl, directValues));
     }
 
     return product;
 }
 
 
-OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
+std::shared_ptr<OpticsParser::ProductData> parseIGSDBJson(nlohmann::json const & product_json)
 {
-    OpticsParser::ProductData product;
-    product.productName = product_json.at("name").get<std::string>();
-    product.productType = product_json.at("type").get<std::string>();
+    std::shared_ptr<OpticsParser::ProductData> product(new OpticsParser::ProductData);
+    product->productName = product_json.at("name").get<std::string>();
+    product->productType = product_json.at("type").get<std::string>();
 
-    product.nfrcid = get_optional_field<int>(product_json, "nfrc_id");
-    product.manufacturer = product_json.at("manufacturer_name").get<std::string>();
-    product.material = get_optional_field<std::string>(product_json, "material_bulk_properties");
+    product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
+    product->manufacturer = product_json.at("manufacturer_name").get<std::string>();
+    product->material = get_optional_field<std::string>(product_json, "material_bulk_properties");
 
     if(product_json.count("coating_properties"))
     {
-        product.coatingName =
+        product->coatingName =
           get_optional_field<std::string>(product_json.at("coating_properties"), "coating_name");
-        product.coatedSide =
+        product->coatedSide =
           get_optional_field<std::string>(product_json.at("coating_properties"), "coated_side");
     }
 
     if(product_json.count("interlayer_properties"))
     {
-        product.substrateFilename = get_optional_field<std::string>(
+        product->substrateFilename = get_optional_field<std::string>(
           product_json.at("interlayer_properties"), "interlayer_name");
     }
 
 
-    product.appearance = get_optional_field<std::string>(product_json, "appearance");
-    product.acceptance = get_optional_field<std::string>(product_json, "acceptance");
-    product.fileName = get_optional_field<std::string>(product_json, "filename");
-    product.unitSystem = get_optional_field<std::string>(product_json, "unit_system");
+    product->appearance = get_optional_field<std::string>(product_json, "appearance");
+    product->acceptance = get_optional_field<std::string>(product_json, "acceptance");
+    product->fileName = get_optional_field<std::string>(product_json, "filename");
+    product->unitSystem = get_optional_field<std::string>(product_json, "unit_system");
 
     nlohmann::json measured_data_json = product_json.at("measured_data");
 
-    product.thickness = measured_data_json.at("thickness").get<double>();
-    product.conductivity = measured_data_json.at("conductivity").get<double>();
-    product.IRTransmittance = measured_data_json.at("tir_front").get<double>();
-    product.frontEmissivity = measured_data_json.at("emissivity_front").get<double>();
-    product.backEmissivity = measured_data_json.at("emissivity_back").get<double>();
+    product->thickness = measured_data_json.at("thickness").get<double>();
+    product->conductivity = measured_data_json.at("conductivity").get<double>();
+    product->IRTransmittance = measured_data_json.at("tir_front").get<double>();
+    product->frontEmissivity = measured_data_json.at("emissivity_front").get<double>();
+    product->backEmissivity = measured_data_json.at("emissivity_back").get<double>();
 
-    product.frontEmissivitySource =
+    product->frontEmissivitySource =
       get_optional_field<std::string>(measured_data_json, "emissivity_front_source");
 
-    product.backEmissivitySource =
+    product->backEmissivitySource =
       get_optional_field<std::string>(measured_data_json, "emissivity_back_source");
 
-    product.backEmissivitySource =
+    product->backEmissivitySource =
       get_optional_field<std::string>(measured_data_json, "wavelength_units");
 
 
@@ -467,13 +468,14 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         double rf = val.at("Rf").get<double>();
         double rb = val.at("Rb").get<double>();
         OpticsParser::MeasurementComponent directValues{t, t, rf, rb};
-        product.measurements.push_back(OpticsParser::WLData(wl, directValues));
+        product->measurements.push_back(OpticsParser::WLData(wl, directValues));
     }
 
     return product;
 }
 
-OpticsParser::ProductData OpticsParser::Parser::parseJSONString(std::string const & json_str)
+std::shared_ptr<OpticsParser::ProductData>
+  OpticsParser::Parser::parseJSONString(std::string const & json_str)
 {
     nlohmann::json product_json = nlohmann::json::parse(json_str);
 
@@ -499,26 +501,27 @@ OpticsParser::ProductData OpticsParser::Parser::parseJSONString(std::string cons
 }
 
 
-OpticsParser::ProductData OpticsParser::Parser::parseJSONFile(std::string const & fname)
+std::shared_ptr<OpticsParser::ProductData>
+  OpticsParser::Parser::parseJSONFile(std::string const & fname)
 {
     std::ifstream fin(fname);
     std::string content((std::istreambuf_iterator<char>(fin)), (std::istreambuf_iterator<char>()));
     return parseJSONString(content);
 }
 
-OpticsParser::ProductData OpticsParser::parseFile(const std::string & inputFile)
+std::shared_ptr<OpticsParser::ProductData> OpticsParser::parseFile(const std::string & inputFile)
 {
     OpticsParser::Parser parser;
     return parser.parseFile(inputFile);
 }
 
-OpticsParser::ProductData OpticsParser::parseJSONString(std::string const & json)
+std::shared_ptr<OpticsParser::ProductData> OpticsParser::parseJSONString(std::string const & json)
 {
     OpticsParser::Parser parser;
     return parser.parseJSONString(json);
 }
 
-OpticsParser::ProductData OpticsParser::parseJSONFile(std::string const & fname)
+std::shared_ptr<OpticsParser::ProductData> OpticsParser::parseJSONFile(std::string const & fname)
 {
     OpticsParser::Parser parser;
     return parser.parseJSONFile(fname);

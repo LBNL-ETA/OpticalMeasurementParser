@@ -35,9 +35,36 @@ namespace OpticsParser
                double rbDirect,
                double rbDiffuse);
 
-          double wavelength;
+        double wavelength;
         MeasurementComponent directComponent;
         std::optional<MeasurementComponent> diffuseComponent;
+    };
+
+    struct NoGeometry
+    {};
+
+    struct VenetianGeometry
+    {
+        double slatWidth;
+        double slatSpacing;
+        double slatCurvature;
+        double numberSegments;
+    };
+
+    struct WovenGeometry
+    {
+        double threadDiameter;
+        double threadSpacing;
+        double shadeThickness;
+    };
+
+    struct ProductData;
+
+    template<typename T>
+    struct CompositionInformation
+    {
+        T geometry;
+        std::shared_ptr<ProductData> material;
     };
 
     struct ProductData
@@ -94,4 +121,10 @@ namespace OpticsParser
 
     void to_json(nlohmann::json & j, WLData const & wl);
     void to_json(nlohmann::json & j, ProductData const & wl);
+
+    template<typename T>
+    struct ComposedProductData : ProductData
+    {
+        CompositionInformation<T> compositionInformation;
+    };
 }   // namespace OpticsParser

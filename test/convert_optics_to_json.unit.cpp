@@ -28,8 +28,8 @@ TEST_F(TestConvertOpticsFile, TestConvertClear3)
     clear_3_path += "/CLEAR_3.DAT";
 
     OpticsParser::Parser parser;
-    OpticsParser::ProductData product = parser.parseFile(clear_3_path);
-    nlohmann::json product_json = product;
+    std::shared_ptr<OpticsParser::ProductData> product = parser.parseFile(clear_3_path);
+    nlohmann::json product_json = *product;
     
     EXPECT_EQ(product_json.at("nfrc_id").get<int>(), 102);
     EXPECT_EQ(product_json.at("product_name").get<std::string>(), "Generic Clear Glass");
@@ -63,8 +63,8 @@ TEST_F(TestConvertOpticsFile, TestConvertClear3)
     EXPECT_EQ(measurements[110].at("rb").get<double>(), 0.068);
 
 /*
-    EXPECT_EQ(product.frontEmissivitySource, "Material");
-    EXPECT_EQ(product.backEmissivitySource, "Material");
+    EXPECT_EQ(product->frontEmissivitySource, "Material");
+    EXPECT_EQ(product->backEmissivitySource, "Material");
 */
 
     EXPECT_EQ(product_json.at("manufacturer").get<std::string>(), "Generic");

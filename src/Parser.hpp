@@ -12,17 +12,17 @@ namespace OpticsParser
     class Parser
     {
     public:
-        ProductData parseFile(const std::string & inputFile);
-        ProductData parseJSONString(std::string const & json);
-        ProductData parseJSONFile(std::string const & fname);
+        std::shared_ptr<ProductData> parseFile(const std::string & inputFile);
+        std::shared_ptr<ProductData> parseJSONString(std::string const & json);
+        std::shared_ptr<ProductData> parseJSONFile(std::string const & fname);
 
     private:
-        void parseHeaderLine(const std::string & line, ProductData & product);
-        void parseMeasurementLine(const std::string & line, ProductData & product);
-        void parseEmissivities(const std::string & line, ProductData & product);
-        void parseUnits(const std::string & line, ProductData & product);
-        void parseNFRCID(const std::string & line, ProductData & product);
-        void parseAERCID(const std::string & line, ProductData & product);
+        void parseHeaderLine(const std::string & line, std::shared_ptr<ProductData> product);
+        void parseMeasurementLine(const std::string & line, std::shared_ptr<ProductData> product);
+        void parseEmissivities(const std::string & line, std::shared_ptr<ProductData> product);
+        void parseUnits(const std::string & line, std::shared_ptr<ProductData> product);
+        void parseNFRCID(const std::string & line, std::shared_ptr<ProductData> product);
+        void parseAERCID(const std::string & line, std::shared_ptr<ProductData> product);
 
 		void parseBoolPropertyInsideBraces(const std::string & line,
                                            std::string search,
@@ -69,7 +69,7 @@ namespace OpticsParser
         }
     };
 
-    ProductData parseFile(const std::string & inputFile);
-    ProductData parseJSONString(std::string const & json);
-    ProductData parseJSONFile(std::string const & fname);
+    std::shared_ptr<ProductData> parseFile(const std::string & inputFile);
+    std::shared_ptr<ProductData> parseJSONString(std::string const & json);
+    std::shared_ptr<ProductData> parseJSONFile(std::string const & fname);
 }   // namespace OpticsParser
