@@ -40,19 +40,28 @@ namespace OpticsParser
         std::optional<MeasurementComponent> diffuseComponent;
     };
 
-    struct NoGeometry
-    {};
-
-    struct VenetianGeometry
+    struct ProductGeometry
     {
+        ProductGeometry() = default;
+        virtual ~ProductGeometry() = default;
+	};
+
+    struct VenetianGeometry : ProductGeometry
+    {
+        VenetianGeometry(double slatWidth,
+                         double slatSpacing,
+                         double slatCurvature,
+                         int numberSegments);
+
         double slatWidth;
         double slatSpacing;
         double slatCurvature;
-        double numberSegments;
+        int numberSegments;
     };
 
-    struct WovenGeometry
+    struct WovenGeometry : ProductGeometry
     {
+        WovenGeometry(double threadDiameter, double threadSpacing, double shadeThickness);
         double threadDiameter;
         double threadSpacing;
         double shadeThickness;
@@ -60,16 +69,17 @@ namespace OpticsParser
 
     struct ProductData;
 
-    template<typename T>
     struct CompositionInformation
     {
-        T geometry;
         std::shared_ptr<ProductData> material;
+        std::shared_ptr<ProductGeometry> geometry;
     };
 
     struct ProductData
     {
         ProductData() = default;
+        ProductData(ProductData const & other) = default;
+        virtual ~ProductData() = default;
         ProductData(std::string const & productName,
                     std::string const & productType,
                     int nfrcid,
@@ -95,11 +105,11 @@ namespace OpticsParser
         std::string productName;
         std::string productType;
         std::optional<int> nfrcid;
-        double thickness;
+        std::optional<double> thickness;
         std::optional<double> conductivity;
-        double IRTransmittance;
-        double frontEmissivity;
-        double backEmissivity;
+        std::optional<double> IRTransmittance;
+        std::optional<double> frontEmissivity;
+        std::optional<double> backEmissivity;
         std::optional<std::string> frontEmissivitySource;
         std::optional<std::string> backEmissivitySource;
         std::string manufacturer;
@@ -112,7 +122,7 @@ namespace OpticsParser
         std::optional<std::string> fileName;
         std::optional<std::string> unitSystem;
         std::optional<std::string> wavelengthUnit;
-        std::vector<WLData> measurements;
+        std::optional<std::vector<WLData>> measurements;
         std::optional<std::string> extrapolation;
         std::optional<int> aercID;
         std::optional<bool> specularity;
@@ -122,9 +132,11 @@ namespace OpticsParser
     void to_json(nlohmann::json & j, WLData const & wl);
     void to_json(nlohmann::json & j, ProductData const & wl);
 
-    template<typename T>
     struct ComposedProductData : ProductData
     {
-        CompositionInformation<T> compositionInformation;
+        ComposedProductData(ProductData const & product,
+                            std::shared_ptr<CompositionInformation> composition);
+
+        std::shared_ptr<CompositionInformation> compositionInformation;
     };
 }   // namespace OpticsParser

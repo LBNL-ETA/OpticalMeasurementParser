@@ -50,12 +50,12 @@ TEST_F(TestFile1, Test1)
     OpticsParser::Parser parser;
     std::shared_ptr<OpticsParser::ProductData> product = parser.parseFile(inputFile);
 
-    EXPECT_NEAR(3.048, product->thickness, 1e-6);
+    EXPECT_NEAR(3.048, product->thickness.value(), 1e-6);
     EXPECT_NEAR(1, product->conductivity.value(), 1e-6);
-    EXPECT_NEAR(0, product->IRTransmittance, 1e-6);
-    EXPECT_NEAR(0.84, product->frontEmissivity, 1e-6);
-    EXPECT_NEAR(0.84, product->backEmissivity, 1e-6);
-    EXPECT_EQ(102, product->nfrcid);
+    EXPECT_NEAR(0, product->IRTransmittance.value(), 1e-6);
+    EXPECT_NEAR(0.84, product->frontEmissivity.value(), 1e-6);
+    EXPECT_NEAR(0.84, product->backEmissivity.value(), 1e-6);
+    EXPECT_EQ(102, product->nfrcid.value());
     EXPECT_EQ("Generic Clear Glass", product->productName);
     EXPECT_EQ("Monolithic", product->productType);
 
@@ -67,16 +67,17 @@ TEST_F(TestFile1, Test1)
                                                      {0.320, 0.1000, 0.0470, 0.0480},
                                                      {0.325, 0.2180, 0.0490, 0.0500}};
 
-    EXPECT_EQ(correctResults.size(), product->measurements.size());
+    EXPECT_EQ(correctResults.size(), product->measurements.value().size());
     for(auto i = 0u; i < correctResults.size(); ++i)
     {
-        EXPECT_NEAR(correctResults[i].wavelength, product->measurements[i].wavelength, 1e-6);
         EXPECT_NEAR(
-          correctResults[i].directComponent.tf, product->measurements[i].directComponent.tf, 1e-6);
+          correctResults[i].wavelength, product->measurements.value()[i].wavelength, 1e-6);
         EXPECT_NEAR(
-          correctResults[i].directComponent.rf, product->measurements[i].directComponent.rf, 1e-6);
+          correctResults[i].directComponent.tf, product->measurements.value()[i].directComponent.tf, 1e-6);
         EXPECT_NEAR(
-          correctResults[i].directComponent.rb, product->measurements[i].directComponent.rb, 1e-6);
+          correctResults[i].directComponent.rf, product->measurements.value()[i].directComponent.rf, 1e-6);
+        EXPECT_NEAR(
+          correctResults[i].directComponent.rb, product->measurements.value()[i].directComponent.rb, 1e-6);
     }
 }
 
@@ -86,12 +87,12 @@ TEST_F(TestFile1, TestParseFile)
     OpticsParser::Parser parser;
     std::shared_ptr<OpticsParser::ProductData> productData = parser.parseFile(inputFile);
 
-    EXPECT_NEAR(3.048, productData->thickness, 1e-6);
+    EXPECT_NEAR(3.048, productData->thickness.value(), 1e-6);
     EXPECT_NEAR(1, productData->conductivity.value(), 1e-6);
-    EXPECT_NEAR(0, productData->IRTransmittance, 1e-6);
-    EXPECT_NEAR(0.84, productData->frontEmissivity, 1e-6);
-    EXPECT_NEAR(0.84, productData->backEmissivity, 1e-6);
-    EXPECT_EQ(102, productData->nfrcid);
+    EXPECT_NEAR(0, productData->IRTransmittance.value(), 1e-6);
+    EXPECT_NEAR(0.84, productData->frontEmissivity.value(), 1e-6);
+    EXPECT_NEAR(0.84, productData->backEmissivity.value(), 1e-6);
+    EXPECT_EQ(102, productData->nfrcid.value());
     EXPECT_EQ("Generic Clear Glass", productData->productName);
     EXPECT_EQ("Monolithic", productData->productType);
     std::vector<OpticsParser::WLData> correctResults{{0.300, 0.0020, 0.0470, 0.0480},
@@ -101,18 +102,18 @@ TEST_F(TestFile1, TestParseFile)
                                                      {0.320, 0.1000, 0.0470, 0.0480},
                                                      {0.325, 0.2180, 0.0490, 0.0500}};
 
-    EXPECT_EQ(correctResults.size(), productData->measurements.size());
+    EXPECT_EQ(correctResults.size(), productData->measurements.value().size());
     for(auto i = 0u; i < correctResults.size(); ++i)
     {
-        EXPECT_NEAR(correctResults[i].wavelength, productData->measurements[i].wavelength, 1e-6);
+        EXPECT_NEAR(correctResults[i].wavelength, productData->measurements.value()[i].wavelength, 1e-6);
         EXPECT_NEAR(correctResults[i].directComponent.tf,
-                    productData->measurements[i].directComponent.tf,
+                    productData->measurements.value()[i].directComponent.tf,
                     1e-6);
         EXPECT_NEAR(correctResults[i].directComponent.rf,
-                    productData->measurements[i].directComponent.rf,
+                    productData->measurements.value()[i].directComponent.rf,
                     1e-6);
         EXPECT_NEAR(correctResults[i].directComponent.rb,
-                    productData->measurements[i].directComponent.rb,
+                    productData->measurements.value()[i].directComponent.rb,
                     1e-6);
     }
 }

@@ -5,10 +5,12 @@
 #include <nlohmann/json.hpp>
 
 #include "Parser.hpp"
-std::shared_ptr<OpticsParser::ProductData> OpticsParser::Parser::parseFile(const std::string & inputFile)
+std::shared_ptr<OpticsParser::ProductData>
+  OpticsParser::Parser::parseFile(const std::string & inputFile)
 {
     std::string fileName = inputFile.substr(inputFile.find_last_of("/\\") + 1);
     std::shared_ptr<OpticsParser::ProductData> product(new OpticsParser::ProductData);
+    product->measurements = std::vector<OpticsParser::WLData>();
     std::ifstream inFile(inputFile);
     std::string line;
     while(std::getline(inFile, line))
@@ -102,10 +104,12 @@ void OpticsParser::Parser::parseMeasurementLine(const std::string & line,
 
     auto parser = measuredValueToParser.find(result.size());
 
+    std::vector<OpticsParser::WLData> measurements;
+
     if(parser != measuredValueToParser.end())
     {
         auto parsedValues = parser->second(result);
-        product->measurements.push_back(parsedValues);
+        product->measurements.value().push_back(parsedValues);
     }
     else
     {
@@ -249,7 +253,11 @@ std::optional<T> get_optional_field(nlohmann::json const & json, std::string con
     std::optional<T> data;
     if(json.count(field_name))
     {
-        data = json.at(field_name).get<T>();
+        auto field = json.at(field_name);
+        if(!field.is_null())
+        {
+            data = json.at(field_name).get<T>();
+        }
     }
     return data;
 }
@@ -366,16 +374,17 @@ std::shared_ptr<OpticsParser::ProductData> parseCheckerToolJson(nlohmann::json c
 
     nlohmann::json measured_data_json = product_json.at("measured_data");
 
-    product->thickness = measured_data_json.at("thickness").get<double>();
+    product->thickness = get_optional_field<double>(
+      measured_data_json, "thickness");   // measured_data_json.at("thickness").get<double>();
     if(measured_data_json.count("bulk_properties_override"))
     {
         product->conductivity = get_optional_field<double>(
           measured_data_json.at("bulk_properties_override"), "thermal_conductivity");
     }
 
-    product->IRTransmittance = measured_data_json.at("tir_front").get<double>();
-    product->frontEmissivity = measured_data_json.at("emissivity_front").get<double>();
-    product->backEmissivity = measured_data_json.at("emissivity_back").get<double>();
+    product->IRTransmittance = get_optional_field<double>(measured_data_json, "tir_front");
+    product->frontEmissivity = get_optional_field<double>(measured_data_json, "emissivity_front");
+    product->backEmissivity = get_optional_field<double>(measured_data_json, "emissivity_back");
 
     product->frontEmissivitySource =
       get_optional_field<std::string>(measured_data_json, "emissivity_front_source");
@@ -386,28 +395,38 @@ std::shared_ptr<OpticsParser::ProductData> parseCheckerToolJson(nlohmann::json c
     product->backEmissivitySource =
       get_optional_field<std::string>(measured_data_json, "wavelength_units");
 
-    nlohmann::json spectral_data_json = measured_data_json.at("spectral_data");
-    nlohmann::json wavelength_data_json =
-      spectral_data_json.at("angle_block")[0].at("wavelength_data");
+    std::vector<OpticsParser::WLData> measurements;
 
-    for(nlohmann::json::iterator itr = wavelength_data_json.begin();
-        itr != wavelength_data_json.end();
-        ++itr)
+    nlohmann::json spectral_data_json = measured_data_json.at("spectral_data");
+    if(!spectral_data_json.is_null())
     {
-        auto val = itr.value();
-        double wl = val.at("w").get<double>();
-        double t = val.at("tf").get<double>();
-        double rf = val.at("rf").get<double>();
-        double rb = val.at("rb").get<double>();
-        OpticsParser::MeasurementComponent directValues{t, t, rf, rb};
-        product->measurements.push_back(OpticsParser::WLData(wl, directValues));
+        nlohmann::json wavelength_data_json =
+          spectral_data_json.at("angle_block")[0].at("wavelength_data");
+
+        for(nlohmann::json::iterator itr = wavelength_data_json.begin();
+            itr != wavelength_data_json.end();
+            ++itr)
+        {
+            auto val = itr.value();
+            double wl = val.at("w").get<double>();
+            double t = val.at("tf").get<double>();
+            double rf = val.at("rf").get<double>();
+            double rb = val.at("rb").get<double>();
+            OpticsParser::MeasurementComponent directValues{t, t, rf, rb};
+            measurements.push_back(OpticsParser::WLData(wl, directValues));
+        }
+    }
+    if(!measurements.empty())
+    {
+        product->measurements = measurements;
     }
 
     return product;
 }
 
 
-std::shared_ptr<OpticsParser::ProductData> parseIGSDBJson(nlohmann::json const & product_json)
+std::shared_ptr<OpticsParser::ProductData>
+  parseIGSDBJsonUncomposedProduct(nlohmann::json const & product_json)
 {
     std::shared_ptr<OpticsParser::ProductData> product(new OpticsParser::ProductData);
     product->productName = product_json.at("name").get<std::string>();
@@ -439,11 +458,11 @@ std::shared_ptr<OpticsParser::ProductData> parseIGSDBJson(nlohmann::json const &
 
     nlohmann::json measured_data_json = product_json.at("measured_data");
 
-    product->thickness = measured_data_json.at("thickness").get<double>();
-    product->conductivity = measured_data_json.at("conductivity").get<double>();
-    product->IRTransmittance = measured_data_json.at("tir_front").get<double>();
-    product->frontEmissivity = measured_data_json.at("emissivity_front").get<double>();
-    product->backEmissivity = measured_data_json.at("emissivity_back").get<double>();
+    product->thickness = get_optional_field<double>(measured_data_json, "thickness");
+    product->conductivity = get_optional_field<double>(measured_data_json, "conductivity");
+    product->IRTransmittance = get_optional_field<double>(measured_data_json, "tir_front");
+    product->frontEmissivity = get_optional_field<double>(measured_data_json, "emissivity_front");
+    product->backEmissivity = get_optional_field<double>(measured_data_json, "emissivity_back");
 
     product->frontEmissivitySource =
       get_optional_field<std::string>(measured_data_json, "emissivity_front_source");
@@ -456,22 +475,105 @@ std::shared_ptr<OpticsParser::ProductData> parseIGSDBJson(nlohmann::json const &
 
 
     nlohmann::json spectral_data_json = product_json.at("spectral_data");
-    nlohmann::json wavelength_data_json = spectral_data_json.at("spectral_data");
-
-    for(nlohmann::json::iterator itr = wavelength_data_json.begin();
-        itr != wavelength_data_json.end();
-        ++itr)
+    if(!spectral_data_json.is_null())
     {
-        auto val = itr.value();
-        double wl = val.at("wavelength").get<double>();
-        double t = val.at("T").get<double>();
-        double rf = val.at("Rf").get<double>();
-        double rb = val.at("Rb").get<double>();
-        OpticsParser::MeasurementComponent directValues{t, t, rf, rb};
-        product->measurements.push_back(OpticsParser::WLData(wl, directValues));
-    }
+        nlohmann::json wavelength_data_json = spectral_data_json.at("spectral_data");
 
+        std::vector<OpticsParser::WLData> measurements;
+
+        for(nlohmann::json::iterator itr = wavelength_data_json.begin();
+            itr != wavelength_data_json.end();
+            ++itr)
+        {
+            auto val = itr.value();
+            double wl = val.at("wavelength").get<double>();
+            double t = val.at("T").get<double>();
+            double rf = val.at("Rf").get<double>();
+            double rb = val.at("Rb").get<double>();
+            OpticsParser::MeasurementComponent directValues{t, t, rf, rb};
+            measurements.push_back(OpticsParser::WLData(wl, directValues));
+        }
+        if(!measurements.empty())
+        {
+            product->measurements = measurements;
+        }
+    }
     return product;
+}
+
+std::shared_ptr<OpticsParser::ProductGeometry>
+  parseVenetianGeometry(nlohmann::json const & geometry_json)
+{
+    auto slatWidth = geometry_json.at("slat_width").get<double>();
+    auto slatSpacing = geometry_json.at("slat_spacing").get<double>();
+    auto slatCurvature = geometry_json.at("slat_curvature").get<double>();
+    auto numberSegments = geometry_json.at("number_segments").get<int>();
+
+    return std::shared_ptr<OpticsParser::ProductGeometry>(
+      new OpticsParser::VenetianGeometry(slatWidth, slatSpacing, slatCurvature, numberSegments));
+}
+
+std::shared_ptr<OpticsParser::ProductGeometry>
+  parseWovenGeometry(nlohmann::json const & geometry_json)
+{
+    auto threadDiameter = geometry_json.at("thread_diameter").get<double>();
+    auto threadSpacing = geometry_json.at("thread_spacing").get<double>();
+    auto shadeThickness = geometry_json.at("shade_thickness").get<double>();
+
+    return std::shared_ptr<OpticsParser::ProductGeometry>(
+      new OpticsParser::WovenGeometry(threadDiameter, threadSpacing, shadeThickness));
+}
+
+std::shared_ptr<OpticsParser::ProductGeometry> parseGeometry(std::string const & subtype,
+                                                             nlohmann::json const & geometry_json)
+{
+    std::map<std::string,
+             std::function<std::shared_ptr<OpticsParser::ProductGeometry>(nlohmann::json const &)>>
+      mapping;
+
+    mapping["venetian"] = &parseVenetianGeometry;
+    mapping["woven"] = &parseWovenGeometry;
+
+    auto itr = mapping.find(subtype);
+    if(itr != mapping.end())
+    {
+        return itr->second(geometry_json);
+    }
+    else
+    {
+        std::stringstream msg;
+        msg << "Subtype " << subtype << " geometry not yet supported.";
+        throw std::runtime_error(msg.str());
+    }
+}
+
+std::shared_ptr<OpticsParser::ProductData>
+  parseIGSDBJsonComposedProduct(nlohmann::json const & product_json)
+{
+    auto subtype = product_json.at("subtype").get<std::string>();
+    auto composition_information = product_json.at("composition_information");
+    auto product_material = composition_information.at("materials")[0];
+    auto product_geometry = composition_information.at("geometry");
+    auto material = parseIGSDBJsonUncomposedProduct(product_material);
+    auto geometry = parseGeometry(subtype, product_geometry);
+    std::shared_ptr<OpticsParser::CompositionInformation> compositionInformation(
+      new OpticsParser::CompositionInformation{material, geometry});
+    auto product = parseIGSDBJsonUncomposedProduct(product_json);
+    std::shared_ptr<OpticsParser::ProductData> composedProduct(
+      new OpticsParser::ComposedProductData(*product, compositionInformation));
+    return composedProduct;
+}
+
+std::shared_ptr<OpticsParser::ProductData> parseIGSDBJson(nlohmann::json const & product_json)
+{
+    if(product_json.count("composition_information"))
+    {
+        return parseIGSDBJsonComposedProduct(product_json);
+    }
+    else
+    {
+        return parseIGSDBJsonUncomposedProduct(product_json);
+    }
 }
 
 std::shared_ptr<OpticsParser::ProductData>

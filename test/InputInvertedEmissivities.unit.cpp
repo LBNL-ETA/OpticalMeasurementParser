@@ -50,12 +50,12 @@ TEST_F(TestInvertedEmissivities, Test1)
     OpticsParser::Parser parser;
     std::shared_ptr<OpticsParser::ProductData> product = parser.parseFile(inputFile);
 
-    EXPECT_NEAR(3.048, product->thickness, 1e-6);
+    EXPECT_NEAR(3.048, product->thickness.value(), 1e-6);
     EXPECT_NEAR(1, product->conductivity.value(), 1e-6);
-    EXPECT_NEAR(0, product->IRTransmittance, 1e-6);
-    EXPECT_NEAR(0.84, product->frontEmissivity, 1e-6);
-    EXPECT_NEAR(0.5, product->backEmissivity, 1e-6);
-    EXPECT_EQ(102, product->nfrcid);
+    EXPECT_NEAR(0, product->IRTransmittance.value(), 1e-6);
+    EXPECT_NEAR(0.84, product->frontEmissivity.value(), 1e-6);
+    EXPECT_NEAR(0.5, product->backEmissivity.value(), 1e-6);
+    EXPECT_EQ(102, product->nfrcid.value());
     EXPECT_EQ("", product->productName);
     EXPECT_EQ("Monolithic", product->productType);
 
@@ -66,15 +66,15 @@ TEST_F(TestInvertedEmissivities, Test1)
                                                      {0.320, 0.1000, 0.0470, 0.0480},
                                                      {0.325, 0.2180, 0.0490, 0.0500}};
 
-    EXPECT_EQ(correctResults.size(), product->measurements.size());
+    EXPECT_EQ(correctResults.size(), product->measurements.value().size());
     for(auto i = 0u; i < correctResults.size(); ++i)
     {
-        EXPECT_NEAR(correctResults[i].wavelength, product->measurements[i].wavelength, 1e-6);
+        EXPECT_NEAR(correctResults[i].wavelength, product->measurements.value()[i].wavelength, 1e-6);
         EXPECT_NEAR(
-          correctResults[i].directComponent.tf, product->measurements[i].directComponent.tf, 1e-6);
+          correctResults[i].directComponent.tf, product->measurements.value()[i].directComponent.tf, 1e-6);
         EXPECT_NEAR(
-          correctResults[i].directComponent.rf, product->measurements[i].directComponent.rf, 1e-6);
+          correctResults[i].directComponent.rf, product->measurements.value()[i].directComponent.rf, 1e-6);
         EXPECT_NEAR(
-          correctResults[i].directComponent.rb, product->measurements[i].directComponent.rb, 1e-6);
+          correctResults[i].directComponent.rb, product->measurements.value()[i].directComponent.rb, 1e-6);
     }
 }

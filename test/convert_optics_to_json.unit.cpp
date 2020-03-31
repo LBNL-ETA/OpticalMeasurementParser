@@ -63,8 +63,8 @@ TEST_F(TestConvertOpticsFile, TestConvertClear3)
     EXPECT_EQ(measurements[110].at("rb").get<double>(), 0.068);
 
 /*
-    EXPECT_EQ(product->frontEmissivitySource, "Material");
-    EXPECT_EQ(product->backEmissivitySource, "Material");
+    EXPECT_EQ(product->frontEmissivitySource.value(), "Material");
+    EXPECT_EQ(product->backEmissivitySource.value(), "Material");
 */
 
     EXPECT_EQ(product_json.at("manufacturer").get<std::string>(), "Generic");

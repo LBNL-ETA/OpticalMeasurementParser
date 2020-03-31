@@ -30,22 +30,22 @@ TEST_F(TestLoadJSONFromDisk, TestLoadClear3JSON)
     clear_3_path /= "CLEAR_3.json";
 
     std::shared_ptr<OpticsParser::ProductData> product = OpticsParser::parseJSONFile(clear_3_path.string());
-//    EXPECT_EQ(product->nfrcid, 102);
+//    EXPECT_EQ(product->nfrcid.value(), 102);
     EXPECT_EQ(product->productName, "Generic Clear Glass");
     EXPECT_EQ(product->productType, "monolithic");
-    EXPECT_EQ(product->thickness, 3.048);
+    EXPECT_EQ(product->thickness.value(), 3.048);
     EXPECT_EQ(product->conductivity, 1.0);
-    EXPECT_EQ(product->IRTransmittance, 0.0);
-    EXPECT_EQ(product->frontEmissivity, 0.84);
-    EXPECT_EQ(product->backEmissivity, 0.84);
-    EXPECT_EQ(product->measurements.size(), 111);
-    EXPECT_EQ(product->measurements[0].wavelength, 0.3);
-    EXPECT_EQ(product->measurements[0].T, 0.002);
-    EXPECT_EQ(product->measurements[0].frontR, 0.047);
-    EXPECT_EQ(product->measurements[0].backR, 0.048);
-    EXPECT_EQ(product->measurements[110].wavelength, 2.5);
-    EXPECT_EQ(product->measurements[110].T, 0.822);
-    EXPECT_EQ(product->measurements[110].frontR, 0.068);
-    EXPECT_EQ(product->measurements[110].backR, 0.068);
+    EXPECT_EQ(product->IRTransmittance.value(), 0.0);
+    EXPECT_EQ(product->frontEmissivity.value(), 0.84);
+    EXPECT_EQ(product->backEmissivity.value(), 0.84);
+    EXPECT_EQ(product->measurements.value().size(), 111);
+    EXPECT_EQ(product->measurements.value()[0].wavelength, 0.3);
+    EXPECT_EQ(product->measurements.value()[0].T, 0.002);
+    EXPECT_EQ(product->measurements.value()[0].frontR, 0.047);
+    EXPECT_EQ(product->measurements.value()[0].backR, 0.048);
+    EXPECT_EQ(product->measurements.value()[110].wavelength, 2.5);
+    EXPECT_EQ(product->measurements.value()[110].T, 0.822);
+    EXPECT_EQ(product->measurements.value()[110].frontR, 0.068);
+    EXPECT_EQ(product->measurements.value()[110].backR, 0.068);
 }
 #endif

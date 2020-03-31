@@ -5,9 +5,7 @@
 OpticsParser::WLData::WLData(double wavelength,
                              MeasurementComponent directComponent,
                              std::optional<MeasurementComponent> diffuseComponent) :
-    wavelength(wavelength),
-    directComponent(directComponent),
-    diffuseComponent(diffuseComponent)
+    wavelength(wavelength), directComponent(directComponent), diffuseComponent(diffuseComponent)
 {}
 
 OpticsParser::WLData::WLData(double wavelength, double tDirect, double rfDirect, double rbDiffuse) :
@@ -118,21 +116,27 @@ void add_optional(nlohmann::json & j,
 
 void OpticsParser::to_json(nlohmann::json & j, OpticsParser::ProductData const & p)
 {
-    nlohmann::json angle_block{{"incidence_angle", 0},
-                               {"number_wavelengths", p.measurements.size()},
-                               {"wavelength_data", p.measurements}};
-    nlohmann::json spectral_data{{"number_incidence_angles", 1},
-                                 {"angle_block", std::vector<nlohmann::json>{angle_block}}};
+    nlohmann::json spectral_data;
 
-    add_optional(spectral_data, "unit", p.wavelengthUnit);
+    if(p.measurements)
+    {
+        nlohmann::json angle_block{{"incidence_angle", 0},
+                                   {"number_wavelengths", p.measurements.value().size()},
+                                   {"wavelength_data", p.measurements.value()}};
+        spectral_data["number_incidence_angles"] = 1;
+        spectral_data["angle_block"] = std::vector<nlohmann::json>{angle_block};
 
-    nlohmann::json measured_data{{"thickness", p.thickness},
-                                 {"tir_front", p.IRTransmittance},
-                                 {"tir_back", p.IRTransmittance},
-                                 {"emissivity_front", p.frontEmissivity},
-                                 {"emissivity_back", p.backEmissivity},
-                                 {"spectral_data", spectral_data},
-                                 {"is_specular", true}};
+        add_optional(spectral_data, "unit", p.wavelengthUnit);
+    }
+    nlohmann::json measured_data;
+    add_optional(measured_data, "thickness", p.thickness);
+    add_optional(measured_data, "tir_front", p.IRTransmittance);
+    add_optional(measured_data, "tir_back", p.IRTransmittance);
+    add_optional(measured_data, "emissivity_front", p.frontEmissivity);
+    add_optional(measured_data, "emissivity_back", p.backEmissivity);
+    measured_data["spectral_data"] = spectral_data;
+    add_optional(measured_data, "is_specular", p.specularity);
+
 
     if(p.conductivity)
     {
@@ -164,3 +168,26 @@ void OpticsParser::to_json(nlohmann::json & j, OpticsParser::ProductData const &
     add_optional(j, "appearance", p.appearance);
     add_optional(j, "acceptance", p.acceptance);
 }
+
+OpticsParser::ComposedProductData::ComposedProductData(
+  ProductData const & product, std::shared_ptr<CompositionInformation> composition) :
+    ProductData(product), compositionInformation(composition)
+{}
+
+OpticsParser::VenetianGeometry::VenetianGeometry(double slatWidth,
+                                                 double slatSpacing,
+                                                 double slatCurvature,
+                                                 int numberSegments) :
+    slatWidth(slatWidth),
+    slatSpacing(slatSpacing),
+    slatCurvature(slatCurvature),
+    numberSegments(numberSegments)
+{}
+
+OpticsParser::WovenGeometry::WovenGeometry(double threadDiameter,
+                                           double threadSpacing,
+                                           double shadeThickness) :
+    threadDiameter(threadDiameter),
+    threadSpacing(threadSpacing),
+    shadeThickness(shadeThickness)
+{}
