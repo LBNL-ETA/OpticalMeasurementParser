@@ -82,7 +82,7 @@ namespace OpticsParser
         virtual ~ProductData() = default;
         ProductData(std::string const & productName,
                     std::string const & productType,
-                    std::string const & subtype;
+                    std::string const & subtype,
                     int nfrcid,
                     double thickness,
                     double conductivity,
