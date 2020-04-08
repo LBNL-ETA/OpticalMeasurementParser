@@ -44,7 +44,7 @@ namespace OpticsParser
     {
         ProductGeometry() = default;
         virtual ~ProductGeometry() = default;
-	};
+    };
 
     struct VenetianGeometry : ProductGeometry
     {
@@ -105,7 +105,7 @@ namespace OpticsParser
 
         std::string productName;
         std::string productType;
-        std::string subtype;
+        std::optional<std::string> subtype;
         std::optional<int> nfrcid;
         std::optional<double> thickness;
         std::optional<double> conductivity;
