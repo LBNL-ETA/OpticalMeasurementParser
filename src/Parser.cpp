@@ -431,6 +431,7 @@ std::shared_ptr<OpticsParser::ProductData>
     std::shared_ptr<OpticsParser::ProductData> product(new OpticsParser::ProductData);
     product->productName = product_json.at("name").get<std::string>();
     product->productType = product_json.at("type").get<std::string>();
+    product->subtype = get_optional_field<std::string>(product_json, "subtype");
 
     product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
     product->manufacturer = product_json.at("manufacturer_name").get<std::string>();
