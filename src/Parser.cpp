@@ -524,6 +524,19 @@ std::shared_ptr<OpticsParser::ProductGeometry>
       new OpticsParser::WovenGeometry(threadDiameter, threadSpacing, shadeThickness));
 }
 
+std::shared_ptr<OpticsParser::ProductGeometry>
+  parsePerforatedGeometry(nlohmann::json const & geometry_json)
+{
+    double spacingX = geometry_json.at("spacing_x").get<double>();
+    double spacingY = geometry_json.at("spacing_y").get<double>();
+    double dimensionX = geometry_json.at("dimension_x").get<double>();
+    double dimensionY = geometry_json.at("dimension_y").get<double>();
+    std::string perforationType = geometry_json.at("perforation_type").get<std::string>();
+
+    return std::shared_ptr<OpticsParser::ProductGeometry>(new OpticsParser::PerforatedGeometry(
+      spacingX, spacingY, dimensionX, dimensionY, perforationType));
+}
+
 std::shared_ptr<OpticsParser::ProductGeometry> parseGeometry(std::string const & subtype,
                                                              nlohmann::json const & geometry_json)
 {
@@ -533,6 +546,7 @@ std::shared_ptr<OpticsParser::ProductGeometry> parseGeometry(std::string const &
 
     mapping["venetian"] = &parseVenetianGeometry;
     mapping["woven"] = &parseWovenGeometry;
+    mapping["perforated-screen"] = &parsePerforatedGeometry;
 
     auto itr = mapping.find(subtype);
     if(itr != mapping.end())

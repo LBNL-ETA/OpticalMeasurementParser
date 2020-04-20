@@ -187,7 +187,17 @@ OpticsParser::VenetianGeometry::VenetianGeometry(double slatWidth,
 OpticsParser::WovenGeometry::WovenGeometry(double threadDiameter,
                                            double threadSpacing,
                                            double shadeThickness) :
-    threadDiameter(threadDiameter),
-    threadSpacing(threadSpacing),
-    shadeThickness(shadeThickness)
+    threadDiameter(threadDiameter), threadSpacing(threadSpacing), shadeThickness(shadeThickness)
+{}
+
+OpticsParser::PerforatedGeometry::PerforatedGeometry(double spacingX,
+                                                     double spacingY,
+                                                     double dimensionX,
+                                                     double dimensionY,
+                                                     std::string perforationType) :
+    spacingX(spacingX),
+    spacingY(spacingY),
+    dimensionX(dimensionX),
+    dimensionY(dimensionY),
+    perforationType(perforationType)
 {}

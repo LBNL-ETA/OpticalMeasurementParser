@@ -44,7 +44,7 @@ namespace OpticsParser
     {
         ProductGeometry() = default;
         virtual ~ProductGeometry() = default;
-	};
+    };
 
     struct VenetianGeometry : ProductGeometry
     {
@@ -65,6 +65,17 @@ namespace OpticsParser
         double threadDiameter;
         double threadSpacing;
         double shadeThickness;
+    };
+
+    struct PerforatedGeometry : ProductGeometry
+    {
+        PerforatedGeometry(double spacingX, double spacingY, double dimensionX, double dimensionY,
+                           std::string perforationType);
+        double spacingX;
+        double spacingY;
+        double dimensionX;
+        double dimensionY;
+        std::string perforationType;
     };
 
     struct ProductData;
