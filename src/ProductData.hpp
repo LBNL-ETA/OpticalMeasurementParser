@@ -96,6 +96,10 @@ namespace OpticsParser
                     std::string const & manufacturer);
         ProductData(std::string const & productName,
                     std::string const & productType,
+                    std::string const & subType,
+                    std::string const & manufacturer);
+        ProductData(std::string const & productName,
+                    std::string const & productType,
                     std::string const & subtype,
                     int nfrcid,
                     double thickness,
