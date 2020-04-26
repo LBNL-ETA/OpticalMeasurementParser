@@ -32,9 +32,14 @@ OpticsParser::WLData::WLData(double wavelength,
 OpticsParser::ProductData::ProductData(std::string const & productName,
                                        std::string const & productType,
                                        std::string const & manufacturer) :
-    productName(productName),
-    productType(productType),
-    manufacturer(manufacturer)
+    productName(productName), productType(productType), manufacturer(manufacturer)
+{}
+
+OpticsParser::ProductData::ProductData(std::string const & productName,
+                                       std::string const & productType,
+                                       std::string const & subType,
+                                       std::string const & manufacturer) :
+    productName(productName), productType(productType), subType(subType), manufacturer(manufacturer)
 {}
 
 OpticsParser::ProductData::ProductData(std::string const & productName,
