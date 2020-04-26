@@ -93,6 +93,9 @@ namespace OpticsParser
         virtual ~ProductData() = default;
         ProductData(std::string const & productName,
                     std::string const & productType,
+                    std::string const & manufacturer);
+        ProductData(std::string const & productName,
+                    std::string const & productType,
                     std::string const & subtype,
                     int nfrcid,
                     double thickness,
@@ -116,6 +119,7 @@ namespace OpticsParser
 
         std::string productName;
         std::string productType;
+        std::string manufacturer;
         std::optional<std::string> subtype;
         std::optional<int> nfrcid;
         std::optional<double> thickness;
@@ -125,7 +129,6 @@ namespace OpticsParser
         std::optional<double> backEmissivity;
         std::optional<std::string> frontEmissivitySource;
         std::optional<std::string> backEmissivitySource;
-        std::string manufacturer;
         std::optional<std::string> material;
         std::optional<std::string> coatingName;
         std::optional<std::string> coatedSide;

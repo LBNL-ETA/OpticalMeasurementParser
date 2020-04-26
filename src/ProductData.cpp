@@ -31,6 +31,14 @@ OpticsParser::WLData::WLData(double wavelength,
 
 OpticsParser::ProductData::ProductData(std::string const & productName,
                                        std::string const & productType,
+                                       std::string const & manufacturer) :
+    productName(productName),
+    productType(productType),
+    manufacturer(manufacturer)
+{}
+
+OpticsParser::ProductData::ProductData(std::string const & productName,
+                                       std::string const & productType,
                                        std::string const & subtype,
                                        int nfrcid,
                                        double thickness,
