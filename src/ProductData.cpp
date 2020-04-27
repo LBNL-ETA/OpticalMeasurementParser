@@ -189,13 +189,12 @@ OpticsParser::ComposedProductData::ComposedProductData(
     ProductData(product), compositionInformation(composition)
 {}
 
-OpticsParser::VenetianGeometry::VenetianGeometry(double slatWidth,
-                                                 double slatSpacing,
-                                                 double slatCurvature,
-                                                 int numberSegments) :
+OpticsParser::VenetianGeometry::VenetianGeometry(
+  double slatWidth, double slatSpacing, double slatCurvature, double slatTilt, int numberSegments) :
     slatWidth(slatWidth),
     slatSpacing(slatSpacing),
     slatCurvature(slatCurvature),
+    slatTilt(slatTilt),
     numberSegments(numberSegments)
 {}
 

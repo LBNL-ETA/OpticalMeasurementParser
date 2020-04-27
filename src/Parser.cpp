@@ -509,9 +509,9 @@ std::shared_ptr<OpticsParser::ProductGeometry>
     auto slatSpacing = geometry_json.at("slat_spacing").get<double>();
     auto slatCurvature = geometry_json.at("slat_curvature").get<double>();
     auto numberSegments = geometry_json.at("number_segments").get<int>();
-
+    double slatTilt = geometry_json.value("slat_tilt", 0.0);
     return std::shared_ptr<OpticsParser::ProductGeometry>(
-      new OpticsParser::VenetianGeometry(slatWidth, slatSpacing, slatCurvature, numberSegments));
+      new OpticsParser::VenetianGeometry(slatWidth, slatSpacing, slatCurvature, slatTilt, numberSegments));
 }
 
 std::shared_ptr<OpticsParser::ProductGeometry>

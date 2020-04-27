@@ -51,11 +51,13 @@ namespace OpticsParser
         VenetianGeometry(double slatWidth,
                          double slatSpacing,
                          double slatCurvature,
-                         int numberSegments);
+                         double slatTilt = 0,
+                         int numberSegments = 5);
 
         double slatWidth;
         double slatSpacing;
         double slatCurvature;
+        double slatTilt;
         int numberSegments;
     };
 
@@ -69,7 +71,10 @@ namespace OpticsParser
 
     struct PerforatedGeometry : ProductGeometry
     {
-        PerforatedGeometry(double spacingX, double spacingY, double dimensionX, double dimensionY,
+        PerforatedGeometry(double spacingX,
+                           double spacingY,
+                           double dimensionX,
+                           double dimensionY,
                            std::string perforationType);
         double spacingX;
         double spacingY;
