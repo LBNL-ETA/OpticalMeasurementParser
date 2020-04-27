@@ -510,6 +510,14 @@ std::shared_ptr<OpticsParser::ProductGeometry>
     auto slatCurvature = geometry_json.at("slat_curvature").get<double>();
     auto numberSegments = geometry_json.at("number_segments").get<int>();
     double slatTilt = geometry_json.value("slat_tilt", 0.0);
+
+	// These values are stored as mm in the sources being parsed.
+    // Convert to meters here for consistancy with other non-wavelength
+    // length units.
+    slatWidth /= 1000.0;
+    slatSpacing /= 1000.0;
+    slatCurvature /= 1000.0;
+
     return std::shared_ptr<OpticsParser::ProductGeometry>(
       new OpticsParser::VenetianGeometry(slatWidth, slatSpacing, slatCurvature, slatTilt, numberSegments));
 }
