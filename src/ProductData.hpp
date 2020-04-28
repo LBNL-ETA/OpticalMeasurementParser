@@ -91,7 +91,7 @@ namespace OpticsParser
         std::shared_ptr<ProductGeometry> geometry;
     };
 
-    struct ProductData
+    struct ProductData : std::enable_shared_from_this<ProductData>
     {
         ProductData() = default;
         ProductData(ProductData const & other) = default;
@@ -125,6 +125,8 @@ namespace OpticsParser
                     std::string unitSystem,
                     std::string wavelengthUnit,
                     std::vector<WLData> const & measurements);
+
+		virtual std::shared_ptr<ProductData> composedProduct();
 
         std::string productName;
         std::string productType;
@@ -162,6 +164,9 @@ namespace OpticsParser
         ComposedProductData(ProductData const & product,
                             std::shared_ptr<CompositionInformation> composition);
 
-        std::shared_ptr<CompositionInformation> compositionInformation;
+        std::shared_ptr<ProductData> composedProduct() override;
+        
+		std::shared_ptr<CompositionInformation> compositionInformation;
+        
     };
 }   // namespace OpticsParser

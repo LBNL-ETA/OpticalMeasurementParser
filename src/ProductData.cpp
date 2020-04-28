@@ -88,6 +88,16 @@ OpticsParser::ProductData::ProductData(std::string const & productName,
     measurements(measurements)
 {}
 
+std::shared_ptr<OpticsParser::ProductData> OpticsParser::ProductData::composedProduct()
+{
+    return shared_from_this();
+}
+
+std::shared_ptr<OpticsParser::ProductData> OpticsParser::ComposedProductData::composedProduct()
+{
+    return compositionInformation->material;
+}
+
 void OpticsParser::to_json(nlohmann::json & j, OpticsParser::WLData const & wl)
 {
     j = nlohmann::json{{"w", wl.wavelength},
