@@ -214,10 +214,14 @@ void OpticsParser::Parser::parseBoolPropertyInsideBraces(const std::string & lin
     if(val.length() > 1)
     {
         std::string upperCase = val;
-#pragma warning(push)
-#pragma warning(disable : 4244)
+#ifdef _MSC_VER
+#    pragma warning(push)
+#    pragma warning(disable : 4244)
+#    endif
         std::for_each(upperCase.begin(), upperCase.end(), [](char & c) { c = ::toupper(c); });
-#pragma warning(pop)
+#ifdef _MSC_VER
+#    pragma warning(pop)
+#endif
         if(upperCase == "TRUE")
         {
             property = true;
@@ -262,7 +266,7 @@ std::optional<T> get_optional_field(nlohmann::json const & json, std::string con
     return data;
 }
 
-#if 0
+#    if 0
 OpticsParser::ProductData parseCheckerToolJson_OLD(nlohmann::json const & product_json)
 {
     std::string product_name = product_json.at("product_name").get<std::string>();
@@ -336,7 +340,7 @@ OpticsParser::ProductData parseCheckerToolJson_OLD(nlohmann::json const & produc
 
     return productData;
 }
-#endif
+#    endif
 
 std::shared_ptr<OpticsParser::ProductData> parseCheckerToolJson(nlohmann::json const & product_json)
 {
@@ -511,15 +515,15 @@ std::shared_ptr<OpticsParser::ProductGeometry>
     auto numberSegments = geometry_json.at("number_segments").get<int>();
     double slatTilt = geometry_json.value("slat_tilt", 0.0);
 
-	// These values are stored as mm in the sources being parsed.
+    // These values are stored as mm in the sources being parsed.
     // Convert to meters here for consistancy with other non-wavelength
     // length units.
     slatWidth /= 1000.0;
     slatSpacing /= 1000.0;
     slatCurvature /= 1000.0;
 
-    return std::shared_ptr<OpticsParser::ProductGeometry>(
-      new OpticsParser::VenetianGeometry(slatWidth, slatSpacing, slatCurvature, slatTilt, numberSegments));
+    return std::shared_ptr<OpticsParser::ProductGeometry>(new OpticsParser::VenetianGeometry(
+      slatWidth, slatSpacing, slatCurvature, slatTilt, numberSegments));
 }
 
 std::shared_ptr<OpticsParser::ProductGeometry>
