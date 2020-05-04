@@ -39,7 +39,7 @@ OpticsParser::ProductData::ProductData(std::string const & productName,
                                        std::string const & productType,
                                        std::string const & subtype,
                                        std::string const & manufacturer) :
-    productName(productName), productType(productType), subtype(subtype), manufacturer(manufacturer)
+    productName(productName), productType(productType), manufacturer(manufacturer), subtype(subtype)
 {}
 
 OpticsParser::ProductData::ProductData(std::string const & productName,
@@ -66,6 +66,7 @@ OpticsParser::ProductData::ProductData(std::string const & productName,
                                        std::vector<WLData> const & measurements) :
     productName(productName),
     productType(productType),
+    manufacturer(manufacturer),
     subtype(subtype),
     nfrcid(nfrcid),
     thickness(thickness),
@@ -75,7 +76,6 @@ OpticsParser::ProductData::ProductData(std::string const & productName,
     backEmissivity(backEmissivity),
     frontEmissivitySource(frontEmissivitySource),
     backEmissivitySource(backEmissivitySource),
-    manufacturer(manufacturer),
     material(material),
     coatingName(coatingName),
     coatedSide(coatedSide),
