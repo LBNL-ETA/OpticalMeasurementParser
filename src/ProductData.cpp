@@ -199,6 +199,11 @@ OpticsParser::ComposedProductData::ComposedProductData(
     ProductData(product), compositionInformation(composition)
 {}
 
+OpticsParser::ComposedProductData::ComposedProductData(
+  std::shared_ptr<CompositionInformation> composition) :
+    ProductData(), compositionInformation(composition)
+{}
+
 OpticsParser::VenetianGeometry::VenetianGeometry(
   double slatWidth, double slatSpacing, double slatCurvature, double slatTilt, int numberSegments) :
     slatWidth(slatWidth),

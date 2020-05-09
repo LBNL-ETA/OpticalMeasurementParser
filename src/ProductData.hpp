@@ -126,7 +126,7 @@ namespace OpticsParser
                     std::string wavelengthUnit,
                     std::vector<WLData> const & measurements);
 
-		virtual std::shared_ptr<ProductData> composedProduct();
+        virtual std::shared_ptr<ProductData> composedProduct();
 
         std::string productName;
         std::string productType;
@@ -163,10 +163,9 @@ namespace OpticsParser
     {
         ComposedProductData(ProductData const & product,
                             std::shared_ptr<CompositionInformation> composition);
+        ComposedProductData(std::shared_ptr<CompositionInformation> composition);
 
         std::shared_ptr<ProductData> composedProduct() override;
-        
-		std::shared_ptr<CompositionInformation> compositionInformation;
-        
+        std::shared_ptr<CompositionInformation> compositionInformation;
     };
 }   // namespace OpticsParser
