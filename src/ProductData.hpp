@@ -83,14 +83,6 @@ namespace OpticsParser
         std::string perforationType;
     };
 
-    struct ProductData;
-
-    struct CompositionInformation
-    {
-        std::shared_ptr<ProductData> material;
-        std::shared_ptr<ProductGeometry> geometry;
-    };
-
     struct ProductData : std::enable_shared_from_this<ProductData>
     {
         ProductData() = default;
@@ -158,6 +150,12 @@ namespace OpticsParser
 
     void to_json(nlohmann::json & j, WLData const & wl);
     void to_json(nlohmann::json & j, ProductData const & wl);
+
+	struct CompositionInformation
+    {
+        std::shared_ptr<ProductData> material;
+        std::shared_ptr<ProductGeometry> geometry;
+    };
 
     struct ComposedProductData : ProductData
     {
