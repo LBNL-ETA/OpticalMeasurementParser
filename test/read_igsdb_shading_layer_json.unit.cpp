@@ -41,9 +41,9 @@ TEST_F(TestLoadIGSDBJSONFromDisk, TestLoadIGSDBVenetianShadingLayerJSON)
     EXPECT_EQ(product->backEmissivity, std::optional<double>());
     EXPECT_EQ(product->measurements.has_value(), false);
 	auto geometry = std::dynamic_pointer_cast<OpticsParser::VenetianGeometry>(product->compositionInformation->geometry);
-	EXPECT_EQ(geometry->slatWidth, 14.8);
-	EXPECT_EQ(geometry->slatSpacing, 12.7);
-	EXPECT_EQ(geometry->slatCurvature, 33.13057);
+	EXPECT_EQ(geometry->slatWidth, 0.0148);
+	EXPECT_EQ(geometry->slatSpacing, 0.0127);
+	EXPECT_EQ(geometry->slatCurvature, 0.03313057);
 	EXPECT_EQ(geometry->numberSegments, 5);
 	auto material = product->compositionInformation->material;
 	EXPECT_EQ(material->productName, "White Venetian Blind Slat (white.txt)");

@@ -578,9 +578,9 @@ std::shared_ptr<OpticsParser::ProductData>
   parseIGSDBJsonComposedProduct(nlohmann::json const & product_json)
 {
     auto subtype = product_json.at("subtype").get<std::string>();
-    auto composition_information = product_json.at("composition_information");
-    auto product_material = composition_information.at("materials")[0];
-    auto product_geometry = composition_information.at("geometry");
+    auto composition_information = product_json.at("composition");
+    auto product_material = composition_information[0].at("child_product");
+    auto product_geometry = composition_information[0].at("extra_data").at("geometry");
     auto material = parseIGSDBJsonUncomposedProduct(product_material);
     auto geometry = parseGeometry(subtype, product_geometry);
     std::shared_ptr<OpticsParser::CompositionInformation> compositionInformation(
@@ -593,7 +593,7 @@ std::shared_ptr<OpticsParser::ProductData>
 
 std::shared_ptr<OpticsParser::ProductData> parseIGSDBJson(nlohmann::json const & product_json)
 {
-    if(product_json.count("composition_information"))
+    if(product_json.count("composition") && !product_json.at("composition").empty())
     {
         return parseIGSDBJsonComposedProduct(product_json);
     }
