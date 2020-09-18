@@ -46,6 +46,7 @@ namespace OpticsParser
 
         std::string productName;
         std::string productType;
+        std::string productSubtype;
         std::optional<int> nfrcid;
         double thickness;
         std::optional<double> conductivity;
@@ -65,6 +66,8 @@ namespace OpticsParser
         std::optional<std::string> unitSystem;
         std::optional<std::string> wavelengthUnit;
         std::vector<WLData> measurements;
+        std::optional<int> igdbChecksum;
+        std::optional<std::string> igdbDatabaseVersion;
     };
 
     void to_json(nlohmann::json & j, WLData const & wl);

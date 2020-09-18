@@ -70,7 +70,6 @@ void OpticsParser::Parser::parseMeasurementLine(const std::string & line, Produc
 }
 
 
-
 void OpticsParser::Parser::parseEmissivities(const std::string & line,
                                              OpticsParser::ProductData & product)
 {
@@ -270,11 +269,11 @@ OpticsParser::ProductData parseCheckerToolJson(nlohmann::json const & product_js
     nlohmann::json measured_data_json = product_json.at("measured_data");
 
     product.thickness = measured_data_json.at("thickness").get<double>();
-	if(measured_data_json.count("bulk_properties_override"))
-	{
-            product.conductivity = get_optional_field<double>(
-              measured_data_json.at("bulk_properties_override"), "thermal_conductivity");
-	}
+    if(measured_data_json.count("bulk_properties_override"))
+    {
+        product.conductivity = get_optional_field<double>(
+          measured_data_json.at("bulk_properties_override"), "thermal_conductivity");
+    }
 
     product.IRTransmittance = measured_data_json.at("tir_front").get<double>();
     product.frontEmissivity = measured_data_json.at("emissivity_front").get<double>();
@@ -314,18 +313,17 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
     OpticsParser::ProductData product;
     product.productName = product_json.at("name").get<std::string>();
     product.productType = product_json.at("type").get<std::string>();
-
+    product.productSubtype = product_json.at("subtype").get<std::string>();
     product.nfrcid = get_optional_field<int>(product_json, "nfrc_id");
+    product.igdbChecksum = get_optional_field<int>(product_json, "igdb_checksum");
+    product.igdbDatabaseVersion =
+      get_optional_field<std::string>(product_json, "igdb_database_version");
     product.manufacturer = product_json.at("manufacturer_name").get<std::string>();
     product.material = get_optional_field<std::string>(product_json, "material_bulk_properties");
 
-    if(product_json.count("coating_properties"))
-    {
-        product.coatingName =
-          get_optional_field<std::string>(product_json.at("coating_properties"), "coating_name");
-        product.coatedSide =
-          get_optional_field<std::string>(product_json.at("coating_properties"), "coated_side");
-    }
+
+    product.coatingName = get_optional_field<std::string>(product_json, "coating_name");
+    product.coatedSide = get_optional_field<std::string>(product_json, "coated_side");
 
     if(product_json.count("interlayer_properties"))
     {
@@ -336,7 +334,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
 
     product.appearance = get_optional_field<std::string>(product_json, "appearance");
     product.acceptance = get_optional_field<std::string>(product_json, "acceptance");
-    product.fileName = get_optional_field<std::string>(product_json, "filename");
+    product.fileName = get_optional_field<std::string>(product_json, "data_file_name");
     product.unitSystem = get_optional_field<std::string>(product_json, "unit_system");
 
     nlohmann::json measured_data_json = product_json.at("measured_data");
