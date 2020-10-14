@@ -4,7 +4,9 @@ add_library( ${LIB_NAME}
 		Parser.hpp
 		Parser.cpp
 		ProductData.hpp
-		ProductData.cpp)
+		ProductData.cpp
+		xmlParser.h
+		xmlParser.cpp)
 
 target_link_libraries(${LIB_NAME} PUBLIC nlohmann_json::nlohmann_json)
 
