@@ -38,12 +38,14 @@ add_executable(${PROJECT_TEST_NAME}
 		convert_optics_to_json.unit.cpp
 		read_checker_tool_json_file.unit.cpp
 		read_igsdb_shading_layer_json.unit.cpp
+		read_bsdf_xml_file.unit.cpp
 		main.cpp 
 		paths.h )
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(${PROJECT_TEST_NAME} gmock_main ${LIB_NAME})
+target_link_libraries(${PROJECT_TEST_NAME} xsde ${LIB_NAME})
 
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_std_17)
 

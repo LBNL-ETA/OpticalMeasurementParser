@@ -36,7 +36,16 @@ endif()
 set( JSON_BuildTests OFF CACHE BOOL "")
 
 include(CMakeLists-nlohmann_json.txt)
+include_directories(
+	# include library directory 
+	# so #include <xsde/something.h> works everywhere in the project
+	${CMAKE_CURRENT_SOURCE_DIR}/libxsde
 
+	# include directory with generated config headers
+	# so #include <xsde/config.h> also works
+	${CMAKE_CURRENT_BINARY_DIR}/libxsde/xsde/include
+)
+add_subdirectory(libxsde)
 add_subdirectory( src )
 
 target_include_directories(${LIB_NAME}
@@ -46,6 +55,8 @@ target_include_directories(${LIB_NAME}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
+
+target_link_libraries(${target_name} xsde)
 
 Option(BUILD_Optical_Measurement_Parser_Tests "Build tests for optical measurement parsing." ON)
 

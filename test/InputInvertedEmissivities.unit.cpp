@@ -66,15 +66,17 @@ TEST_F(TestInvertedEmissivities, Test1)
                                                      {0.320, 0.1000, 0.0470, 0.0480},
                                                      {0.325, 0.2180, 0.0490, 0.0500}};
 
-    EXPECT_EQ(correctResults.size(), product->measurements.value().size());
+	auto & givenResults =
+		std::get<std::vector<OpticsParser::WLData>>(product->measurements.value());
+    EXPECT_EQ(correctResults.size(), givenResults.size());
     for(auto i = 0u; i < correctResults.size(); ++i)
     {
-        EXPECT_NEAR(correctResults[i].wavelength, product->measurements.value()[i].wavelength, 1e-6);
+        EXPECT_NEAR(correctResults[i].wavelength, givenResults[i].wavelength, 1e-6);
         EXPECT_NEAR(
-          correctResults[i].directComponent.tf, product->measurements.value()[i].directComponent.tf, 1e-6);
+          correctResults[i].directComponent.tf, givenResults[i].directComponent.tf, 1e-6);
         EXPECT_NEAR(
-          correctResults[i].directComponent.rf, product->measurements.value()[i].directComponent.rf, 1e-6);
+          correctResults[i].directComponent.rf, givenResults[i].directComponent.rf, 1e-6);
         EXPECT_NEAR(
-          correctResults[i].directComponent.rb, product->measurements.value()[i].directComponent.rb, 1e-6);
+          correctResults[i].directComponent.rb, givenResults[i].directComponent.rb, 1e-6);
     }
 }

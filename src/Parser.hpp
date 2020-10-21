@@ -71,5 +71,6 @@ namespace OpticsParser
 
     std::shared_ptr<ProductData> parseFile(const std::string & inputFile);
     std::shared_ptr<ProductData> parseJSONString(std::string const & json);
-    std::shared_ptr<ProductData> parseJSONFile(std::string const & fname);
+	std::shared_ptr<ProductData> parseJSONFile(std::string const & fname);
+	std::shared_ptr<ProductData> parseBSDFXMLFile(std::string const & fname);
 }   // namespace OpticsParser

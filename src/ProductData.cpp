@@ -28,66 +28,6 @@ OpticsParser::WLData::WLData(double wavelength,
     diffuseComponent(MeasurementComponent{tfDiffuse, tbDiffuse, rfDiffuse, rbDiffuse})
 {}
 
-
-OpticsParser::ProductData::ProductData(std::string const & productName,
-                                       std::string const & productType,
-                                       std::string const & manufacturer) :
-    productName(productName), productType(productType), manufacturer(manufacturer)
-{}
-
-OpticsParser::ProductData::ProductData(std::string const & productName,
-                                       std::string const & productType,
-                                       std::string const & subtype,
-                                       std::string const & manufacturer) :
-    productName(productName), productType(productType), manufacturer(manufacturer), subtype(subtype)
-{}
-
-OpticsParser::ProductData::ProductData(std::string const & productName,
-                                       std::string const & productType,
-                                       std::string const & subtype,
-                                       int nfrcid,
-                                       double thickness,
-                                       double conductivity,
-                                       double IRTransmittance,
-                                       double frontEmissivity,
-                                       double backEmissivity,
-                                       std::string frontEmissivitySource,
-                                       std::string backEmissivitySource,
-                                       std::string manufacturer,
-                                       std::string material,
-                                       std::string coatingName,
-                                       std::string coatedSide,
-                                       std::string substrateFilename,
-                                       std::string appearance,
-                                       std::string acceptance,
-                                       std::string fileName,
-                                       std::string unitSystem,
-                                       std::string wavelengthUnit,
-                                       std::vector<WLData> const & measurements) :
-    productName(productName),
-    productType(productType),
-    manufacturer(manufacturer),
-    subtype(subtype),
-    nfrcid(nfrcid),
-    thickness(thickness),
-    conductivity(conductivity),
-    IRTransmittance(IRTransmittance),
-    frontEmissivity(frontEmissivity),
-    backEmissivity(backEmissivity),
-    frontEmissivitySource(frontEmissivitySource),
-    backEmissivitySource(backEmissivitySource),
-    material(material),
-    coatingName(coatingName),
-    coatedSide(coatedSide),
-    substrateFilename(substrateFilename),
-    appearance(appearance),
-    acceptance(acceptance),
-    fileName(fileName),
-    unitSystem(unitSystem),
-    wavelengthUnit(wavelengthUnit),
-    measurements(measurements)
-{}
-
 std::shared_ptr<OpticsParser::ProductData> OpticsParser::ProductData::composedProduct()
 {
     return shared_from_this();
@@ -145,9 +85,15 @@ void OpticsParser::to_json(nlohmann::json & j, OpticsParser::ProductData const &
 
     if(p.measurements)
     {
+		auto & measurements = p.measurements.value();
+		if(std::holds_alternative<OpticsParser::MultiBandBSDF>(measurements))
+		{
+			throw std::runtime_error("Writing BSDF data to json is not supported.");
+		}
+		auto & specularMeasurements = std::get<std::vector< OpticsParser::WLData>>(measurements);
         nlohmann::json angle_block{{"incidence_angle", 0},
-                                   {"number_wavelengths", p.measurements.value().size()},
-                                   {"wavelength_data", p.measurements.value()}};
+                                   {"number_wavelengths", specularMeasurements.size()},
+                                   {"wavelength_data", specularMeasurements}};
         spectral_data["number_incidence_angles"] = 1;
         spectral_data["angle_block"] = std::vector<nlohmann::json>{angle_block};
 

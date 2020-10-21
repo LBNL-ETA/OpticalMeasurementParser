@@ -3,7 +3,8 @@
 #include <vector>
 #include <string>
 #include <optional>
-
+#include <map>
+#include <variant>
 #include <nlohmann/json.hpp>
 
 namespace OpticsParser
@@ -39,6 +40,18 @@ namespace OpticsParser
         MeasurementComponent directComponent;
         std::optional<MeasurementComponent> diffuseComponent;
     };
+
+    typedef std::vector<std::vector<double>> BSDF;
+
+    struct WavelengthBSDFs
+    {
+        BSDF tf;
+        BSDF tb;
+        BSDF rf;
+        BSDF rb;
+    };
+
+    typedef std::map<std::string, WavelengthBSDFs> MultiBandBSDF;
 
     struct ProductGeometry
     {
@@ -88,35 +101,6 @@ namespace OpticsParser
         ProductData() = default;
         ProductData(ProductData const & other) = default;
         virtual ~ProductData() = default;
-        ProductData(std::string const & productName,
-                    std::string const & productType,
-                    std::string const & manufacturer);
-        ProductData(std::string const & productName,
-                    std::string const & productType,
-                    std::string const & subtype,
-                    std::string const & manufacturer);
-        ProductData(std::string const & productName,
-                    std::string const & productType,
-                    std::string const & subtype,
-                    int nfrcid,
-                    double thickness,
-                    double conductivity,
-                    double IRTransmittance,
-                    double frontEmissivity,
-                    double backEmissivity,
-                    std::string frontEmissivitySource,
-                    std::string backEmissivitySource,
-                    std::string manufacturer,
-                    std::string material,
-                    std::string coatingName,
-                    std::string coatedSide,
-                    std::string substrateFilename,
-                    std::string appearance,
-                    std::string acceptance,
-                    std::string fileName,
-                    std::string unitSystem,
-                    std::string wavelengthUnit,
-                    std::vector<WLData> const & measurements);
 
         virtual std::shared_ptr<ProductData> composedProduct();
 
@@ -141,7 +125,7 @@ namespace OpticsParser
         std::optional<std::string> fileName;
         std::optional<std::string> unitSystem;
         std::optional<std::string> wavelengthUnit;
-        std::optional<std::vector<WLData>> measurements;
+        std::optional<std::variant<std::vector<WLData>, MultiBandBSDF>> measurements;
         std::optional<std::string> extrapolation;
         std::optional<int> aercID;
         std::optional<bool> specularity;
@@ -151,7 +135,7 @@ namespace OpticsParser
     void to_json(nlohmann::json & j, WLData const & wl);
     void to_json(nlohmann::json & j, ProductData const & wl);
 
-	struct CompositionInformation
+    struct CompositionInformation
     {
         std::shared_ptr<ProductData> material;
         std::shared_ptr<ProductGeometry> geometry;

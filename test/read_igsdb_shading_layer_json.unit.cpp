@@ -54,16 +54,17 @@ TEST_F(TestLoadIGSDBJSONFromDisk, TestLoadIGSDBVenetianShadingLayerJSON)
     EXPECT_EQ(material->frontEmissivity, 0.9);
     EXPECT_EQ(material->backEmissivity, 0.9);
     EXPECT_EQ(material->measurements.has_value(), true);
-
-	EXPECT_EQ(material->measurements.value().size(), 441);
-    EXPECT_EQ(material->measurements.value()[0].wavelength, 0.3);
-    EXPECT_EQ(material->measurements.value()[0].directComponent.tf, 0.0);
-    EXPECT_EQ(material->measurements.value()[0].directComponent.rf, 0.0703);
-    EXPECT_EQ(material->measurements.value()[0].directComponent.rb, 0.0703);
-    EXPECT_EQ(material->measurements.value()[440].wavelength, 2.50);
-    EXPECT_EQ(material->measurements.value()[440].directComponent.tf, 0.0);
-    EXPECT_EQ(material->measurements.value()[440].directComponent.rf, 0.719);
-    EXPECT_EQ(material->measurements.value()[440].directComponent.rb, 0.719);
+	auto & materialMeasurements =
+		std::get<std::vector<OpticsParser::WLData>>(material->measurements.value());
+	EXPECT_EQ(materialMeasurements.size(), 441);
+    EXPECT_EQ(materialMeasurements[0].wavelength, 0.3);
+    EXPECT_EQ(materialMeasurements[0].directComponent.tf, 0.0);
+    EXPECT_EQ(materialMeasurements[0].directComponent.rf, 0.0703);
+    EXPECT_EQ(materialMeasurements[0].directComponent.rb, 0.0703);
+    EXPECT_EQ(materialMeasurements[440].wavelength, 2.50);
+    EXPECT_EQ(materialMeasurements[440].directComponent.tf, 0.0);
+    EXPECT_EQ(materialMeasurements[440].directComponent.rf, 0.719);
+    EXPECT_EQ(materialMeasurements[440].directComponent.rb, 0.719);
 
 }
 
@@ -108,14 +109,15 @@ TEST_F(TestLoadIGSDBJSONFromDisk, TestLoadIGSDBPerforatedScreenShadingLayerJSON)
     EXPECT_EQ(material->backEmissivity, 0.84);
     EXPECT_EQ(material->conductivity, 0.12);
     EXPECT_EQ(material->measurements.has_value(), true);
-
-    EXPECT_EQ(material->measurements.value().size(), 441);
-    EXPECT_EQ(material->measurements.value()[0].wavelength, 0.3);
-    EXPECT_EQ(material->measurements.value()[0].directComponent.tf, 0.0);
-    EXPECT_EQ(material->measurements.value()[0].directComponent.rf, 0.0794);
-    EXPECT_EQ(material->measurements.value()[0].directComponent.rb, 0.0674);
-    EXPECT_EQ(material->measurements.value()[440].wavelength, 2.50);
-    EXPECT_EQ(material->measurements.value()[440].directComponent.tf, 0.0);
-    EXPECT_EQ(material->measurements.value()[440].directComponent.rf, 0.6568);
-    EXPECT_EQ(material->measurements.value()[440].directComponent.rb, 0.48);
+	auto & materialMeasurements =
+		std::get<std::vector<OpticsParser::WLData>>(material->measurements.value());
+    EXPECT_EQ(materialMeasurements.size(), 441);
+    EXPECT_EQ(materialMeasurements[0].wavelength, 0.3);
+    EXPECT_EQ(materialMeasurements[0].directComponent.tf, 0.0);
+    EXPECT_EQ(materialMeasurements[0].directComponent.rf, 0.0794);
+    EXPECT_EQ(materialMeasurements[0].directComponent.rb, 0.0674);
+    EXPECT_EQ(materialMeasurements[440].wavelength, 2.50);
+    EXPECT_EQ(materialMeasurements[440].directComponent.tf, 0.0);
+    EXPECT_EQ(materialMeasurements[440].directComponent.rf, 0.6568);
+    EXPECT_EQ(materialMeasurements[440].directComponent.rb, 0.48);
 }

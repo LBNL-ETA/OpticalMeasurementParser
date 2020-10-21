@@ -5,6 +5,9 @@
 #include <nlohmann/json.hpp>
 
 #include "Parser.hpp"
+#include "bsdfXML/BSDF-v1.7.8.hxx"
+#include "bsdfXML/BSDF-v1.7.8-pimpl.hxx"
+
 std::shared_ptr<OpticsParser::ProductData>
   OpticsParser::Parser::parseFile(const std::string & inputFile)
 {
@@ -104,12 +107,13 @@ void OpticsParser::Parser::parseMeasurementLine(const std::string & line,
 
     auto parser = measuredValueToParser.find(result.size());
 
-    std::vector<OpticsParser::WLData> measurements;
 
     if(parser != measuredValueToParser.end())
     {
+        std::vector<OpticsParser::WLData> & measurements =
+          std::get<std::vector<OpticsParser::WLData>>(product->measurements.value());
         auto parsedValues = parser->second(result);
-        product->measurements.value().push_back(parsedValues);
+        measurements.push_back(parsedValues);
     }
     else
     {
@@ -217,7 +221,7 @@ void OpticsParser::Parser::parseBoolPropertyInsideBraces(const std::string & lin
 #ifdef _MSC_VER
 #    pragma warning(push)
 #    pragma warning(disable : 4244)
-#    endif
+#endif
         std::for_each(upperCase.begin(), upperCase.end(), [](char & c) { c = ::toupper(c); });
 #ifdef _MSC_VER
 #    pragma warning(pop)
@@ -266,81 +270,6 @@ std::optional<T> get_optional_field(nlohmann::json const & json, std::string con
     return data;
 }
 
-#    if 0
-OpticsParser::ProductData parseCheckerToolJson_OLD(nlohmann::json const & product_json)
-{
-    std::string product_name = product_json.at("product_name").get<std::string>();
-    std::string product_type = product_json.at("product_type").get<std::string>();
-    int nfrc_id = product_json.value("nfrc_id", -1);
-    std::string manufacturer = product_json.at("manufacturer").get<std::string>();
-    std::string material_name = "";   // TODO
-    std::string coating_name =
-      product_json.at("coating_properties").at("coating_name").get<std::string>();
-    std::string coated_side =
-      product_json.at("coating_properties").at("coated_side").get<std::string>();
-    std::string substrate_filename = "";   // TODO
-    std::string appearance = product_json.at("appearance").get<std::string>();
-    std::string acceptance = product_json.at("acceptance").get<std::string>();
-
-
-    nlohmann::json measured_data_json = product_json.at("measured_data");
-
-    double thickness = measured_data_json.at("thickness").get<double>();
-    double conductivity = -1;   // TODO
-    double tir_front = measured_data_json.at("tir_front").get<double>();
-    double emissivity_front = measured_data_json.at("emissivity_front").get<double>();
-    double emissivity_back = measured_data_json.at("emissivity_back").get<double>();
-    std::string emissivity_front_source = "";   // TODO
-    std::string emissivity_back_source = "";    // TODO
-    std::string filename = "";                  // TODO
-    std::string unit_system = "";               // TODO
-    std::string wavelength_units = "";          // TODO
-
-
-    nlohmann::json spectral_data_json = measured_data_json.at("spectral_data");
-    nlohmann::json wavelength_data_json =
-      spectral_data_json.at("angle_block")[0].at("wavelength_data");
-
-    std::vector<OpticsParser::WLData> measurements;
-
-    for(nlohmann::json::iterator itr = wavelength_data_json.begin();
-        itr != wavelength_data_json.end();
-        ++itr)
-    {
-        auto val = itr.value();
-        double wl = val.at("w").get<double>();
-        double t = val.at("tf").get<double>();
-        double rf = val.at("rf").get<double>();
-        double rb = val.at("rb").get<double>();
-        measurements.push_back(OpticsParser::WLData(wl, t, rf, rb));
-    }
-
-
-    OpticsParser::ProductData productData(product_name,
-                                          product_type,
-                                          nfrc_id,
-                                          thickness,
-                                          conductivity,
-                                          tir_front,
-                                          emissivity_front,
-                                          emissivity_back,
-                                          emissivity_front_source,
-                                          emissivity_back_source,
-                                          manufacturer,
-                                          material_name,
-                                          coating_name,
-                                          coated_side,
-                                          substrate_filename,
-                                          appearance,
-                                          acceptance,
-                                          filename,
-                                          unit_system,
-                                          wavelength_units,
-                                          measurements);
-
-    return productData;
-}
-#    endif
 
 std::shared_ptr<OpticsParser::ProductData> parseCheckerToolJson(nlohmann::json const & product_json)
 {
@@ -654,4 +583,114 @@ std::shared_ptr<OpticsParser::ProductData> OpticsParser::parseJSONFile(std::stri
 {
     OpticsParser::Parser parser;
     return parser.parseJSONFile(fname);
+}
+
+template<typename T, typename U>
+void assignOptionalValue(T & field, bool exists, U const & value)
+{
+    if(exists)
+    {
+        field = value;
+    }
+}
+
+std::shared_ptr<OpticsParser::ProductData> OpticsParser::parseBSDFXMLFile(std::string const & fname)
+{
+    std::shared_ptr<OpticsParser::ProductData> product(new OpticsParser::ProductData());
+    try
+    {
+        XMLShadeMaterialBSDF::WindowElement_paggr windowElementParser;
+        xml_schema::document_pimpl docPimpl(windowElementParser.root_parser(),
+                                            windowElementParser.root_namespace(),
+                                            windowElementParser.root_name());
+        windowElementParser.pre();
+        docPimpl.parse(fname);
+        std::unique_ptr<XMLShadeMaterialBSDF::WindowElement> windowElement(
+          windowElementParser.post());
+        for(auto & layerItr : windowElement->Optical().Layer().choice())
+        {
+            if(layerItr.choice_arm() == layerItr.Material_tag)
+            {
+                auto material = layerItr.Material()[0];
+                product->productName = material.Name();
+                product->productType = "shading";
+                assignOptionalValue(
+                  product->subtype, material.DeviceType_present(), material.DeviceType().string());
+                assignOptionalValue(
+                  product->manufacturer, material.Manufacturer_present(), material.Manufacturer());
+                assignOptionalValue(
+                  product->thickness, material.Thickness_present(), material.Thickness());
+                assignOptionalValue(product->conductivity,
+                                    material.ThermalConductivity_present(),
+                                    material.ThermalConductivity());
+                assignOptionalValue(
+                  product->IRTransmittance, material.TIR_present(), material.TIR());
+                assignOptionalValue(product->frontEmissivity,
+                                    material.EmissivityFront_present(),
+                                    material.EmissivityFront());
+                assignOptionalValue(product->backEmissivity,
+                                    material.EmissivityBack_present(),
+                                    material.EmissivityBack());
+                assignOptionalValue(product->acceptance,
+                                    material.AERCAcceptance_present(),
+                                    material.AERCAcceptance());
+                assignOptionalValue(
+                  product->permeabilityFactor, material.Openness_present(), material.Openness());
+                assignOptionalValue(product->permeabilityFactor,
+                                    material.EffectiveOpennessFraction_present(),
+                                    material.EffectiveOpennessFraction());
+            }
+            else if(layerItr.choice_arm() == layerItr.WavelengthData_tag)
+            {
+                auto & wavelengthData = layerItr.WavelengthData();
+                for(auto & wavelengthDataItr : wavelengthData)
+                {
+                    for(auto & wavelengthDataChoiceItr : wavelengthDataItr.choice())
+                    {
+                        if(wavelengthDataChoiceItr.choice_arm()
+                           == wavelengthDataChoiceItr.WavelengthDataBlock_tag)
+                        {
+                            auto & wavelengthDataBlock =
+                              wavelengthDataChoiceItr.WavelengthDataBlock();
+                            for(auto & wavelengthDataBlockItr : wavelengthDataBlock)
+                            {
+								XMLShadeMaterialBSDF::WavelengthDataDirectionEnum wavelengthDirection;
+                                std::vector<std::vector<double>> bsdf;
+                                for(auto & wavelengthDataBlockChoiceItr :
+                                    wavelengthDataBlockItr.choice())
+                                {
+                                    if(wavelengthDataBlockChoiceItr.choice_arm()
+                                       == wavelengthDataBlockChoiceItr.WavelengthDataDirection_tag)
+                                    {
+                                        wavelengthDirection =
+                                          wavelengthDataBlockChoiceItr.WavelengthDataDirection();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // if(wavelengthDataItr.)
+                }
+            }
+        }
+
+#if 0
+        for(auto itr = layer->WavelengthData().begin(); itr != layer->WavelengthData().end(); ++itr)
+        {
+			for(auto jtr = itr->choice().begin(); jtr != itr->choice().end(); ++jtr)
+			{
+				auto & wavelengthDataBlock = jtr->WavelengthDataBlock();
+				wavelengthDataBlock;
+				auto bsdf = 4;
+				bsdf++;
+			}
+			
+        }
+#endif
+    }
+    catch(const xml_schema::parser_exception & e)
+    {
+        e.what();
+    }
+    return product;
 }
