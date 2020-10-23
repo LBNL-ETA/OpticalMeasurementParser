@@ -42,35 +42,49 @@ TEST_F(TestLoadBSDFXMLFromDisk, TestLoad2011SA1)
 	auto & measurements = std::get<OpticsParser::MultiBandBSDF>(product->measurements.value());
 	auto & solar = measurements.at("solar");
 	auto & visible = measurements.at("visible");
-	EXPECT_EQ(solar.tf.size(), 145);
-	EXPECT_EQ(solar.tb.size(), 145);
-	EXPECT_EQ(solar.rf.size(), 145);
-	EXPECT_EQ(solar.rb.size(), 145);
-	EXPECT_EQ(visible.tf.size(), 145);
-	EXPECT_EQ(visible.tb.size(), 145);
-	EXPECT_EQ(visible.rf.size(), 145);
-	EXPECT_EQ(visible.rb.size(), 145);
-	for(size_t i = 0; i < solar.tf.size(); ++i)
+	EXPECT_EQ(solar.tf.rowAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(solar.tf.columnAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(solar.tb.rowAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(solar.tb.columnAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(solar.rf.rowAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(solar.rf.columnAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(solar.rb.rowAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(solar.rb.columnAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(visible.tf.rowAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(visible.tf.columnAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(visible.tb.rowAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(visible.tb.columnAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(visible.rf.rowAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(visible.rf.columnAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(visible.rb.rowAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(visible.rb.columnAngleBasisName, "LBNL/Klems Full");
+	EXPECT_EQ(solar.tf.data.size(), 145);
+	EXPECT_EQ(solar.tb.data.size(), 145);
+	EXPECT_EQ(solar.rf.data.size(), 145);
+	EXPECT_EQ(solar.rb.data.size(), 145);
+	EXPECT_EQ(visible.tf.data.size(), 145);
+	EXPECT_EQ(visible.tb.data.size(), 145);
+	EXPECT_EQ(visible.rf.data.size(), 145);
+	EXPECT_EQ(visible.rb.data.size(), 145);
+	for(size_t i = 0; i < solar.tf.data.size(); ++i)
 	{
-		EXPECT_EQ(solar.tf[i].size(), 145);
-		EXPECT_EQ(solar.tb[i].size(), 145);
-		EXPECT_EQ(solar.rf[i].size(), 145);
-		EXPECT_EQ(solar.rb[i].size(), 145);
-		EXPECT_EQ(visible.tf[i].size(), 145);
-		EXPECT_EQ(visible.tb[i].size(), 145);
-		EXPECT_EQ(visible.rf[i].size(), 145);
-		EXPECT_EQ(visible.rb[i].size(), 145);
+		EXPECT_EQ(solar.tf.data[i].size(), 145);
+		EXPECT_EQ(solar.tb.data[i].size(), 145);
+		EXPECT_EQ(solar.rf.data[i].size(), 145);
+		EXPECT_EQ(solar.rb.data[i].size(), 145);
+		EXPECT_EQ(visible.tf.data[i].size(), 145);
+		EXPECT_EQ(visible.tb.data[i].size(), 145);
+		EXPECT_EQ(visible.rf.data[i].size(), 145);
+		EXPECT_EQ(visible.rb.data[i].size(), 145);
 	}
 
-	EXPECT_EQ(solar.tf[1][1], 2.009060);
-	EXPECT_EQ(solar.tb[0][1], 0.021508);
-	EXPECT_EQ(solar.rf[1][0], 0.148154);
-	EXPECT_EQ(solar.rb[0][0], 0.167364);
-	EXPECT_EQ(visible.tf[1][1], 2.027935);
-	EXPECT_EQ(visible.tb[0][1], 0.014274);
-	EXPECT_EQ(visible.rf[1][0], 0.153571);
-	EXPECT_EQ(visible.rb[0][0], 0.178254);
-
-
+	EXPECT_EQ(solar.tf.data[1][1], 2.009060);
+	EXPECT_EQ(solar.tb.data[0][1], 0.021508);
+	EXPECT_EQ(solar.rf.data[1][0], 0.148154);
+	EXPECT_EQ(solar.rb.data[0][0], 0.167364);
+	EXPECT_EQ(visible.tf.data[1][1], 2.027935);
+	EXPECT_EQ(visible.tb.data[0][1], 0.014274);
+	EXPECT_EQ(visible.rf.data[1][0], 0.153571);
+	EXPECT_EQ(visible.rb.data[0][0], 0.178254);
 
 }

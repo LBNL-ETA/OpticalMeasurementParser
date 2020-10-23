@@ -739,21 +739,26 @@ namespace OpticsParser
             }
             std::vector<std::vector<double>> bsdf = convertToSquareMatrix(splitData);
 
+			std::string columnAngleBasisName =
+				wavelengthDataBlockNode.getChildNode(_T("ColumnAngleBasis")).getText();
+			std::string rowAngleBasisName =
+				wavelengthDataBlockNode.getChildNode(_T("RowAngleBasis")).getText();
+
             if(toLower(wavelengthDirection) == "transmission front")
             {
-                currentBandBSDFs->tf = bsdf;
+				currentBandBSDFs->tf = BSDF{bsdf, rowAngleBasisName, columnAngleBasisName};
             }
             else if(toLower(wavelengthDirection) == "transmission back")
             {
-                currentBandBSDFs->tb = bsdf;
+                currentBandBSDFs->tb = BSDF{bsdf, rowAngleBasisName, columnAngleBasisName};
             }
             else if(toLower(wavelengthDirection) == "reflection front")
             {
-                currentBandBSDFs->rf = bsdf;
+                currentBandBSDFs->rf = BSDF{bsdf, rowAngleBasisName, columnAngleBasisName};
             }
             else if(toLower(wavelengthDirection) == "reflection back")
             {
-                currentBandBSDFs->rb = bsdf;
+                currentBandBSDFs->rb = BSDF{bsdf, rowAngleBasisName, columnAngleBasisName};
             }
         }
 

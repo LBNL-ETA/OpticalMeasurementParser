@@ -41,7 +41,12 @@ namespace OpticsParser
 		std::optional<MeasurementComponent> diffuseComponent;
 	};
 
-	typedef std::vector<std::vector<double>> BSDF;
+	struct BSDF
+	{
+		std::vector<std::vector<double>> data;
+		std::string rowAngleBasisName;
+		std::string columnAngleBasisName;
+	};
 
 	struct WavelengthBSDFs
 	{
