@@ -10,7 +10,7 @@
 
 extern std::string test_dir;
 
-#if 0
+#if 1
 class TestLoadJSONFromDisk : public testing::Test
 {
 protected:
@@ -38,14 +38,15 @@ TEST_F(TestLoadJSONFromDisk, TestLoadClear3JSON)
 	EXPECT_EQ(product->IRTransmittance.value(), 0.0);
 	EXPECT_EQ(product->frontEmissivity.value(), 0.84);
 	EXPECT_EQ(product->backEmissivity.value(), 0.84);
-	EXPECT_EQ(product->measurements.value().size(), 111);
-	EXPECT_EQ(product->measurements.value()[0].wavelength, 0.3);
-	EXPECT_EQ(product->measurements.value()[0].T, 0.002);
-	EXPECT_EQ(product->measurements.value()[0].frontR, 0.047);
-	EXPECT_EQ(product->measurements.value()[0].backR, 0.048);
-	EXPECT_EQ(product->measurements.value()[110].wavelength, 2.5);
-	EXPECT_EQ(product->measurements.value()[110].T, 0.822);
-	EXPECT_EQ(product->measurements.value()[110].frontR, 0.068);
-	EXPECT_EQ(product->measurements.value()[110].backR, 0.068);
+	auto & measurements = std::get<std::vector<OpticsParser::WLData>>(product->measurements.value());
+	EXPECT_EQ(measurements.size(), 111);
+	EXPECT_EQ(measurements[0].wavelength, 0.3);
+	EXPECT_EQ(measurements[0].directComponent.tf, 0.002);
+	EXPECT_EQ(measurements[0].directComponent.rf, 0.047);
+	EXPECT_EQ(measurements[0].directComponent.rb, 0.048);
+	EXPECT_EQ(measurements[110].wavelength, 2.5);
+	EXPECT_EQ(measurements[110].directComponent.tf, 0.822);
+	EXPECT_EQ(measurements[110].directComponent.rf, 0.068);
+	EXPECT_EQ(measurements[110].directComponent.rb, 0.068);
 }
 #endif
