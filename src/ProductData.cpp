@@ -28,6 +28,20 @@ OpticsParser::WLData::WLData(double wavelength,
 	diffuseComponent(MeasurementComponent{tfDiffuse, tbDiffuse, rfDiffuse, rbDiffuse})
 {}
 
+OpticsParser::ProductData::ProductData(std::string const & productName,
+	std::string const & productType,
+	std::string const & manufacturer) :
+	productName(productName), productType(productType), manufacturer(manufacturer)
+{}
+
+OpticsParser::ProductData::ProductData(std::string const & productName,
+	std::string const & productType,
+	std::string const & subtype,
+	std::string const & manufacturer) :
+	productName(productName), productType(productType), manufacturer(manufacturer), subtype(subtype)
+{}
+
+
 std::shared_ptr<OpticsParser::ProductData> OpticsParser::ProductData::composedProduct()
 {
 	return shared_from_this();
