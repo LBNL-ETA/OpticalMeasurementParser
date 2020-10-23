@@ -40,11 +40,35 @@
  *   If you add "#define _XMLPARSER_NO_MESSAGEBOX_" on the first line of this file
  *   the "openFileHelper" function will always display error messages inside the
  *   console instead of inside a message-box-window. Message-box-windows are
- *   available on windows 9x/NT/2000/XP/Vista only.
+ *   available on windows 9x/NT/2000/XP/Vista/Win7/Win8 only.
  *
- * Copyright (c) 2002, Frank Vanden Berghen - All rights reserved.
- * Commercialized by <a href="http://www.Business-Insight.com">Business-Insight</a>
- * See the file "AFPL-license.txt about the licensing terms
+ * The following license terms applies to projects developped by "Windows and Daylighting group at the Lawrence Berkeley National Laboratory" only:
+ * (all other projects are under the Aladdin Free Public License (AFPL) -
+ *  see the file "AFPL-license.txt" for more informations about this license)
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of Frank Vanden Berghen nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY Frank Vanden Berghen ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL Frank Vanden Berghen BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Copyright (c) 2013, Frank Vanden Berghen - All rights reserved.<br/>
  *
  ****************************************************************************
  */

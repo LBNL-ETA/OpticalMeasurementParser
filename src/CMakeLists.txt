@@ -26,7 +26,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     target_compile_options(${LIB_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()
 if (MSVC)
-    target_compile_options(${LIB_NAME} PRIVATE /W4 /WX)
+    target_compile_options(${LIB_NAME} PRIVATE /W4 /WX /wd4706) #4706 is "assignment within conditional expression".  Occurs in several places in xmlParser.cpp
+
 endif()
 
 
