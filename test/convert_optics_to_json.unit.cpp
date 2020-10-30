@@ -10,7 +10,10 @@
 
 extern std::string test_dir;
 
+// Converting to json requires updating and is not currently being
+// used so disabling for now.
 
+#if 0
 class TestConvertOpticsFile : public testing::Test
 {
 protected:
@@ -77,3 +80,4 @@ TEST_F(TestConvertOpticsFile, TestConvertClear3)
     EXPECT_EQ(product_json.at("acceptance").get<std::string>(), "#");
 
 }
+#endif

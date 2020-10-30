@@ -148,8 +148,10 @@ namespace OpticsParser
         std::optional<double> permeabilityFactor;
     };
 
-    void to_json(nlohmann::json & j, WLData const & wl);
-    void to_json(nlohmann::json & j, ProductData const & wl);
+	// Converting to json requires updating and is not currently being
+	// used so disabling for now.
+    //void to_json(nlohmann::json & j, WLData const & wl);
+    //void to_json(nlohmann::json & j, ProductData const & wl);
 
     struct CompositionInformation
     {

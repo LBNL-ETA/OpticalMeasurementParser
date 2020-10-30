@@ -52,6 +52,9 @@ std::shared_ptr<OpticsParser::ProductData> OpticsParser::ComposedProductData::co
 	return compositionInformation->material;
 }
 
+// Converting to json requires updating and is not currently being
+// used so disabling for now.
+#if 0
 void OpticsParser::to_json(nlohmann::json & j, OpticsParser::WLData const & wl)
 {
 	j = nlohmann::json{{"w", wl.wavelength},
@@ -59,6 +62,7 @@ void OpticsParser::to_json(nlohmann::json & j, OpticsParser::WLData const & wl)
 					   {"rf", wl.directComponent.rf},
 					   {"rb", wl.directComponent.rb}};
 }
+#endif
 
 std::string convert_product_type(std::string const & optics_product_type)
 {
@@ -93,6 +97,9 @@ void add_optional(nlohmann::json & j,
 	}
 }
 
+// Converting to json requires updating and is not currently being
+// used so disabling for now.
+#if 0
 void OpticsParser::to_json(nlohmann::json & j, OpticsParser::ProductData const & p)
 {
 	nlohmann::json spectral_data;
@@ -153,6 +160,7 @@ void OpticsParser::to_json(nlohmann::json & j, OpticsParser::ProductData const &
 	add_optional(j, "appearance", p.appearance);
 	add_optional(j, "acceptance", p.acceptance);
 }
+#endif
 
 OpticsParser::ComposedProductData::ComposedProductData(
 	ProductData const & product, std::shared_ptr<CompositionInformation> composition) :

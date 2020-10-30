@@ -30,7 +30,8 @@ TEST_F(TestLoadJSONFromDisk, TestLoadCheckerToolJSON)
 	std::shared_ptr<OpticsParser::ProductData> product = parser.parseJSONFile(product_path.string());
 	//    EXPECT_EQ(product->nfrcid.value(), 102);
 	EXPECT_EQ(product->productName, "CGD89_092661");
-	EXPECT_EQ(product->productType, "coated-glass");
+	EXPECT_EQ("glazing", product->productType);
+	EXPECT_EQ("Monolithic", product->subtype);
 	EXPECT_EQ(product->coatingName, "CGD89_092661");
 	EXPECT_EQ(product->coatedSide, "Both");
 	EXPECT_EQ(product->manufacturer, "Cardinal Glass Industries");

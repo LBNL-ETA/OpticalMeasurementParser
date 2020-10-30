@@ -54,7 +54,8 @@ namespace OpticsParser
         parsePropertyAtTheEnd("IR Transmittance", "TIR=", line, product->IRTransmittance);
         parseEmissivities(line, product);
         parseStringPropertyInsideBraces(line, "Product Name", product->productName);
-        parseStringPropertyInsideBraces(line, "Type", product->productType);
+		product->productType = "glazing"; // There are only glazing optics files.  
+        parseStringPropertyInsideBraces(line, "Type", product->subtype);
         parseStringPropertyInsideBraces(line, "Ef_Source", product->frontEmissivitySource);
         parseStringPropertyInsideBraces(line, "Eb_Source", product->backEmissivitySource);
         parseStringPropertyInsideBraces(line, "Manufacturer", product->manufacturer);
@@ -570,7 +571,7 @@ namespace OpticsParser
         return parseJSONString(content);
     }
 
-    std::shared_ptr<ProductData> parseFile(const std::string & inputFile)
+    std::shared_ptr<ProductData> parseOpticsFile(const std::string & inputFile)
     {
         Parser parser;
         return parser.parseFile(inputFile);

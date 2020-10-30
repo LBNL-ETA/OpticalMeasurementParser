@@ -57,7 +57,8 @@ TEST_F(TestInvertedEmissivities, Test1)
 	EXPECT_NEAR(0.5, product->backEmissivity.value(), 1e-6);
 	EXPECT_EQ(102, product->nfrcid.value());
 	EXPECT_EQ("", product->productName);
-	EXPECT_EQ("Monolithic", product->productType);
+	EXPECT_EQ("glazing", product->productType);
+	EXPECT_EQ("Monolithic", product->subtype);
 
 	std::vector<OpticsParser::WLData> correctResults{{0.300, 0.0020, 0.0470, 0.0480},
 													 {0.305, 0.0030, 0.0470, 0.0480},
