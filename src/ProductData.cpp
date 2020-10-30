@@ -100,7 +100,7 @@ void OpticsParser::to_json(nlohmann::json & j, OpticsParser::ProductData const &
 	if(p.measurements)
 	{
 		auto & measurements = p.measurements.value();
-		if(std::holds_alternative<OpticsParser::MultiBandBSDF>(measurements))
+		if(std::holds_alternative<OpticsParser::DualBandBSDF>(measurements))
 		{
 			throw std::runtime_error("Writing BSDF data to json is not supported.");
 		}

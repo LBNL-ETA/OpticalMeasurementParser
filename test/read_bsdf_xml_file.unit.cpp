@@ -38,10 +38,10 @@ TEST_F(TestLoadBSDFXMLFromDisk, TestLoad2011SA1)
 	EXPECT_EQ(product->frontEmissivity, 0.79626);
 	EXPECT_EQ(product->backEmissivity, 0.79626);
 	EXPECT_TRUE(product->measurements.has_value());
-	EXPECT_TRUE(std::holds_alternative<OpticsParser::MultiBandBSDF>(product->measurements.value()));
-	auto & measurements = std::get<OpticsParser::MultiBandBSDF>(product->measurements.value());
-	auto & solar = measurements.at("solar");
-	auto & visible = measurements.at("visible");
+	EXPECT_TRUE(std::holds_alternative<OpticsParser::DualBandBSDF>(product->measurements.value()));
+	auto & measurements = std::get<OpticsParser::DualBandBSDF>(product->measurements.value());
+	auto & solar = measurements.solar;
+	auto & visible = measurements.visible;
 	EXPECT_EQ(solar.tf.rowAngleBasisName, "LBNL/Klems Full");
 	EXPECT_EQ(solar.tf.columnAngleBasisName, "LBNL/Klems Full");
 	EXPECT_EQ(solar.tb.rowAngleBasisName, "LBNL/Klems Full");

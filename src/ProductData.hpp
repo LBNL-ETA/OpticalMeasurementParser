@@ -56,7 +56,11 @@ namespace OpticsParser
         BSDF rb;
     };
 
-    typedef std::map<std::string, WavelengthBSDFs> MultiBandBSDF;
+	struct DualBandBSDF
+	{
+		WavelengthBSDFs solar;
+		WavelengthBSDFs visible;
+	};
 
     struct ProductGeometry
     {
@@ -137,7 +141,7 @@ namespace OpticsParser
         std::optional<std::string> fileName;
         std::optional<std::string> unitSystem;
         std::optional<std::string> wavelengthUnit;
-        std::optional<std::variant<std::vector<WLData>, MultiBandBSDF>> measurements;
+        std::optional<std::variant<std::vector<WLData>, DualBandBSDF>> measurements;
         std::optional<std::string> extrapolation;
         std::optional<int> aercID;
         std::optional<bool> specularity;

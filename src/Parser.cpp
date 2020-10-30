@@ -676,7 +676,6 @@ namespace OpticsParser
         
 		int wavelengthDataNodeCt = xLayerNode.nChildNode("WavelengthData");
         
-        MultiBandBSDF multiBandBSDF;
         WavelengthBSDFs solarBSDFs;
         WavelengthBSDFs visibleBSDFs;
 
@@ -762,9 +761,7 @@ namespace OpticsParser
             }
         }
 
-        multiBandBSDF["solar"] = solarBSDFs;
-        multiBandBSDF["visible"] = visibleBSDFs;
-        product->measurements = multiBandBSDF;
+		product->measurements = DualBandBSDF{solarBSDFs, visibleBSDFs};
 
         return product;
     }
