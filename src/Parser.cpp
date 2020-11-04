@@ -602,12 +602,12 @@ namespace OpticsParser
         }
     }
 
-    std::vector<std::basic_string<TCHAR>> splitString(const std::basic_string<TCHAR> & str,
+    std::vector<std::string> splitString(const std::string & str,
                                                       const TCHAR token)
     {
-        std::vector<std::basic_string<TCHAR>> strings;
-        std::basic_istringstream<TCHAR> test{str};
-        std::basic_string<TCHAR> line;
+        std::vector<std::string> strings;
+        std::istringstream test{str};
+        std::string line;
         while(getline(test, line, token))
         {
             strings.push_back(line);
