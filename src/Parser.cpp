@@ -646,13 +646,13 @@ namespace OpticsParser
             throw std::runtime_error("XML error : WindowElement not found");
         }
         XMLNode xLayerNode =
-          xWindowElementNode.getChildNode(_T("Optical")).getChildNode(_T("Layer"));
+          xWindowElementNode.getChildNode("Optical").getChildNode("Layer");
 
-        XMLNode matNode = xLayerNode.getChildNode(_T("Material"));
-        product->productName = matNode.getChildNode(_T("Name")).getText();
-        product->manufacturer = matNode.getChildNode(_T("Manufacturer")).getText();
-        auto thicknessStr = matNode.getChildNode(_T("Thickness")).getText();
-        auto thicknessUnitStr = matNode.getChildNode(_T("Thickness")).getAttribute(_T("unit"));
+        XMLNode matNode = xLayerNode.getChildNode("Material");
+        product->productName = matNode.getChildNode("Name").getText();
+        product->manufacturer = matNode.getChildNode("Manufacturer").getText();
+        auto thicknessStr = matNode.getChildNode("Thickness").getText();
+        auto thicknessUnitStr = matNode.getChildNode("Thickness").getAttribute("unit");
         
         double thickness = std::stod(thicknessStr);
         if(toLower(thicknessUnitStr) == "millimeter")
@@ -666,13 +666,13 @@ namespace OpticsParser
             throw std::runtime_error("XML error: Unsupported thickness unit");
         }
         product->thickness = thickness;
-        product->frontEmissivity = std::stod(matNode.getChildNode(_T("EmissivityFront")).getText());
-        product->backEmissivity = std::stod(matNode.getChildNode(_T("EmissivityBack")).getText());
-        product->IRTransmittance = std::stod(matNode.getChildNode(_T("TIR")).getText());
-		product->conductivity = std::stod(matNode.getChildNode(_T("ThermalConductivity")).getText());
-        auto opennessNode = matNode.getChildNode(_T("PermeabilityFactor"));
+        product->frontEmissivity = std::stod(matNode.getChildNode("EmissivityFront").getText());
+        product->backEmissivity = std::stod(matNode.getChildNode("EmissivityBack").getText());
+        product->IRTransmittance = std::stod(matNode.getChildNode("TIR").getText());
+		product->conductivity = std::stod(matNode.getChildNode("ThermalConductivity").getText());
+        auto opennessNode = matNode.getChildNode("PermeabilityFactor");
 
-        auto xEffectiveOpenness = matNode.getChildNode(_T("EffectiveOpennessFraction"));
+        auto xEffectiveOpenness = matNode.getChildNode("EffectiveOpennessFraction");
         if(!xEffectiveOpenness.isEmpty() && opennessNode.isEmpty())
         {
             opennessNode = xEffectiveOpenness;
@@ -687,18 +687,18 @@ namespace OpticsParser
 		for(int i = 0; i < wavelengthDataNodeCt; ++i)
         {
 			XMLNode wavelengthDataNode =
-				xLayerNode.getChildNode(_T("WavelengthData"), i);
+				xLayerNode.getChildNode("WavelengthData", i);
 			if(wavelengthDataNode.isEmpty())
 				throw std::runtime_error("XML error: Empty WavelengthData section found");
             XMLNode wavelengthDataBlockNode =
-              wavelengthDataNode.getChildNode(_T("WavelengthDataBlock"), 0);
+              wavelengthDataNode.getChildNode("WavelengthDataBlock", 0);
             std::string wavelengthDirection =
-              wavelengthDataBlockNode.getChildNode(_T("WavelengthDataDirection")).getText();
-            XMLNode wavelengthNode = wavelengthDataNode.getChildNode(_T("Wavelength"));
+              wavelengthDataBlockNode.getChildNode("WavelengthDataDirection").getText();
+            XMLNode wavelengthNode = wavelengthDataNode.getChildNode("Wavelength");
             std::string wavelengthRange =
-              wavelengthDataNode.getChildNode(_T("Wavelength")).getText();
+              wavelengthDataNode.getChildNode("Wavelength").getText();
             std::string wavelengthUnit =
-              wavelengthDataNode.getChildNode(_T("Wavelength")).getAttribute(_T("unit"));
+              wavelengthDataNode.getChildNode("Wavelength").getAttribute("unit");
 
             if(wavelengthRange.empty())
             {
@@ -734,7 +734,7 @@ namespace OpticsParser
             }
 
             std::string dataString =
-              wavelengthDataBlockNode.getChildNode(_T("ScatteringData")).getText();
+              wavelengthDataBlockNode.getChildNode("ScatteringData").getText();
             std::vector<std::string> splitDataString = splitString(dataString, ',');
             std::vector<double> splitData;
             for(auto const & s : splitDataString)
@@ -744,9 +744,9 @@ namespace OpticsParser
             std::vector<std::vector<double>> bsdf = convertToSquareMatrix(splitData);
 
 			std::string columnAngleBasisName =
-				wavelengthDataBlockNode.getChildNode(_T("ColumnAngleBasis")).getText();
+				wavelengthDataBlockNode.getChildNode("ColumnAngleBasis").getText();
 			std::string rowAngleBasisName =
-				wavelengthDataBlockNode.getChildNode(_T("RowAngleBasis")).getText();
+				wavelengthDataBlockNode.getChildNode("RowAngleBasis").getText();
 
             if(toLower(wavelengthDirection) == "transmission front")
             {
@@ -773,13 +773,13 @@ namespace OpticsParser
 
 	std::shared_ptr<ProductData> parseBSDFXMLString(std::string const & contents)
 	{
-		XMLNode xWindowElementNode = XMLNode::parseString(contents.c_str(), _T("WindowElement"));
+		XMLNode xWindowElementNode = XMLNode::parseString(contents.c_str(), "WindowElement");
 		return parseBSDFXML(xWindowElementNode);
 	}
 
 	std::shared_ptr<ProductData> parseBSDFXMLFile(std::string const & fname)
 	{
-		XMLNode xWindowElementNode = XMLNode::openFileHelper(fname.c_str(), _T("WindowElement"));
+		XMLNode xWindowElementNode = XMLNode::openFileHelper(fname.c_str(), "WindowElement");
 		return parseBSDFXML(xWindowElementNode);
 	}
 
