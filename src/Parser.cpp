@@ -12,10 +12,14 @@ namespace OpticsParser
 {
     std::string toLower(std::string s)
     {
-#pragma warning(push)
-#pragma warning(disable : 4244)
-        std::for_each(s.begin(), s.end(), [](char & c) { c = std::tolower(c); });
-#pragma warning(pop)
+#ifdef _MSC_VER
+#    pragma warning(push)
+#    pragma warning(disable : 4244)
+#endif
+		std::transform(s.begin(), s.end(), s.begin(), std::tolower);
+#ifdef _MSC_VER
+#    pragma warning(pop)
+#endif
         return s;
     }
 
