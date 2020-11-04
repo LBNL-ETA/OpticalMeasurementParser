@@ -16,7 +16,7 @@ namespace OpticsParser
 #    pragma warning(push)
 #    pragma warning(disable : 4244)
 #endif
-		std::transform(s.begin(), s.end(), s.begin(), std::tolower);
+        std::transform(s.begin(), s.end(), s.begin(), std::tolower);
 #ifdef _MSC_VER
 #    pragma warning(pop)
 #endif
@@ -58,7 +58,7 @@ namespace OpticsParser
         parsePropertyAtTheEnd("IR Transmittance", "TIR=", line, product->IRTransmittance);
         parseEmissivities(line, product);
         parseStringPropertyInsideBraces(line, "Product Name", product->productName);
-		product->productType = "glazing"; // There are only glazing optics files.  
+        product->productType = "glazing";   // There are only glazing optics files.
         parseStringPropertyInsideBraces(line, "Type", product->subtype);
         parseStringPropertyInsideBraces(line, "Ef_Source", product->frontEmissivitySource);
         parseStringPropertyInsideBraces(line, "Eb_Source", product->backEmissivitySource);
@@ -602,8 +602,7 @@ namespace OpticsParser
         }
     }
 
-    std::vector<std::string> splitString(const std::string & str,
-                                                      const TCHAR token)
+    std::vector<std::string> splitString(const std::string & str, const char token)
     {
         std::vector<std::string> strings;
         std::istringstream test{str};
@@ -636,24 +635,22 @@ namespace OpticsParser
         return m;
     }
 
-	
 
     std::shared_ptr<ProductData> parseBSDFXML(XMLNode const & xWindowElementNode)
     {
-		std::shared_ptr<ProductData> product(new ProductData());
+        std::shared_ptr<ProductData> product(new ProductData());
         if(xWindowElementNode.isEmpty())
         {
             throw std::runtime_error("XML error : WindowElement not found");
         }
-        XMLNode xLayerNode =
-          xWindowElementNode.getChildNode("Optical").getChildNode("Layer");
+        XMLNode xLayerNode = xWindowElementNode.getChildNode("Optical").getChildNode("Layer");
 
         XMLNode matNode = xLayerNode.getChildNode("Material");
         product->productName = matNode.getChildNode("Name").getText();
         product->manufacturer = matNode.getChildNode("Manufacturer").getText();
         auto thicknessStr = matNode.getChildNode("Thickness").getText();
         auto thicknessUnitStr = matNode.getChildNode("Thickness").getAttribute("unit");
-        
+
         double thickness = std::stod(thicknessStr);
         if(toLower(thicknessUnitStr) == "millimeter")
         {}
@@ -669,7 +666,7 @@ namespace OpticsParser
         product->frontEmissivity = std::stod(matNode.getChildNode("EmissivityFront").getText());
         product->backEmissivity = std::stod(matNode.getChildNode("EmissivityBack").getText());
         product->IRTransmittance = std::stod(matNode.getChildNode("TIR").getText());
-		product->conductivity = std::stod(matNode.getChildNode("ThermalConductivity").getText());
+        product->conductivity = std::stod(matNode.getChildNode("ThermalConductivity").getText());
         auto opennessNode = matNode.getChildNode("PermeabilityFactor");
 
         auto xEffectiveOpenness = matNode.getChildNode("EffectiveOpennessFraction");
@@ -678,25 +675,23 @@ namespace OpticsParser
             opennessNode = xEffectiveOpenness;
         }
         product->permeabilityFactor = std::stod(opennessNode.getText());
-        
-		int wavelengthDataNodeCt = xLayerNode.nChildNode("WavelengthData");
-        
+
+        int wavelengthDataNodeCt = xLayerNode.nChildNode("WavelengthData");
+
         WavelengthBSDFs solarBSDFs;
         WavelengthBSDFs visibleBSDFs;
 
-		for(int i = 0; i < wavelengthDataNodeCt; ++i)
+        for(int i = 0; i < wavelengthDataNodeCt; ++i)
         {
-			XMLNode wavelengthDataNode =
-				xLayerNode.getChildNode("WavelengthData", i);
-			if(wavelengthDataNode.isEmpty())
-				throw std::runtime_error("XML error: Empty WavelengthData section found");
+            XMLNode wavelengthDataNode = xLayerNode.getChildNode("WavelengthData", i);
+            if(wavelengthDataNode.isEmpty())
+                throw std::runtime_error("XML error: Empty WavelengthData section found");
             XMLNode wavelengthDataBlockNode =
               wavelengthDataNode.getChildNode("WavelengthDataBlock", 0);
             std::string wavelengthDirection =
               wavelengthDataBlockNode.getChildNode("WavelengthDataDirection").getText();
             XMLNode wavelengthNode = wavelengthDataNode.getChildNode("Wavelength");
-            std::string wavelengthRange =
-              wavelengthDataNode.getChildNode("Wavelength").getText();
+            std::string wavelengthRange = wavelengthDataNode.getChildNode("Wavelength").getText();
             std::string wavelengthUnit =
               wavelengthDataNode.getChildNode("Wavelength").getAttribute("unit");
 
@@ -743,14 +738,14 @@ namespace OpticsParser
             }
             std::vector<std::vector<double>> bsdf = convertToSquareMatrix(splitData);
 
-			std::string columnAngleBasisName =
-				wavelengthDataBlockNode.getChildNode("ColumnAngleBasis").getText();
-			std::string rowAngleBasisName =
-				wavelengthDataBlockNode.getChildNode("RowAngleBasis").getText();
+            std::string columnAngleBasisName =
+              wavelengthDataBlockNode.getChildNode("ColumnAngleBasis").getText();
+            std::string rowAngleBasisName =
+              wavelengthDataBlockNode.getChildNode("RowAngleBasis").getText();
 
             if(toLower(wavelengthDirection) == "transmission front")
             {
-				currentBandBSDFs->tf = BSDF{bsdf, rowAngleBasisName, columnAngleBasisName};
+                currentBandBSDFs->tf = BSDF{bsdf, rowAngleBasisName, columnAngleBasisName};
             }
             else if(toLower(wavelengthDirection) == "transmission back")
             {
@@ -766,23 +761,22 @@ namespace OpticsParser
             }
         }
 
-		product->measurements = DualBandBSDF{solarBSDFs, visibleBSDFs};
+        product->measurements = DualBandBSDF{solarBSDFs, visibleBSDFs};
 
         return product;
     }
 
-	std::shared_ptr<ProductData> parseBSDFXMLString(std::string const & contents)
-	{
-		XMLNode xWindowElementNode = XMLNode::parseString(contents.c_str(), "WindowElement");
-		return parseBSDFXML(xWindowElementNode);
-	}
+    std::shared_ptr<ProductData> parseBSDFXMLString(std::string const & contents)
+    {
+        XMLNode xWindowElementNode = XMLNode::parseString(contents.c_str(), "WindowElement");
+        return parseBSDFXML(xWindowElementNode);
+    }
 
-	std::shared_ptr<ProductData> parseBSDFXMLFile(std::string const & fname)
-	{
-		XMLNode xWindowElementNode = XMLNode::openFileHelper(fname.c_str(), "WindowElement");
-		return parseBSDFXML(xWindowElementNode);
-	}
-
+    std::shared_ptr<ProductData> parseBSDFXMLFile(std::string const & fname)
+    {
+        XMLNode xWindowElementNode = XMLNode::openFileHelper(fname.c_str(), "WindowElement");
+        return parseBSDFXML(xWindowElementNode);
+    }
 
 
 }   // namespace OpticsParser
