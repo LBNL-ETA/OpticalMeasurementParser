@@ -636,11 +636,11 @@ namespace OpticsParser
         return m;
     }
 
+	
 
-    std::shared_ptr<ProductData> parseBSDFXMLFile(std::string const & fname)
+    std::shared_ptr<ProductData> parseBSDFXML(XMLNode const & xWindowElementNode)
     {
-        std::shared_ptr<ProductData> product(new ProductData());
-        XMLNode xWindowElementNode = XMLNode::openFileHelper(fname.c_str(), _T("WindowElement"));
+		std::shared_ptr<ProductData> product(new ProductData());
         if(xWindowElementNode.isEmpty())
         {
             throw std::runtime_error("XML error : WindowElement not found");
@@ -770,4 +770,19 @@ namespace OpticsParser
 
         return product;
     }
+
+	std::shared_ptr<ProductData> parseBSDFXMLString(std::string const & contents)
+	{
+		XMLNode xWindowElementNode = XMLNode::parseString(contents.c_str(), _T("WindowElement"));
+		return parseBSDFXML(xWindowElementNode);
+	}
+
+	std::shared_ptr<ProductData> parseBSDFXMLFile(std::string const & fname)
+	{
+		XMLNode xWindowElementNode = XMLNode::openFileHelper(fname.c_str(), _T("WindowElement"));
+		return parseBSDFXML(xWindowElementNode);
+	}
+
+
+
 }   // namespace OpticsParser
