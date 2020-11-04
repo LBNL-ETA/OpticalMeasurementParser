@@ -20,10 +20,10 @@ endif()
 
 
 if (CMAKE_COMPILER_IS_GNUCC)
-    target_compile_options(${LIB_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)    
+    target_compile_options(${LIB_NAME} PRIVATE -Wall -Wextra -pedantic -Werror -Wno-implicit-fallthrough) # XMLParser generates implicite-fallthrough warnings
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    target_compile_options(${LIB_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+    target_compile_options(${LIB_NAME} PRIVATE -Wall -Wextra -pedantic -Werror -Wno-implicit-fallthrough) # XMLParser generates implicite-fallthrough warnings
 endif()
 if (MSVC)
     target_compile_options(${LIB_NAME} PRIVATE /W4 /WX /wd4706) #4706 is "assignment within conditional expression".  Occurs in several places in xmlParser.cpp
