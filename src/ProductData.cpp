@@ -36,9 +36,9 @@ OpticsParser::ProductData::ProductData(std::string const & productName,
 
 OpticsParser::ProductData::ProductData(std::string const & productName,
 	std::string const & productType,
-	std::string const & subtype,
+	std::string const & productSubtype,
 	std::string const & manufacturer) :
-	productName(productName), productType(productType), manufacturer(manufacturer), subtype(subtype)
+	productName(productName), productType(productType), manufacturer(manufacturer), productSubtype(productSubtype)
 {}
 
 

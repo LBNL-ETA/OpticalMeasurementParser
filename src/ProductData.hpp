@@ -115,7 +115,7 @@ namespace OpticsParser
                     std::string const & manufacturer);
         ProductData(std::string const & productName,
                     std::string const & productType,
-                    std::string const & subtype,
+                    std::string const & productSubtype,
                     std::string const & manufacturer);
 
         virtual std::shared_ptr<ProductData> composedProduct();
@@ -146,7 +146,6 @@ namespace OpticsParser
         std::optional<int> aercID;
         std::optional<bool> specularity;
         std::optional<double> permeabilityFactor;
-        std::vector<WLData> measurements;
         std::optional<int> igdbChecksum;
         std::optional<std::string> igdbDatabaseVersion;
     };

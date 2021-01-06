@@ -59,7 +59,7 @@ namespace OpticsParser
         parseEmissivities(line, product);
         parseStringPropertyInsideBraces(line, "Product Name", product->productName);
         product->productType = "glazing";   // There are only glazing optics files.
-        parseStringPropertyInsideBraces(line, "Type", product->subtype);
+        parseStringPropertyInsideBraces(line, "Type", product->productSubtype);
         parseStringPropertyInsideBraces(line, "Ef_Source", product->frontEmissivitySource);
         parseStringPropertyInsideBraces(line, "Eb_Source", product->backEmissivitySource);
         parseStringPropertyInsideBraces(line, "Manufacturer", product->manufacturer);
@@ -373,7 +373,7 @@ namespace OpticsParser
         std::shared_ptr<ProductData> product(new ProductData);
         product->productName = product_json.at("name").get<std::string>();
         product->productType = product_json.at("type").get<std::string>();
-        product->subtype = get_optional_field<std::string>(product_json, "subtype");
+        product->productSubtype = get_optional_field<std::string>(product_json, "subtype");
 
         product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
         product->manufacturer = product_json.at("manufacturer_name").get<std::string>();
@@ -487,7 +487,7 @@ namespace OpticsParser
           new PerforatedGeometry(spacingX, spacingY, dimensionX, dimensionY, perforationType));
     }
 
-    std::shared_ptr<ProductGeometry> parseGeometry(std::string const & subtype,
+    std::shared_ptr<ProductGeometry> parseGeometry(std::string const & productSubtype,
                                                    nlohmann::json const & geometry_json)
     {
         std::map<std::string,
@@ -498,7 +498,7 @@ namespace OpticsParser
         mapping["woven"] = &parseWovenGeometry;
         mapping["perforated-screen"] = &parsePerforatedGeometry;
 
-        auto itr = mapping.find(subtype);
+        auto itr = mapping.find(productSubtype);
         if(itr != mapping.end())
         {
             return itr->second(geometry_json);
@@ -506,7 +506,7 @@ namespace OpticsParser
         else
         {
             std::stringstream msg;
-            msg << "Subtype " << subtype << " geometry not yet supported.";
+            msg << "Subtype " << productSubtype << " geometry not yet supported.";
             throw std::runtime_error(msg.str());
         }
     }
