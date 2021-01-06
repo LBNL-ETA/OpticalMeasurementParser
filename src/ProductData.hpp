@@ -123,7 +123,7 @@ namespace OpticsParser
         std::string productName;
         std::string productType;
         std::string manufacturer;
-        std::optional<std::string> subtype;
+        std::optional<std::string> productSubtype;
         std::optional<int> nfrcid;
         std::optional<double> thickness;
         std::optional<double> conductivity;
@@ -146,6 +146,9 @@ namespace OpticsParser
         std::optional<int> aercID;
         std::optional<bool> specularity;
         std::optional<double> permeabilityFactor;
+        std::vector<WLData> measurements;
+        std::optional<int> igdbChecksum;
+        std::optional<std::string> igdbDatabaseVersion;
     };
 
 	// Converting to json requires updating and is not currently being

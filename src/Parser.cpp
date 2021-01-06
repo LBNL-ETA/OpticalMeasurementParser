@@ -104,7 +104,6 @@ namespace OpticsParser
         return WLData(wl, directValues, diffuseValues);
     }
 
-
     void Parser::parseMeasurementLine(const std::string & line,
                                       std::shared_ptr<ProductData> product)
     {
@@ -308,7 +307,6 @@ namespace OpticsParser
             product->substrateFilename = get_optional_field<std::string>(
               product_json.at("interlayer_properties"), "interlayer_name");
         }
-
 
         product->appearance = get_optional_field<std::string>(product_json, "appearance");
         product->acceptance = get_optional_field<std::string>(product_json, "acceptance");
