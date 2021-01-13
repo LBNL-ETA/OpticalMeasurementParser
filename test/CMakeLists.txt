@@ -43,8 +43,9 @@ add_executable(${PROJECT_TEST_NAME}
 		paths.h )
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
-target_link_libraries(${PROJECT_TEST_NAME} gmock_main ${LIB_NAME})
+target_link_libraries(${PROJECT_TEST_NAME} gmock_main ${LIB_NAME} xmlParser)
 
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_std_17)
 

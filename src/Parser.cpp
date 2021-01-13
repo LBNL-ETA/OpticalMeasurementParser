@@ -4,9 +4,9 @@
 #include <cctype>
 
 #include <nlohmann/json.hpp>
+#include <xmlParser/xmlParser.hpp>
 
 #include "Parser.hpp"
-#include "xmlParser.h"
 
 namespace OpticsParser
 {
@@ -634,16 +634,16 @@ namespace OpticsParser
     }
 
 
-    std::shared_ptr<ProductData> parseBSDFXML(XMLNode const & xWindowElementNode)
+    std::shared_ptr<ProductData> parseBSDFXML(XMLParser::XMLNode const & xWindowElementNode)
     {
         std::shared_ptr<ProductData> product(new ProductData());
         if(xWindowElementNode.isEmpty())
         {
-            throw std::runtime_error("XML error : WindowElement not found");
+            throw std::runtime_error("XML error: WindowElement not found");
         }
-        XMLNode xLayerNode = xWindowElementNode.getChildNode("Optical").getChildNode("Layer");
+        XMLParser::XMLNode xLayerNode = xWindowElementNode.getChildNode("Optical").getChildNode("Layer");
 
-        XMLNode matNode = xLayerNode.getChildNode("Material");
+        XMLParser::XMLNode matNode = xLayerNode.getChildNode("Material");
         product->productName = matNode.getChildNode("Name").getText();
         product->manufacturer = matNode.getChildNode("Manufacturer").getText();
         auto thicknessStr = matNode.getChildNode("Thickness").getText();
@@ -681,14 +681,14 @@ namespace OpticsParser
 
         for(int i = 0; i < wavelengthDataNodeCt; ++i)
         {
-            XMLNode wavelengthDataNode = xLayerNode.getChildNode("WavelengthData", i);
+            XMLParser::XMLNode wavelengthDataNode = xLayerNode.getChildNode("WavelengthData", i);
             if(wavelengthDataNode.isEmpty())
                 throw std::runtime_error("XML error: Empty WavelengthData section found");
-            XMLNode wavelengthDataBlockNode =
+            XMLParser::XMLNode wavelengthDataBlockNode =
               wavelengthDataNode.getChildNode("WavelengthDataBlock", 0);
             std::string wavelengthDirection =
               wavelengthDataBlockNode.getChildNode("WavelengthDataDirection").getText();
-            XMLNode wavelengthNode = wavelengthDataNode.getChildNode("Wavelength");
+            XMLParser::XMLNode wavelengthNode = wavelengthDataNode.getChildNode("Wavelength");
             std::string wavelengthRange = wavelengthDataNode.getChildNode("Wavelength").getText();
             std::string wavelengthUnit =
               wavelengthDataNode.getChildNode("Wavelength").getAttribute("unit");
@@ -766,13 +766,13 @@ namespace OpticsParser
 
     std::shared_ptr<ProductData> parseBSDFXMLString(std::string const & contents)
     {
-        XMLNode xWindowElementNode = XMLNode::parseString(contents.c_str(), "WindowElement");
+        XMLParser::XMLNode xWindowElementNode = XMLParser::XMLNode::parseString(contents.c_str(), "WindowElement");
         return parseBSDFXML(xWindowElementNode);
     }
 
     std::shared_ptr<ProductData> parseBSDFXMLFile(std::string const & fname)
     {
-        XMLNode xWindowElementNode = XMLNode::openFileHelper(fname.c_str(), "WindowElement");
+        XMLParser::XMLNode xWindowElementNode = XMLParser::XMLNode::openFileHelper(fname.c_str(), "WindowElement");
         return parseBSDFXML(xWindowElementNode);
     }
 
