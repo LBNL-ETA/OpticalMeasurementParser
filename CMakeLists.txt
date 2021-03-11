@@ -36,6 +36,7 @@ endif()
 set( JSON_BuildTests OFF CACHE BOOL "")
 
 include(CMakeLists-nlohmann_json.txt)
+include(CMakeLists-xmlParser.txt)
 
 add_subdirectory( src )
 
