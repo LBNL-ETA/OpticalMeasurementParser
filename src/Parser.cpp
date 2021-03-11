@@ -2,7 +2,8 @@
 #include <sstream>
 #include <iostream>
 #include <cctype>
-
+#include <regex>
+#include <algorithm>
 #include <nlohmann/json.hpp>
 
 #include "Parser.hpp"
@@ -602,18 +603,19 @@ namespace OpticsParser
         }
     }
 
-    std::vector<std::string> splitString(const std::string & str, const char token)
+    std::vector<std::string> splitString(const std::string & str, std::string const& delimiters)
     {
-        std::vector<std::string> strings;
-        std::istringstream test{str};
-        std::string line;
-        while(getline(test, line, token))
-        {
-            strings.push_back(line);
-        }
-
-        return strings;
+		std::stringstream delimiterRe;
+		delimiterRe << "[" << delimiters << "]";
+		std::regex re(delimiterRe.str());
+		std::sregex_token_iterator first{str.begin(), str.end(), re, -1}, last;
+		std::vector<std::string> tokens{first, last};
+		tokens.erase(std::remove(tokens.begin(), tokens.end(), ""), tokens.end());
+		tokens.erase(std::remove(tokens.begin(), tokens.end(), "\r\n"), tokens.end());
+		tokens.erase(std::remove(tokens.begin(), tokens.end(), "\n"), tokens.end());
+		return tokens;
     }
+
     std::vector<std::vector<double>> convertToSquareMatrix(std::vector<double> const & v)
     {
         double intPart;
@@ -730,7 +732,7 @@ namespace OpticsParser
 
             std::string dataString =
               wavelengthDataBlockNode.getChildNode("ScatteringData").getText();
-            std::vector<std::string> splitDataString = splitString(dataString, ',');
+            std::vector<std::string> splitDataString = splitString(dataString, " ,;"); // Split on space, comma, or semicolon
             std::vector<double> splitData;
             for(auto const & s : splitDataString)
             {
