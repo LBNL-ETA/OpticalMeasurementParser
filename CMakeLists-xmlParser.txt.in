@@ -4,7 +4,7 @@ include(ExternalProject)
 
 ExternalProject_Add(xmlParser
     GIT_REPOSITORY https://github.com/LBNL-ETA/XMLParser.git
-    GIT_TAG "master"
+    GIT_TAG "main"
     
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
