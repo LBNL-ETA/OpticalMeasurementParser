@@ -50,6 +50,17 @@ namespace OpticsParser
         return product;
     }
 
+	std::optional<double> parseOptionalDoubleNode(XMLParser::XMLNode const & node)
+	{
+		std::optional<double> result;
+		auto txt = node.getText();
+		if(txt)
+		{
+			result = std::stod(txt);
+		}
+		return result;
+	}
+
     void Parser::parseHeaderLine(const std::string & line, std::shared_ptr<ProductData> product)
     {
         parseUnits(line, product);
@@ -665,25 +676,23 @@ namespace OpticsParser
         XMLParser::XMLNode matNode = xLayerNode.getChildNode("Material");
         product->productName = matNode.getChildNode("Name").getText();
         product->manufacturer = matNode.getChildNode("Manufacturer").getText();
-        auto thicknessStr = matNode.getChildNode("Thickness").getText();
+		auto thickness = parseOptionalDoubleNode(matNode.getChildNode("Thickness"));
         auto thicknessUnitStr = matNode.getChildNode("Thickness").getAttribute("unit");
-
-        double thickness = std::stod(thicknessStr);
         if(toLower(thicknessUnitStr) == "millimeter")
         {}
-        else if(toLower(thicknessUnitStr) == "meter")
+        else if(thickness.has_value() && toLower(thicknessUnitStr) == "meter")
         {
-            thickness *= 1000.0;
+            *thickness *= 1000.0;
         }
         else
         {
             throw std::runtime_error("XML error: Unsupported thickness unit");
         }
         product->thickness = thickness;
-        product->frontEmissivity = std::stod(matNode.getChildNode("EmissivityFront").getText());
-        product->backEmissivity = std::stod(matNode.getChildNode("EmissivityBack").getText());
-        product->IRTransmittance = std::stod(matNode.getChildNode("TIR").getText());
-        product->conductivity = std::stod(matNode.getChildNode("ThermalConductivity").getText());
+        product->frontEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityFront"));
+        product->backEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityBack"));
+        product->IRTransmittance = parseOptionalDoubleNode(matNode.getChildNode("TIR"));
+        product->conductivity = parseOptionalDoubleNode(matNode.getChildNode("ThermalConductivity"));
         auto opennessNode = matNode.getChildNode("PermeabilityFactor");
 
         auto xEffectiveOpenness = matNode.getChildNode("EffectiveOpennessFraction");
@@ -691,7 +700,7 @@ namespace OpticsParser
         {
             opennessNode = xEffectiveOpenness;
         }
-        product->permeabilityFactor = std::stod(opennessNode.getText());
+        product->permeabilityFactor = parseOptionalDoubleNode(opennessNode);
 
         int wavelengthDataNodeCt = xLayerNode.nChildNode("WavelengthData");
 
