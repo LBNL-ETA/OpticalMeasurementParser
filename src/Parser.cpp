@@ -619,7 +619,7 @@ namespace OpticsParser
 		std::vector<char> possibleTokens{',', ';', ' '};
 		for(auto & tok : possibleTokens)
 		{
-			if(str.find(tok) != std::basic_string<TCHAR>::npos)
+			if(str.find(tok) != std::string::npos)
 			{
 				token = tok;
 				break;
@@ -631,7 +631,7 @@ namespace OpticsParser
     std::vector<std::string> splitString(const std::string & str)
     {
 		std::vector<std::string> tokens;
-		std::basic_istringstream<TCHAR> test{str};
+		std::istringstream test{str};
 		char token = getSplitToken(str);
 		std::string line;
 		while(std::getline(test, line, token))
