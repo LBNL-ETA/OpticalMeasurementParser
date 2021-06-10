@@ -115,7 +115,7 @@ namespace OpticsParser
                     std::string const & manufacturer);
         ProductData(std::string const & productName,
                     std::string const & productType,
-                    std::string const & subtype,
+                    std::string const & productSubtype,
                     std::string const & manufacturer);
 
         virtual std::shared_ptr<ProductData> composedProduct();
@@ -123,7 +123,7 @@ namespace OpticsParser
         std::string productName;
         std::string productType;
         std::string manufacturer;
-        std::optional<std::string> subtype;
+        std::optional<std::string> productSubtype;
         std::optional<int> nfrcid;
         std::optional<double> thickness;
         std::optional<double> conductivity;
@@ -146,6 +146,8 @@ namespace OpticsParser
         std::optional<int> aercID;
         std::optional<bool> specularity;
         std::optional<double> permeabilityFactor;
+		std::optional<int> igdbChecksum;
+        std::optional<std::string> igdbDatabaseVersion;
     };
 
 	// Converting to json requires updating and is not currently being

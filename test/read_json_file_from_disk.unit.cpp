@@ -33,7 +33,7 @@ TEST_F(TestLoadJSONFromDisk, TestLoadClear3JSON)
 	//    EXPECT_EQ(product->nfrcid.value(), 102);
 	EXPECT_EQ(product->productName, "Generic Clear Glass");
 	EXPECT_EQ(product->productType, "glazing");
-	EXPECT_EQ(product->subtype, "monolithic");
+	EXPECT_EQ(product->productSubtype, "monolithic");
 	EXPECT_NEAR(product->thickness.value(), 3.048, 1e-6);
 	EXPECT_EQ(product->conductivity, 1.0);
 	EXPECT_EQ(product->IRTransmittance.value(), 0.0);

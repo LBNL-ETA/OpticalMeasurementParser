@@ -32,7 +32,7 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadClear3)
 	EXPECT_EQ(product->nfrcid.value(), 102);
 	EXPECT_EQ(product->productName, "Generic Clear Glass");
 	EXPECT_EQ("glazing", product->productType);
-	EXPECT_EQ("Monolithic", product->subtype);
+	EXPECT_EQ("Monolithic", product->productSubtype);
 	EXPECT_EQ(product->thickness.value(), 3.048);
 	EXPECT_EQ(product->conductivity, 1.0);
 	EXPECT_EQ(product->IRTransmittance.value(), 0.0);
@@ -75,7 +75,7 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadDiffuseData)
 	EXPECT_EQ(product->nfrcid, std::optional<int>());
 	EXPECT_EQ(product->productName, "Generic frit 38mm aperture");
 	EXPECT_EQ("glazing", product->productType);
-	EXPECT_EQ("Coated", product->subtype);
+	EXPECT_EQ("Coated", product->productSubtype);
 	EXPECT_EQ(product->thickness.value(), 6.0);
 	EXPECT_EQ(product->conductivity, 1.0);
 	EXPECT_EQ(product->IRTransmittance.value(), 0.0);

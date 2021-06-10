@@ -70,7 +70,7 @@ namespace OpticsParser
         parseEmissivities(line, product);
         parseStringPropertyInsideBraces(line, "Product Name", product->productName);
         product->productType = "glazing";   // There are only glazing optics files.
-        parseStringPropertyInsideBraces(line, "Type", product->subtype);
+        parseStringPropertyInsideBraces(line, "Type", product->productSubtype);
         parseStringPropertyInsideBraces(line, "Ef_Source", product->frontEmissivitySource);
         parseStringPropertyInsideBraces(line, "Eb_Source", product->backEmissivitySource);
         parseStringPropertyInsideBraces(line, "Manufacturer", product->manufacturer);
@@ -114,7 +114,6 @@ namespace OpticsParser
         MeasurementComponent diffuseValues{tfDiffuse, tbDiffuse, rfDiffuse, rbDiffuse};
         return WLData(wl, directValues, diffuseValues);
     }
-
 
     void Parser::parseMeasurementLine(const std::string & line,
                                       std::shared_ptr<ProductData> product)
@@ -320,7 +319,6 @@ namespace OpticsParser
               product_json.at("interlayer_properties"), "interlayer_name");
         }
 
-
         product->appearance = get_optional_field<std::string>(product_json, "appearance");
         product->acceptance = get_optional_field<std::string>(product_json, "acceptance");
         product->fileName = get_optional_field<std::string>(product_json, "filename");
@@ -386,13 +384,14 @@ namespace OpticsParser
         std::shared_ptr<ProductData> product(new ProductData);
         product->productName = product_json.at("name").get<std::string>();
         product->productType = product_json.at("type").get<std::string>();
-        product->subtype = get_optional_field<std::string>(product_json, "subtype");
+        product->productSubtype = get_optional_field<std::string>(product_json, "subtype");
 
         product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
         product->manufacturer = product_json.at("manufacturer_name").get<std::string>();
         product->material =
           get_optional_field<std::string>(product_json, "material_bulk_properties");
 
+// <<<<<<< HEAD
         if(product_json.count("coating_properties"))
         {
             product->coatingName = get_optional_field<std::string>(
@@ -477,6 +476,28 @@ namespace OpticsParser
         return std::shared_ptr<ProductGeometry>(
           new VenetianGeometry(slatWidth, slatSpacing, slatCurvature, slatTilt, numberSegments));
     }
+	
+#if 0
+	
+=======
+OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
+{
+    OpticsParser::ProductData product;
+    product.productName = product_json.at("name").get<std::string>();
+    product.productType = product_json.at("type").get<std::string>();
+    product.productSubtype = product_json.at("subtype").get<std::string>();
+    product.nfrcid = get_optional_field<int>(product_json, "nfrc_id");
+    product.igdbChecksum = get_optional_field<int>(product_json, "igdb_checksum");
+    product.igdbDatabaseVersion =
+      get_optional_field<std::string>(product_json, "igdb_database_version");
+    product.manufacturer = product_json.at("manufacturer_name").get<std::string>();
+    product.material = get_optional_field<std::string>(product_json, "material_bulk_properties");
+
+
+    product.coatingName = get_optional_field<std::string>(product_json, "coating_name");
+    product.coatedSide = get_optional_field<std::string>(product_json, "coated_side");
+>>>>>>> origin/WINDOW_8_update_glass_from_IGSDB
+#endif
 
     std::shared_ptr<ProductGeometry> parseWovenGeometry(nlohmann::json const & geometry_json)
     {

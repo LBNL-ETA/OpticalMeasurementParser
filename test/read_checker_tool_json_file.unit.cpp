@@ -31,7 +31,7 @@ TEST_F(TestLoadJSONFromDisk, TestLoadCheckerToolJSON)
 	//    EXPECT_EQ(product->nfrcid.value(), 102);
 	EXPECT_EQ(product->productName, "CGD89_092661");
 	EXPECT_EQ("glazing", product->productType);
-	EXPECT_EQ("Monolithic", product->subtype);
+	EXPECT_EQ("Monolithic", product->productSubtype);
 	EXPECT_EQ(product->coatingName, "CGD89_092661");
 	EXPECT_EQ(product->coatedSide, "Both");
 	EXPECT_EQ(product->manufacturer, "Cardinal Glass Industries");

@@ -3,53 +3,56 @@
 #include <sstream>
 
 OpticsParser::WLData::WLData(double wavelength,
-	MeasurementComponent directComponent,
-	std::optional<MeasurementComponent> diffuseComponent) :
-	wavelength(wavelength), directComponent(directComponent), diffuseComponent(diffuseComponent)
+                             MeasurementComponent directComponent,
+                             std::optional<MeasurementComponent> diffuseComponent) :
+    wavelength(wavelength), directComponent(directComponent), diffuseComponent(diffuseComponent)
 {}
 
 OpticsParser::WLData::WLData(double wavelength, double tDirect, double rfDirect, double rbDiffuse) :
-	wavelength(wavelength),
-	directComponent(MeasurementComponent{tDirect, tDirect, rfDirect, rbDiffuse}),
-	diffuseComponent(std::optional<MeasurementComponent>())
+    wavelength(wavelength),
+    directComponent(MeasurementComponent{tDirect, tDirect, rfDirect, rbDiffuse}),
+    diffuseComponent(std::optional<MeasurementComponent>())
 {}
 
 OpticsParser::WLData::WLData(double wavelength,
-	double tfDirect,
-	double tfDiffuse,
-	double tbDirect,
-	double tbDiffuse,
-	double rfDirect,
-	double rfDiffuse,
-	double rbDirect,
-	double rbDiffuse) :
-	wavelength(wavelength),
-	directComponent(MeasurementComponent{tfDirect, tbDirect, rfDirect, rbDirect}),
-	diffuseComponent(MeasurementComponent{tfDiffuse, tbDiffuse, rfDiffuse, rbDiffuse})
+                             double tfDirect,
+                             double tfDiffuse,
+                             double tbDirect,
+                             double tbDiffuse,
+                             double rfDirect,
+                             double rfDiffuse,
+                             double rbDirect,
+                             double rbDiffuse) :
+    wavelength(wavelength),
+    directComponent(MeasurementComponent{tfDirect, tbDirect, rfDirect, rbDirect}),
+    diffuseComponent(MeasurementComponent{tfDiffuse, tbDiffuse, rfDiffuse, rbDiffuse})
 {}
 
 OpticsParser::ProductData::ProductData(std::string const & productName,
-	std::string const & productType,
-	std::string const & manufacturer) :
-	productName(productName), productType(productType), manufacturer(manufacturer)
+                                       std::string const & productType,
+                                       std::string const & manufacturer) :
+    productName(productName), productType(productType), manufacturer(manufacturer)
 {}
 
 OpticsParser::ProductData::ProductData(std::string const & productName,
-	std::string const & productType,
-	std::string const & subtype,
-	std::string const & manufacturer) :
-	productName(productName), productType(productType), manufacturer(manufacturer), subtype(subtype)
+                                       std::string const & productType,
+                                       std::string const & productSubtype,
+                                       std::string const & manufacturer) :
+    productName(productName),
+    productType(productType),
+    manufacturer(manufacturer),
+    productSubtype(productSubtype)
 {}
 
 
 std::shared_ptr<OpticsParser::ProductData> OpticsParser::ProductData::composedProduct()
 {
-	return shared_from_this();
+    return shared_from_this();
 }
 
 std::shared_ptr<OpticsParser::ProductData> OpticsParser::ComposedProductData::composedProduct()
 {
-	return compositionInformation->material;
+    return compositionInformation->material;
 }
 
 // Converting to json requires updating and is not currently being
@@ -66,35 +69,35 @@ void OpticsParser::to_json(nlohmann::json & j, OpticsParser::WLData const & wl)
 
 std::string convert_product_type(std::string const & optics_product_type)
 {
-	std::map<std::string, std::string> optics_types_to_new_types;
-	optics_types_to_new_types["Monolithic"] = "monolithic";
-	optics_types_to_new_types["Coated"] = "coated-glass";
-	optics_types_to_new_types["Laminate"] = "laminate";
+    std::map<std::string, std::string> optics_types_to_new_types;
+    optics_types_to_new_types["Monolithic"] = "monolithic";
+    optics_types_to_new_types["Coated"] = "coated-glass";
+    optics_types_to_new_types["Laminate"] = "laminate";
 
-	std::map<std::string, std::string>::iterator itr =
-		optics_types_to_new_types.find(optics_product_type);
+    std::map<std::string, std::string>::iterator itr =
+      optics_types_to_new_types.find(optics_product_type);
 
-	if(itr != optics_types_to_new_types.end())
-	{
-		return itr->second;
-	}
-	else
-	{
-		std::stringstream err_msg;
-		err_msg << "Unknown type in optics file: " << optics_product_type;
-		throw std::runtime_error(err_msg.str());
-	}
+    if(itr != optics_types_to_new_types.end())
+    {
+        return itr->second;
+    }
+    else
+    {
+        std::stringstream err_msg;
+        err_msg << "Unknown type in optics file: " << optics_product_type;
+        throw std::runtime_error(err_msg.str());
+    }
 }
 
 template<typename T>
 void add_optional(nlohmann::json & j,
-	std::string const & field_name,
-	std::optional<T> const & value)
+                  std::string const & field_name,
+                  std::optional<T> const & value)
 {
-	if(value)
-	{
-		j[field_name] = value.value();
-	}
+    if(value)
+    {
+        j[field_name] = value.value();
+    }
 }
 
 // Converting to json requires updating and is not currently being
@@ -163,38 +166,38 @@ void OpticsParser::to_json(nlohmann::json & j, OpticsParser::ProductData const &
 #endif
 
 OpticsParser::ComposedProductData::ComposedProductData(
-	ProductData const & product, std::shared_ptr<CompositionInformation> composition) :
-	ProductData(product), compositionInformation(composition)
+  ProductData const & product, std::shared_ptr<CompositionInformation> composition) :
+    ProductData(product), compositionInformation(composition)
 {}
 
 OpticsParser::ComposedProductData::ComposedProductData(
-	std::shared_ptr<CompositionInformation> composition) :
-	ProductData(), compositionInformation(composition)
+  std::shared_ptr<CompositionInformation> composition) :
+    ProductData(), compositionInformation(composition)
 {}
 
 OpticsParser::VenetianGeometry::VenetianGeometry(
-	double slatWidth, double slatSpacing, double slatCurvature, double slatTilt, int numberSegments) :
-	slatWidth(slatWidth),
-	slatSpacing(slatSpacing),
-	slatCurvature(slatCurvature),
-	slatTilt(slatTilt),
-	numberSegments(numberSegments)
+  double slatWidth, double slatSpacing, double slatCurvature, double slatTilt, int numberSegments) :
+    slatWidth(slatWidth),
+    slatSpacing(slatSpacing),
+    slatCurvature(slatCurvature),
+    slatTilt(slatTilt),
+    numberSegments(numberSegments)
 {}
 
 OpticsParser::WovenGeometry::WovenGeometry(double threadDiameter,
-	double threadSpacing,
-	double shadeThickness) :
-	threadDiameter(threadDiameter), threadSpacing(threadSpacing), shadeThickness(shadeThickness)
+                                           double threadSpacing,
+                                           double shadeThickness) :
+    threadDiameter(threadDiameter), threadSpacing(threadSpacing), shadeThickness(shadeThickness)
 {}
 
 OpticsParser::PerforatedGeometry::PerforatedGeometry(double spacingX,
-	double spacingY,
-	double dimensionX,
-	double dimensionY,
-	std::string perforationType) :
-	spacingX(spacingX),
-	spacingY(spacingY),
-	dimensionX(dimensionX),
-	dimensionY(dimensionY),
-	perforationType(perforationType)
+                                                     double spacingY,
+                                                     double dimensionX,
+                                                     double dimensionY,
+                                                     std::string perforationType) :
+    spacingX(spacingX),
+    spacingY(spacingY),
+    dimensionX(dimensionX),
+    dimensionY(dimensionY),
+    perforationType(perforationType)
 {}

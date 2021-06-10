@@ -58,7 +58,7 @@ TEST_F(TestFile1, Test1)
 	EXPECT_EQ(102, product->nfrcid.value());
 	EXPECT_EQ("Generic Clear Glass", product->productName);
 	EXPECT_EQ("glazing", product->productType);
-	EXPECT_EQ("Monolithic", product->subtype);
+	EXPECT_EQ("Monolithic", product->productSubtype);
 
 
 	std::vector<OpticsParser::WLData> correctResults{{0.300, 0.0020, 0.0470, 0.0480},
@@ -98,7 +98,7 @@ TEST_F(TestFile1, TestParseFile)
 	EXPECT_EQ(102, productData->nfrcid.value());
 	EXPECT_EQ("Generic Clear Glass", productData->productName);
 	EXPECT_EQ("glazing", productData->productType);
-	EXPECT_EQ("Monolithic", productData->subtype);
+	EXPECT_EQ("Monolithic", productData->productSubtype);
 	std::vector<OpticsParser::WLData> correctResults{{0.300, 0.0020, 0.0470, 0.0480},
 													 {0.305, 0.0030, 0.0470, 0.0480},
 													 {0.310, 0.0090, 0.0470, 0.0480},
