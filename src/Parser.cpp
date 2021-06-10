@@ -521,7 +521,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
           new PerforatedGeometry(spacingX, spacingY, dimensionX, dimensionY, perforationType));
     }
 
-    std::shared_ptr<ProductGeometry> parseGeometry(std::string const & subtype,
+    std::shared_ptr<ProductGeometry> parseGeometry(std::string const & productSubtype,
                                                    nlohmann::json const & geometry_json)
     {
         std::map<std::string,
@@ -532,7 +532,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         mapping["woven"] = &parseWovenGeometry;
         mapping["perforated-screen"] = &parsePerforatedGeometry;
 
-        auto itr = mapping.find(subtype);
+        auto itr = mapping.find(productSubtype);
         if(itr != mapping.end())
         {
             return itr->second(geometry_json);
@@ -540,7 +540,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         else
         {
             std::stringstream msg;
-            msg << "Subtype " << subtype << " geometry not yet supported.";
+            msg << "Subtype " << productSubtype << " geometry not yet supported.";
             throw std::runtime_error(msg.str());
         }
     }
