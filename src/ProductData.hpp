@@ -148,6 +148,8 @@ namespace OpticsParser
         std::optional<double> permeabilityFactor;
 		std::optional<int> igdbChecksum;
         std::optional<std::string> igdbDatabaseVersion;
+		std::optional<double> density;
+		std::optional<double> youngs_modulus;
     };
 
 	// Converting to json requires updating and is not currently being
