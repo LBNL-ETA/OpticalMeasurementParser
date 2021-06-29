@@ -149,7 +149,7 @@ namespace OpticsParser
 		std::optional<int> igdbChecksum;
         std::optional<std::string> igdbDatabaseVersion;
 		std::optional<double> density;
-		std::optional<double> youngs_modulus;
+		std::optional<double> youngsModulus;
     };
 
 	// Converting to json requires updating and is not currently being
