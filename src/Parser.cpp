@@ -50,16 +50,16 @@ namespace OpticsParser
         return product;
     }
 
-	std::optional<double> parseOptionalDoubleNode(XMLParser::XMLNode const & node)
-	{
-		std::optional<double> result;
-		auto txt = node.getText();
-		if(txt)
-		{
-			result = std::stod(txt);
-		}
-		return result;
-	}
+    std::optional<double> parseOptionalDoubleNode(XMLParser::XMLNode const & node)
+    {
+        std::optional<double> result;
+        auto txt = node.getText();
+        if(txt)
+        {
+            result = std::stod(txt);
+        }
+        return result;
+    }
 
     void Parser::parseHeaderLine(const std::string & line, std::shared_ptr<ProductData> product)
     {
@@ -391,20 +391,11 @@ namespace OpticsParser
         product->material =
           get_optional_field<std::string>(product_json, "material_bulk_properties");
 
-// <<<<<<< HEAD
-        if(product_json.count("coating_properties"))
-        {
-            product->coatingName = get_optional_field<std::string>(
-              product_json.at("coating_properties"), "coating_name");
-            product->coatedSide =
-              get_optional_field<std::string>(product_json.at("coating_properties"), "coated_side");
-        }
+        product->coatingName = get_optional_field<std::string>(product_json, "coating_name");
+        product->coatedSide = get_optional_field<std::string>(product_json, "coated_side");
 
-        if(product_json.count("interlayer_properties"))
-        {
-            product->substrateFilename = get_optional_field<std::string>(
-              product_json.at("interlayer_properties"), "interlayer_name");
-        }
+        product->substrateFilename =
+          get_optional_field<std::string>(product_json, "interlayer_name");
 
 
         product->appearance = get_optional_field<std::string>(product_json, "appearance");
@@ -634,33 +625,33 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         }
     }
 
-	char getSplitToken(std::string const& str)
-	{
-		char token = ','; // Default to comma delmiter?
-		std::vector<char> possibleTokens{',', ';', ' '};
-		for(auto & tok : possibleTokens)
-		{
-			if(str.find(tok) != std::string::npos)
-			{
-				token = tok;
-				break;
-			}
-		}
-		return token;
-	}
+    char getSplitToken(std::string const & str)
+    {
+        char token = ',';   // Default to comma delmiter?
+        std::vector<char> possibleTokens{',', ';', ' '};
+        for(auto & tok : possibleTokens)
+        {
+            if(str.find(tok) != std::string::npos)
+            {
+                token = tok;
+                break;
+            }
+        }
+        return token;
+    }
 
     std::vector<std::string> splitString(const std::string & str)
     {
-		std::vector<std::string> tokens;
-		std::istringstream test{str};
-		char token = getSplitToken(str);
-		std::string line;
-		while(std::getline(test, line, token))
-		{
-			tokens.push_back(line);
-		}
-		
-		return tokens;
+        std::vector<std::string> tokens;
+        std::istringstream test{str};
+        char token = getSplitToken(str);
+        std::string line;
+        while(std::getline(test, line, token))
+        {
+            tokens.push_back(line);
+        }
+
+        return tokens;
     }
 
     std::vector<std::vector<double>> convertToSquareMatrix(std::vector<double> const & v)
@@ -692,12 +683,13 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         {
             throw std::runtime_error("XML error : WindowElement not found");
         }
-        XMLParser::XMLNode xLayerNode = xWindowElementNode.getChildNode("Optical").getChildNode("Layer");
+        XMLParser::XMLNode xLayerNode =
+          xWindowElementNode.getChildNode("Optical").getChildNode("Layer");
 
         XMLParser::XMLNode matNode = xLayerNode.getChildNode("Material");
         product->productName = matNode.getChildNode("Name").getText();
         product->manufacturer = matNode.getChildNode("Manufacturer").getText();
-		auto thickness = parseOptionalDoubleNode(matNode.getChildNode("Thickness"));
+        auto thickness = parseOptionalDoubleNode(matNode.getChildNode("Thickness"));
         auto thicknessUnitStr = matNode.getChildNode("Thickness").getAttribute("unit");
         if(toLower(thicknessUnitStr) == "millimeter")
         {}
@@ -713,7 +705,8 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         product->frontEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityFront"));
         product->backEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityBack"));
         product->IRTransmittance = parseOptionalDoubleNode(matNode.getChildNode("TIR"));
-        product->conductivity = parseOptionalDoubleNode(matNode.getChildNode("ThermalConductivity"));
+        product->conductivity =
+          parseOptionalDoubleNode(matNode.getChildNode("ThermalConductivity"));
         auto opennessNode = matNode.getChildNode("PermeabilityFactor");
 
         auto xEffectiveOpenness = matNode.getChildNode("EffectiveOpennessFraction");
@@ -815,13 +808,15 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
 
     std::shared_ptr<ProductData> parseBSDFXMLString(std::string const & contents)
     {
-        XMLParser::XMLNode xWindowElementNode = XMLParser::XMLNode::parseString(contents.c_str(), "WindowElement");
+        XMLParser::XMLNode xWindowElementNode =
+          XMLParser::XMLNode::parseString(contents.c_str(), "WindowElement");
         return parseBSDFXML(xWindowElementNode);
     }
 
     std::shared_ptr<ProductData> parseBSDFXMLFile(std::string const & fname)
     {
-        XMLParser::XMLNode xWindowElementNode = XMLParser::XMLNode::openFileHelper(fname.c_str(), "WindowElement");
+        XMLParser::XMLNode xWindowElementNode =
+          XMLParser::XMLNode::openFileHelper(fname.c_str(), "WindowElement");
         return parseBSDFXML(xWindowElementNode);
     }
 
