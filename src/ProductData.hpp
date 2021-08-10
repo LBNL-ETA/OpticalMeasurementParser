@@ -25,7 +25,7 @@ namespace OpticsParser
                std::optional<MeasurementComponent> diffuseComponent =
                  std::optional<MeasurementComponent>());
 
-        WLData(double wavelength, double tDirect, double rfDirect, double rbDiffuse);
+        WLData(double wavelength, double tDirect, double rfDirect, double rbDirect);
         WLData(double wavelength,
                double tfDirect,
                double tfDiffuse,

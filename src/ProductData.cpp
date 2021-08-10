@@ -8,9 +8,9 @@ OpticsParser::WLData::WLData(double wavelength,
     wavelength(wavelength), directComponent(directComponent), diffuseComponent(diffuseComponent)
 {}
 
-OpticsParser::WLData::WLData(double wavelength, double tDirect, double rfDirect, double rbDiffuse) :
+OpticsParser::WLData::WLData(double wavelength, double tDirect, double rfDirect, double rbDirect) :
     wavelength(wavelength),
-    directComponent(MeasurementComponent{tDirect, tDirect, rfDirect, rbDiffuse}),
+    directComponent(MeasurementComponent{tDirect, tDirect, rfDirect, rbDirect}),
     diffuseComponent(std::optional<MeasurementComponent>())
 {}
 
