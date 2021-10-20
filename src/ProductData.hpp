@@ -56,11 +56,11 @@ namespace OpticsParser
         BSDF rb;
     };
 
-	struct DualBandBSDF
-	{
-		WavelengthBSDFs solar;
-		WavelengthBSDFs visible;
-	};
+    struct DualBandBSDF
+    {
+        WavelengthBSDFs solar;
+        WavelengthBSDFs visible;
+    };
 
     struct ProductGeometry
     {
@@ -146,16 +146,18 @@ namespace OpticsParser
         std::optional<int> aercID;
         std::optional<bool> specularity;
         std::optional<double> permeabilityFactor;
-		std::optional<int> igdbChecksum;
+        std::optional<int> igdbChecksum;
         std::optional<std::string> igdbDatabaseVersion;
-		std::optional<double> density;
-		std::optional<double> youngsModulus;
+		std::optional<int> cgdbChecksum;
+		std::optional<std::string> cgdbDatabaseVersion;
+        std::optional<double> density;
+        std::optional<double> youngsModulus;
     };
 
-	// Converting to json requires updating and is not currently being
-	// used so disabling for now.
-    //void to_json(nlohmann::json & j, WLData const & wl);
-    //void to_json(nlohmann::json & j, ProductData const & wl);
+    // Converting to json requires updating and is not currently being
+    // used so disabling for now.
+    // void to_json(nlohmann::json & j, WLData const & wl);
+    // void to_json(nlohmann::json & j, ProductData const & wl);
 
     struct CompositionInformation
     {
