@@ -120,11 +120,14 @@ namespace OpticsParser
 
         virtual std::shared_ptr<ProductData> composedProduct();
 
+		std::string name;
         std::string productName;
         std::string productType;
         std::string manufacturer;
         std::optional<std::string> productSubtype;
         std::optional<int> nfrcid;
+		std::optional<int> cgdbShadingLayerId;
+		std::optional<int> cgdbShadeMaterialId;
         std::optional<double> thickness;
         std::optional<double> conductivity;
         std::optional<double> IRTransmittance;
@@ -152,6 +155,7 @@ namespace OpticsParser
 		std::optional<std::string> cgdbDatabaseVersion;
         std::optional<double> density;
         std::optional<double> youngsModulus;
+		std::optional<std::string> dataFileName;
     };
 
     // Converting to json requires updating and is not currently being

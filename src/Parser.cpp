@@ -298,6 +298,10 @@ namespace OpticsParser
         product->productType = product_json.at("product_type").get<std::string>();
 
         product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
+		product->cgdbShadingLayerId = get_optional_field<int>(product_json, "cgdb_shading_layer_id");
+		product->cgdbShadeMaterialId = get_optional_field<int>(product_json, "cgdb_shade_material_id");
+		product->igdbDatabaseVersion = get_optional_field<std::string>(product_json, "igdb_database_version");
+		product->cgdbDatabaseVersion = get_optional_field<std::string>(product_json, "cgdb_database_version");
         product->manufacturer = product_json.at("manufacturer").get<std::string>();
         if(product_json.count("material_bulk_properties"))
         {
@@ -382,11 +386,18 @@ namespace OpticsParser
       parseIGSDBJsonUncomposedProduct(nlohmann::json const & product_json)
     {
         std::shared_ptr<ProductData> product(new ProductData);
-        product->productName = product_json.at("name").get<std::string>();
+		product->name = product_json.at("name").get<std::string>();
+        product->productName = product_json.at("product_name").get<std::string>();
         product->productType = product_json.at("type").get<std::string>();
         product->productSubtype = get_optional_field<std::string>(product_json, "subtype");
 
         product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
+		product->cgdbShadingLayerId = get_optional_field<int>(product_json, "cgdb_shading_layer_id");
+		product->cgdbShadeMaterialId = get_optional_field<int>(product_json, "cgdb_shade_material_id");
+		product->igdbDatabaseVersion = get_optional_field<std::string>(product_json, "igdb_database_version");
+		product->cgdbDatabaseVersion = get_optional_field<std::string>(product_json, "cgdb_database_version");
+		product->igdbChecksum = get_optional_field<int>(product_json, "igdb_checksum");
+		product->cgdbChecksum = get_optional_field<int>(product_json, "cgdb_checksum");
         product->manufacturer = product_json.at("manufacturer_name").get<std::string>();
         product->material =
           get_optional_field<std::string>(product_json, "material_bulk_properties");
@@ -401,6 +412,7 @@ namespace OpticsParser
         product->appearance = get_optional_field<std::string>(product_json, "appearance");
         product->acceptance = get_optional_field<std::string>(product_json, "acceptance");
         product->fileName = get_optional_field<std::string>(product_json, "filename");
+		product->dataFileName = get_optional_field<std::string>(product_json, "data_file_name");
         product->unitSystem = get_optional_field<std::string>(product_json, "unit_system");
 
         nlohmann::json measured_data_json = product_json.at("measured_data");
