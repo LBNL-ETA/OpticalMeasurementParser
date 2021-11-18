@@ -176,11 +176,12 @@ OpticsParser::ComposedProductData::ComposedProductData(
 {}
 
 OpticsParser::VenetianGeometry::VenetianGeometry(
-  double slatWidth, double slatSpacing, double slatCurvature, double slatTilt, int numberSegments) :
+  double slatWidth, double slatSpacing, double slatCurvature, double slatTilt, std::string const& tiltChoice, int numberSegments) :
     slatWidth(slatWidth),
     slatSpacing(slatSpacing),
     slatCurvature(slatCurvature),
     slatTilt(slatTilt),
+	tiltChoice(tiltChoice),
     numberSegments(numberSegments)
 {}
 

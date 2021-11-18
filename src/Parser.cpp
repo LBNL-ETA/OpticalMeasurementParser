@@ -298,10 +298,14 @@ namespace OpticsParser
         product->productType = product_json.at("product_type").get<std::string>();
 
         product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
-		product->cgdbShadingLayerId = get_optional_field<int>(product_json, "cgdb_shading_layer_id");
-		product->cgdbShadeMaterialId = get_optional_field<int>(product_json, "cgdb_shade_material_id");
-		product->igdbDatabaseVersion = get_optional_field<std::string>(product_json, "igdb_database_version");
-		product->cgdbDatabaseVersion = get_optional_field<std::string>(product_json, "cgdb_database_version");
+        product->cgdbShadingLayerId =
+          get_optional_field<int>(product_json, "cgdb_shading_layer_id");
+        product->cgdbShadeMaterialId =
+          get_optional_field<int>(product_json, "cgdb_shade_material_id");
+        product->igdbDatabaseVersion =
+          get_optional_field<std::string>(product_json, "igdb_database_version");
+        product->cgdbDatabaseVersion =
+          get_optional_field<std::string>(product_json, "cgdb_database_version");
         product->manufacturer = product_json.at("manufacturer").get<std::string>();
         if(product_json.count("material_bulk_properties"))
         {
@@ -386,18 +390,22 @@ namespace OpticsParser
       parseIGSDBJsonUncomposedProduct(nlohmann::json const & product_json)
     {
         std::shared_ptr<ProductData> product(new ProductData);
-		product->name = product_json.at("name").get<std::string>();
-        product->productName = product_json.at("product_name").get<std::string>();
+        product->name = product_json.at("name").get<std::string>();
+        product->productName = get_optional_field<std::string>(product_json, "product_name");
         product->productType = product_json.at("type").get<std::string>();
         product->productSubtype = get_optional_field<std::string>(product_json, "subtype");
 
         product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
-		product->cgdbShadingLayerId = get_optional_field<int>(product_json, "cgdb_shading_layer_id");
-		product->cgdbShadeMaterialId = get_optional_field<int>(product_json, "cgdb_shade_material_id");
-		product->igdbDatabaseVersion = get_optional_field<std::string>(product_json, "igdb_database_version");
-		product->cgdbDatabaseVersion = get_optional_field<std::string>(product_json, "cgdb_database_version");
-		product->igdbChecksum = get_optional_field<int>(product_json, "igdb_checksum");
-		product->cgdbChecksum = get_optional_field<int>(product_json, "cgdb_checksum");
+        product->cgdbShadingLayerId =
+          get_optional_field<int>(product_json, "cgdb_shading_layer_id");
+        product->cgdbShadeMaterialId =
+          get_optional_field<int>(product_json, "cgdb_shade_material_id");
+        product->igdbDatabaseVersion =
+          get_optional_field<std::string>(product_json, "igdb_database_version");
+        product->cgdbDatabaseVersion =
+          get_optional_field<std::string>(product_json, "cgdb_database_version");
+        product->igdbChecksum = get_optional_field<int>(product_json, "igdb_checksum");
+        product->cgdbChecksum = get_optional_field<int>(product_json, "cgdb_checksum");
         product->manufacturer = product_json.at("manufacturer_name").get<std::string>();
         product->material =
           get_optional_field<std::string>(product_json, "material_bulk_properties");
@@ -412,8 +420,9 @@ namespace OpticsParser
         product->appearance = get_optional_field<std::string>(product_json, "appearance");
         product->acceptance = get_optional_field<std::string>(product_json, "acceptance");
         product->fileName = get_optional_field<std::string>(product_json, "filename");
-		product->dataFileName = get_optional_field<std::string>(product_json, "data_file_name");
+        product->dataFileName = get_optional_field<std::string>(product_json, "data_file_name");
         product->unitSystem = get_optional_field<std::string>(product_json, "unit_system");
+		product->opticalOpenness = get_optional_field<double>(product_json, "optical_openness");
 
         nlohmann::json measured_data_json = product_json.at("measured_data");
 
@@ -429,6 +438,9 @@ namespace OpticsParser
 
         product->backEmissivitySource =
           get_optional_field<std::string>(measured_data_json, "emissivity_back_source");
+
+        product->permeabilityFactor =
+          get_optional_field<double>(measured_data_json, "permeability_factor");
 
         product->backEmissivitySource =
           get_optional_field<std::string>(measured_data_json, "wavelength_units");
@@ -468,6 +480,7 @@ namespace OpticsParser
         auto slatCurvature = geometry_json.at("slat_curvature").get<double>();
         auto numberSegments = geometry_json.at("number_segments").get<int>();
         double slatTilt = geometry_json.value("slat_tilt", 0.0);
+        std::string tiltChoice = geometry_json.at("tilt_choice").get<std::string>();
 
         // These values are stored as mm in the sources being parsed.
         // Convert to meters here for consistancy with other non-wavelength
@@ -477,9 +490,9 @@ namespace OpticsParser
         slatCurvature /= 1000.0;
 
         return std::shared_ptr<ProductGeometry>(
-          new VenetianGeometry(slatWidth, slatSpacing, slatCurvature, slatTilt, numberSegments));
+          new VenetianGeometry(slatWidth, slatSpacing, slatCurvature, slatTilt, tiltChoice, numberSegments));
     }
-	
+
 #if 0
 	
 =======
@@ -500,9 +513,10 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
     product.coatingName = get_optional_field<std::string>(product_json, "coating_name");
     product.coatedSide = get_optional_field<std::string>(product_json, "coated_side");
 >>>>>>> origin/WINDOW_8_update_glass_from_IGSDB
-#endif
+#    endif
 
-    std::shared_ptr<ProductGeometry> parseWovenGeometry(nlohmann::json const & geometry_json)
+      std::shared_ptr
+      < ProductGeometry> parseWovenGeometry(nlohmann::json const & geometry_json)
     {
         auto threadDiameter = geometry_json.at("thread_diameter").get<double>();
         auto threadSpacing = geometry_json.at("thread_spacing").get<double>();
