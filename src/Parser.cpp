@@ -385,6 +385,78 @@ namespace OpticsParser
         return product;
     }
 
+    void parseDualBandValues(std::shared_ptr<ProductData> product,
+                             nlohmann::json const & spectral_data_json)
+    {
+        if(spectral_data_json.count("dual_band_values") == 0
+           || spectral_data_json.at("dual_band_values").empty())
+        {
+            return;
+        }
+        auto dual_band = spectral_data_json.at("dual_band_values");
+        DualBandValues specular;
+        DualBandValues diffuse;
+
+        specular.solarTransmittanceFront = get_optional_field<double>(dual_band, "Tf_sol_specular");
+        specular.solarReflectanceFront = get_optional_field<double>(dual_band, "Rf_sol_specular");
+        specular.solarReflectanceBack = get_optional_field<double>(dual_band, "Rb_sol_specular");
+        specular.solarTransmittanceBack = get_optional_field<double>(dual_band, "Tb_sol_specular");
+
+        specular.visibleTransmittanceFront =
+          get_optional_field<double>(dual_band, "Tf_vis_specular");
+        specular.visibleTransmittanceBack =
+          get_optional_field<double>(dual_band, "Tb_vis_specular");
+        specular.visibleReflectanceFront = get_optional_field<double>(dual_band, "Rf_vis_specular");
+        specular.visibleReflectanceBack = get_optional_field<double>(dual_band, "Rb_vis_specular");
+
+        diffuse.solarTransmittanceFront = get_optional_field<double>(dual_band, "Tf_sol_diffuse");
+        diffuse.solarReflectanceFront = get_optional_field<double>(dual_band, "Rf_sol_diffuse");
+        diffuse.solarReflectanceBack = get_optional_field<double>(dual_band, "Rb_sol_diffuse");
+        diffuse.solarTransmittanceBack = get_optional_field<double>(dual_band, "Tb_sol_diffuse");
+
+        diffuse.visibleTransmittanceFront = get_optional_field<double>(dual_band, "Tf_vis_diffuse");
+        diffuse.visibleTransmittanceBack = get_optional_field<double>(dual_band, "Tb_vis_diffuse");
+        diffuse.visibleReflectanceFront = get_optional_field<double>(dual_band, "Rf_vis_diffuse");
+        diffuse.visibleReflectanceBack = get_optional_field<double>(dual_band, "Rb_vis_diffuse");
+
+        product->dualBandSpecular = specular;
+        product->dualBandDiffuse = diffuse;
+    }
+
+    void parseIntegratedResults(std::shared_ptr<ProductData> product,
+                                nlohmann::json const & product_json)
+    {
+        if(product_json.count("integrated_results_summary") == 0
+           || product_json.at("integrated_results_summary").empty())
+        {
+            return;
+        }
+        auto integrated_results = product_json.at("integrated_results_summary")[0];
+        PrecalculatedResults result;
+
+        result.solarTransmittanceFront = get_optional_field<double>(integrated_results, "tfsol");
+        result.solarReflectanceFront = get_optional_field<double>(integrated_results, "rfsol");
+        result.visibleTransmittanceFront = get_optional_field<double>(integrated_results, "tfvis");
+        result.visibleReflectanceFront = get_optional_field<double>(integrated_results, "rfvis");
+        result.visibleReflectanceBack = get_optional_field<double>(integrated_results, "rbvis");
+        result.dwTransmittance = get_optional_field<double>(integrated_results, "tdw");
+        result.uvTransmittance = get_optional_field<double>(integrated_results, "tuv");
+        result.spfTransmittance = get_optional_field<double>(integrated_results, "tspf");
+        auto tcie_x = get_optional_field<double>(integrated_results, "tciex");
+        auto tcie_y = get_optional_field<double>(integrated_results, "tciey");
+        auto tcie_z = get_optional_field<double>(integrated_results, "tciez");
+        if(tcie_x.has_value() && tcie_y.has_value() && tcie_z.has_value())
+        {
+            result.cieTransmittance = CIEValue{*tcie_x, *tcie_y, *tcie_z};
+        }
+        auto rfcie_x = get_optional_field<double>(integrated_results, "rfciex");
+        auto rfcie_y = get_optional_field<double>(integrated_results, "rfciey");
+        auto rfcie_z = get_optional_field<double>(integrated_results, "rfciez");
+        if(rfcie_x.has_value() && rfcie_y.has_value() && rfcie_z.has_value())
+        {
+            result.cieReflectanceFront = CIEValue{*rfcie_x, *rfcie_y, *rfcie_z};
+        }
+    }
 
     std::shared_ptr<ProductData>
       parseIGSDBJsonUncomposedProduct(nlohmann::json const & product_json)
@@ -422,7 +494,7 @@ namespace OpticsParser
         product->fileName = get_optional_field<std::string>(product_json, "filename");
         product->dataFileName = get_optional_field<std::string>(product_json, "data_file_name");
         product->unitSystem = get_optional_field<std::string>(product_json, "unit_system");
-		product->opticalOpenness = get_optional_field<double>(product_json, "optical_openness");
+        product->opticalOpenness = get_optional_field<double>(product_json, "optical_openness");
 
         nlohmann::json measured_data_json = product_json.at("measured_data");
 
@@ -469,7 +541,10 @@ namespace OpticsParser
             {
                 product->measurements = measurements;
             }
+            parseDualBandValues(product, spectral_data_json);
         }
+        parseIntegratedResults(product, product_json);
+
         return product;
     }
 
@@ -489,8 +564,8 @@ namespace OpticsParser
         slatSpacing /= 1000.0;
         slatCurvature /= 1000.0;
 
-        return std::shared_ptr<ProductGeometry>(
-          new VenetianGeometry(slatWidth, slatSpacing, slatCurvature, slatTilt, tiltChoice, numberSegments));
+        return std::shared_ptr<ProductGeometry>(new VenetianGeometry(
+          slatWidth, slatSpacing, slatCurvature, slatTilt, tiltChoice, numberSegments));
     }
 
 #if 0

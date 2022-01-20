@@ -74,14 +74,14 @@ namespace OpticsParser
                          double slatSpacing,
                          double slatCurvature,
                          double slatTilt = 0,
-                         std::string const& tiltChoice = "0",
+                         std::string const & tiltChoice = "0",
                          int numberSegments = 5);
 
         double slatWidth;
         double slatSpacing;
         double slatCurvature;
         double slatTilt;
-		std::string tiltChoice;
+        std::string tiltChoice;
         int numberSegments;
     };
 
@@ -107,6 +107,40 @@ namespace OpticsParser
         std::string perforationType;
     };
 
+    struct DualBandValues
+    {
+        std::optional<double> solarTransmittanceFront;
+        std::optional<double> solarTransmittanceBack;
+        std::optional<double> solarReflectanceFront;
+        std::optional<double> solarReflectanceBack;
+        std::optional<double> visibleTransmittanceFront;
+        std::optional<double> visibleTransmittanceBack;
+        std::optional<double> visibleReflectanceFront;
+        std::optional<double> visibleReflectanceBack;
+    };
+
+    struct CIEValue
+    {
+        double x;
+        double y;
+        double z;
+    };
+
+    struct PrecalculatedResults
+    {
+        std::optional<double> solarTransmittanceFront;
+        std::optional<double> solarReflectanceFront;
+        std::optional<double> solarReflectanceBack;
+        std::optional<double> visibleTransmittanceFront;
+        std::optional<double> visibleReflectanceFront;
+        std::optional<double> visibleReflectanceBack;
+        std::optional<double> dwTransmittance;
+        std::optional<double> spfTransmittance;
+        std::optional<double> uvTransmittance;
+        std::optional<CIEValue> cieTransmittance;
+        std::optional<CIEValue> cieReflectanceFront;
+    };
+
     struct ProductData : std::enable_shared_from_this<ProductData>
     {
         ProductData() = default;
@@ -123,7 +157,7 @@ namespace OpticsParser
         virtual std::shared_ptr<ProductData> composedProduct();
 
         std::string name;
-		std::optional<std::string> productName;
+        std::optional<std::string> productName;
         std::string productType;
         std::string manufacturer;
         std::optional<std::string> productSubtype;
@@ -158,7 +192,10 @@ namespace OpticsParser
         std::optional<double> density;
         std::optional<double> youngsModulus;
         std::optional<std::string> dataFileName;
-		std::optional<double> opticalOpenness;
+        std::optional<double> opticalOpenness;
+        std::optional<DualBandValues> dualBandSpecular;
+        std::optional<DualBandValues> dualBandDiffuse;
+        std::optional<PrecalculatedResults> precalculatedResults;
     };
 
     // Converting to json requires updating and is not currently being
