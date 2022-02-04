@@ -456,6 +456,7 @@ namespace OpticsParser
         {
             result.cieReflectanceFront = CIEValue{*rfcie_x, *rfcie_y, *rfcie_z};
         }
+		product->precalculatedResults = result;
     }
 
     std::shared_ptr<ProductData>
