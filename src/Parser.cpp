@@ -298,6 +298,14 @@ namespace OpticsParser
         product->productType = product_json.at("product_type").get<std::string>();
 
         product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
+        product->cgdbShadingLayerId =
+          get_optional_field<int>(product_json, "cgdb_shading_layer_id");
+        product->cgdbShadeMaterialId =
+          get_optional_field<int>(product_json, "cgdb_shade_material_id");
+        product->igdbDatabaseVersion =
+          get_optional_field<std::string>(product_json, "igdb_database_version");
+        product->cgdbDatabaseVersion =
+          get_optional_field<std::string>(product_json, "cgdb_database_version");
         product->manufacturer = product_json.at("manufacturer").get<std::string>();
         if(product_json.count("material_bulk_properties"))
         {
@@ -377,16 +385,100 @@ namespace OpticsParser
         return product;
     }
 
+    void parseDualBandValues(std::shared_ptr<ProductData> product,
+                             nlohmann::json const & spectral_data_json)
+    {
+        if(spectral_data_json.count("dual_band_values") == 0
+           || spectral_data_json.at("dual_band_values").empty())
+        {
+            return;
+        }
+        auto dual_band = spectral_data_json.at("dual_band_values");
+        DualBandValues specular;
+        DualBandValues diffuse;
+
+        specular.solarTransmittanceFront = get_optional_field<double>(dual_band, "Tf_sol_specular");
+        specular.solarReflectanceFront = get_optional_field<double>(dual_band, "Rf_sol_specular");
+        specular.solarReflectanceBack = get_optional_field<double>(dual_band, "Rb_sol_specular");
+        specular.solarTransmittanceBack = get_optional_field<double>(dual_band, "Tb_sol_specular");
+
+        specular.visibleTransmittanceFront =
+          get_optional_field<double>(dual_band, "Tf_vis_specular");
+        specular.visibleTransmittanceBack =
+          get_optional_field<double>(dual_band, "Tb_vis_specular");
+        specular.visibleReflectanceFront = get_optional_field<double>(dual_band, "Rf_vis_specular");
+        specular.visibleReflectanceBack = get_optional_field<double>(dual_band, "Rb_vis_specular");
+
+        diffuse.solarTransmittanceFront = get_optional_field<double>(dual_band, "Tf_sol_diffuse");
+        diffuse.solarReflectanceFront = get_optional_field<double>(dual_band, "Rf_sol_diffuse");
+        diffuse.solarReflectanceBack = get_optional_field<double>(dual_band, "Rb_sol_diffuse");
+        diffuse.solarTransmittanceBack = get_optional_field<double>(dual_band, "Tb_sol_diffuse");
+
+        diffuse.visibleTransmittanceFront = get_optional_field<double>(dual_band, "Tf_vis_diffuse");
+        diffuse.visibleTransmittanceBack = get_optional_field<double>(dual_band, "Tb_vis_diffuse");
+        diffuse.visibleReflectanceFront = get_optional_field<double>(dual_band, "Rf_vis_diffuse");
+        diffuse.visibleReflectanceBack = get_optional_field<double>(dual_band, "Rb_vis_diffuse");
+
+        product->dualBandSpecular = specular;
+        product->dualBandDiffuse = diffuse;
+    }
+
+    void parseIntegratedResults(std::shared_ptr<ProductData> product,
+                                nlohmann::json const & product_json)
+    {
+        if(product_json.count("integrated_results_summary") == 0
+           || product_json.at("integrated_results_summary").empty())
+        {
+            return;
+        }
+        auto integrated_results = product_json.at("integrated_results_summary")[0];
+        PrecalculatedResults result;
+
+        result.solarTransmittanceFront = get_optional_field<double>(integrated_results, "tfsol");
+        result.solarReflectanceFront = get_optional_field<double>(integrated_results, "rfsol");
+        result.visibleTransmittanceFront = get_optional_field<double>(integrated_results, "tfvis");
+        result.visibleReflectanceFront = get_optional_field<double>(integrated_results, "rfvis");
+        result.visibleReflectanceBack = get_optional_field<double>(integrated_results, "rbvis");
+        result.dwTransmittance = get_optional_field<double>(integrated_results, "tdw");
+        result.uvTransmittance = get_optional_field<double>(integrated_results, "tuv");
+        result.spfTransmittance = get_optional_field<double>(integrated_results, "tspf");
+        auto tcie_x = get_optional_field<double>(integrated_results, "tciex");
+        auto tcie_y = get_optional_field<double>(integrated_results, "tciey");
+        auto tcie_z = get_optional_field<double>(integrated_results, "tciez");
+        if(tcie_x.has_value() && tcie_y.has_value() && tcie_z.has_value())
+        {
+            result.cieTransmittance = CIEValue{*tcie_x, *tcie_y, *tcie_z};
+        }
+        auto rfcie_x = get_optional_field<double>(integrated_results, "rfciex");
+        auto rfcie_y = get_optional_field<double>(integrated_results, "rfciey");
+        auto rfcie_z = get_optional_field<double>(integrated_results, "rfciez");
+        if(rfcie_x.has_value() && rfcie_y.has_value() && rfcie_z.has_value())
+        {
+            result.cieReflectanceFront = CIEValue{*rfcie_x, *rfcie_y, *rfcie_z};
+        }
+		product->precalculatedResults = result;
+    }
 
     std::shared_ptr<ProductData>
       parseIGSDBJsonUncomposedProduct(nlohmann::json const & product_json)
     {
         std::shared_ptr<ProductData> product(new ProductData);
-        product->productName = product_json.at("name").get<std::string>();
+        product->name = product_json.at("name").get<std::string>();
+        product->productName = get_optional_field<std::string>(product_json, "product_name");
         product->productType = product_json.at("type").get<std::string>();
         product->productSubtype = get_optional_field<std::string>(product_json, "subtype");
 
         product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
+        product->cgdbShadingLayerId =
+          get_optional_field<int>(product_json, "cgdb_shading_layer_id");
+        product->cgdbShadeMaterialId =
+          get_optional_field<int>(product_json, "cgdb_shade_material_id");
+        product->igdbDatabaseVersion =
+          get_optional_field<std::string>(product_json, "igdb_database_version");
+        product->cgdbDatabaseVersion =
+          get_optional_field<std::string>(product_json, "cgdb_database_version");
+        product->igdbChecksum = get_optional_field<int>(product_json, "igdb_checksum");
+        product->cgdbChecksum = get_optional_field<int>(product_json, "cgdb_checksum");
         product->manufacturer = product_json.at("manufacturer_name").get<std::string>();
         product->material =
           get_optional_field<std::string>(product_json, "material_bulk_properties");
@@ -401,7 +493,9 @@ namespace OpticsParser
         product->appearance = get_optional_field<std::string>(product_json, "appearance");
         product->acceptance = get_optional_field<std::string>(product_json, "acceptance");
         product->fileName = get_optional_field<std::string>(product_json, "filename");
+        product->dataFileName = get_optional_field<std::string>(product_json, "data_file_name");
         product->unitSystem = get_optional_field<std::string>(product_json, "unit_system");
+        product->opticalOpenness = get_optional_field<double>(product_json, "optical_openness");
 
         nlohmann::json measured_data_json = product_json.at("measured_data");
 
@@ -417,6 +511,9 @@ namespace OpticsParser
 
         product->backEmissivitySource =
           get_optional_field<std::string>(measured_data_json, "emissivity_back_source");
+
+        product->permeabilityFactor =
+          get_optional_field<double>(measured_data_json, "permeability_factor");
 
         product->backEmissivitySource =
           get_optional_field<std::string>(measured_data_json, "wavelength_units");
@@ -445,7 +542,10 @@ namespace OpticsParser
             {
                 product->measurements = measurements;
             }
+            parseDualBandValues(product, spectral_data_json);
         }
+        parseIntegratedResults(product, product_json);
+
         return product;
     }
 
@@ -456,6 +556,7 @@ namespace OpticsParser
         auto slatCurvature = geometry_json.at("slat_curvature").get<double>();
         auto numberSegments = geometry_json.at("number_segments").get<int>();
         double slatTilt = geometry_json.value("slat_tilt", 0.0);
+        std::string tiltChoice = geometry_json.at("tilt_choice").get<std::string>();
 
         // These values are stored as mm in the sources being parsed.
         // Convert to meters here for consistancy with other non-wavelength
@@ -464,10 +565,10 @@ namespace OpticsParser
         slatSpacing /= 1000.0;
         slatCurvature /= 1000.0;
 
-        return std::shared_ptr<ProductGeometry>(
-          new VenetianGeometry(slatWidth, slatSpacing, slatCurvature, slatTilt, numberSegments));
+        return std::shared_ptr<ProductGeometry>(new VenetianGeometry(
+          slatWidth, slatSpacing, slatCurvature, slatTilt, tiltChoice, numberSegments));
     }
-	
+
 #if 0
 	
 =======
@@ -488,9 +589,10 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
     product.coatingName = get_optional_field<std::string>(product_json, "coating_name");
     product.coatedSide = get_optional_field<std::string>(product_json, "coated_side");
 >>>>>>> origin/WINDOW_8_update_glass_from_IGSDB
-#endif
+#    endif
 
-    std::shared_ptr<ProductGeometry> parseWovenGeometry(nlohmann::json const & geometry_json)
+      std::shared_ptr
+      < ProductGeometry> parseWovenGeometry(nlohmann::json const & geometry_json)
     {
         auto threadDiameter = geometry_json.at("thread_diameter").get<double>();
         auto threadSpacing = geometry_json.at("thread_spacing").get<double>();
