@@ -42,12 +42,12 @@ TEST_F(TestLoadJSONFromDisk, TestLoadCheckerToolJSON)
 	EXPECT_EQ(product->backEmissivity.value(), 0.149);
 	EXPECT_EQ(product->measurements.value().size(), 462);
 	EXPECT_EQ(product->measurements.value()[0].wavelength, 0.3);
-	EXPECT_EQ(product->measurements.value()[0].directComponent.tf, 0.0);
-	EXPECT_EQ(product->measurements.value()[0].directComponent.rf, 0.021);
-	EXPECT_EQ(product->measurements.value()[0].directComponent.rb, 0.021);
+	EXPECT_EQ(product->measurements.value()[0].directComponent.value().tf, 0.0);
+	EXPECT_EQ(product->measurements.value()[0].directComponent.value().rf, 0.021);
+	EXPECT_EQ(product->measurements.value()[0].directComponent.value().rb, 0.021);
 	EXPECT_EQ(product->measurements.value()[461].wavelength, 25.0);
-	EXPECT_EQ(product->measurements.value()[461].directComponent.tf, 0.0);
-	EXPECT_EQ(product->measurements.value()[461].directComponent.rf, 0.8894);
-	EXPECT_EQ(product->measurements.value()[461].directComponent.rb, 0.8894);
+	EXPECT_EQ(product->measurements.value()[461].directComponent.value().tf, 0.0);
+	EXPECT_EQ(product->measurements.value()[461].directComponent.value().rf, 0.8894);
+	EXPECT_EQ(product->measurements.value()[461].directComponent.value().rb, 0.8894);
 }
 #endif

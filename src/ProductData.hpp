@@ -17,13 +17,22 @@ namespace OpticsParser
         double rb;
     };
 
+    struct PVWavelengthData
+    {
+        double eqef;
+        double eqeb;
+    };
+
     struct WLData
     {
     public:
-        WLData(double wavelength,
-               MeasurementComponent directComponent,
-               std::optional<MeasurementComponent> diffuseComponent =
-                 std::optional<MeasurementComponent>());
+        WLData(
+          double wavelength,
+          std::optional<MeasurementComponent> const & directComponent =
+            std::optional<MeasurementComponent>(),
+          std::optional<MeasurementComponent> const & diffuseComponent =
+            std::optional<MeasurementComponent>(),
+          std::optional<PVWavelengthData> const & pvComponent = std::optional<PVWavelengthData>());
 
         WLData(double wavelength, double tDirect, double rfDirect, double rbDirect);
         WLData(double wavelength,
@@ -37,8 +46,9 @@ namespace OpticsParser
                double rbDiffuse);
 
         double wavelength;
-        MeasurementComponent directComponent;
+        std::optional<MeasurementComponent> directComponent;
         std::optional<MeasurementComponent> diffuseComponent;
+        std::optional<PVWavelengthData> pvComponent;
     };
 
     struct BSDF
