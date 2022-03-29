@@ -550,12 +550,33 @@ namespace OpticsParser
         return product;
     }
 
+    PVPowerProperties parsePowerProperties(nlohmann::json const & power_properties_json)
+    {
+        PVPowerProperties res;
+        for(auto & tempeartaure_power_properties_json : power_properties_json)
+        {
+            double temperature =
+              std::stod(tempeartaure_power_properties_json.at("temperature").get<std::string>());
+            auto values_json = tempeartaure_power_properties_json.at("values");
+            std::vector<PVPowerProperty> properties;
+            for(auto & value_json : values_json)
+            {
+                double jsc = std::stod(value_json.at("jsc").get<std::string>());
+                double voc = std::stod(value_json.at("voc").get<std::string>());
+                double ff = std::stod(value_json.at("ff").get<std::string>());
+                properties.push_back(PVPowerProperty{jsc, voc, ff});
+            }
+            res[temperature] = properties;
+        }
+        return res;
+    }
+
     std::shared_ptr<ProductData>
       parseIGSDBJsonUncomposedProduct_v2(nlohmann::json const & product_json)
     {
-		/*
-		NOTE:  All values in v2 json are strings
-		*/
+        /*
+        NOTE:  All values in v2 json are strings
+        */
         std::shared_ptr<ProductData> product = std::make_shared<ProductData>();
         product->name = product_json.at("name").get<std::string>();
         product->productName = get_optional_field<std::string>(product_json, "product_name");
@@ -612,6 +633,11 @@ namespace OpticsParser
         product->backEmissivitySource =
           get_optional_field<std::string>(measured_data_json, "wavelength_units");
 
+        if(measured_data_json.find("power_properties") != measured_data_json.end())
+        {
+            product->pvPowerProperties =
+              parsePowerProperties(measured_data_json.at("power_properties"));
+        }
 
         nlohmann::json optical_properties_json = measured_data_json.at("optical_properties");
         nlohmann::json optical_data_json = optical_properties_json.at("optical_data");
@@ -623,7 +649,8 @@ namespace OpticsParser
             nlohmann::json wavelength_data_json = angle_block_json.at("wavelength_data");
             for(auto & individual_wavelength_json : wavelength_data_json)
             {
-                double wavelength = std::stod(individual_wavelength_json.at("w").get<std::string>());
+                double wavelength =
+                  std::stod(individual_wavelength_json.at("w").get<std::string>());
                 std::optional<MeasurementComponent> specular;
                 std::optional<MeasurementComponent> diffuse;
                 std::optional<PVWavelengthData> pv;
@@ -652,7 +679,7 @@ namespace OpticsParser
                     double eqeb = std::stod(pv_json.at("eqeb").get<std::string>());
                     pv = PVWavelengthData{eqef, eqeb};
                 }
-				measurements.push_back(WLData(wavelength, specular, diffuse, pv));
+                measurements.push_back(WLData(wavelength, specular, diffuse, pv));
             }
         }
 
@@ -660,6 +687,7 @@ namespace OpticsParser
         {
             product->measurements = measurements;
         }
+
 
 #if 0
 		if(!spectral_data_json.is_null())

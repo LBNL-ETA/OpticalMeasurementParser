@@ -81,4 +81,51 @@ TEST_F(TestLoadJSONFromDisk, TestLoadClear3IGSDBV2JSON)
 	EXPECT_NEAR(measurements[110].directComponent.value().rf, 0.068, 1e-6);
 	EXPECT_NEAR(measurements[110].directComponent.value().rb, 0.068, 1e-6);
 }
+
+TEST_F(TestLoadJSONFromDisk, TestLoadPVIGSDBV2JSON)
+{
+	SCOPED_TRACE("Begin Test: Load igsdb_v2_pv.json from disk.");
+
+	std::filesystem::path product_path(test_dir);
+	product_path /= "products";
+	product_path /= "igsdb_v2_pv.json";
+
+	std::shared_ptr<OpticsParser::ProductData> product = OpticsParser::parseJSONFile(product_path.string());
+	//    EXPECT_EQ(product->nfrcid.value(), 102);
+	EXPECT_EQ(product->name, "Generic Clear Glass");
+	EXPECT_EQ(product->productType, "GLAZING");
+	EXPECT_EQ(product->productSubtype, "MONOLITHIC");
+	EXPECT_NEAR(product->thickness.value(), 3.048, 1e-6);
+	EXPECT_EQ(product->conductivity, std::optional<double>());
+	EXPECT_EQ(product->IRTransmittance.value(), 0.0);
+	EXPECT_NEAR(product->frontEmissivity.value(), 0.84, 1e-6);
+	EXPECT_NEAR(product->backEmissivity.value(), 0.84, 1e-6);
+	auto & measurements = std::get<std::vector<OpticsParser::WLData>>(product->measurements.value());
+	EXPECT_EQ(measurements.size(), 441);
+	EXPECT_NEAR(measurements[0].wavelength, 0.3, 1e-6);
+	EXPECT_NEAR(measurements[0].directComponent.value().tf, 0.002, 1e-6);
+	EXPECT_NEAR(measurements[0].directComponent.value().rf, 0.047, 1e-6);
+	EXPECT_NEAR(measurements[0].directComponent.value().rb, 0.048, 1e-6);
+	EXPECT_NEAR(measurements[0].pvComponent.value().eqef, 0.00569, 1e-6);
+	EXPECT_NEAR(measurements[0].pvComponent.value().eqeb, 0.0, 1e-6);
+	EXPECT_NEAR(measurements[110].wavelength, 2.5, 1e-6);
+	EXPECT_NEAR(measurements[110].directComponent.value().tf, 0.822, 1e-6);
+	EXPECT_NEAR(measurements[110].directComponent.value().rf, 0.068, 1e-6);
+	EXPECT_NEAR(measurements[110].directComponent.value().rb, 0.068, 1e-6);
+	EXPECT_NEAR(measurements[110].pvComponent.value().eqef, 0.0, 1e-6);
+	EXPECT_NEAR(measurements[110].pvComponent.value().eqeb, 0.0, 1e-6);
+	EXPECT_NEAR(measurements[440].pvComponent.value().eqef, 0.0, 1e-6);
+	EXPECT_NEAR(measurements[440].pvComponent.value().eqeb, 0.0, 1e-6);
+
+	auto & allPowerProperties = product->pvPowerProperties.value();
+	EXPECT_EQ(allPowerProperties.size(), 1);
+	auto & powerProperties = allPowerProperties.at(298.15);
+	EXPECT_EQ(powerProperties.size(), 161);
+	EXPECT_NEAR(powerProperties[0].jsc, 0.002478752, 1e-9);
+	EXPECT_NEAR(powerProperties[0].voc, 0.550933333, 1e-9);
+	EXPECT_NEAR(powerProperties[0].ff, 0.5467, 1e-6);
+	EXPECT_NEAR(powerProperties[160].jsc, 7.389056099, 1e-9);
+	EXPECT_NEAR(powerProperties[160].voc, 0.846133333, 1e-9);
+	EXPECT_NEAR(powerProperties[160].ff, 0.4219, 1e-6);
+}
 #endif
