@@ -575,7 +575,8 @@ namespace OpticsParser
       parseIGSDBJsonUncomposedProduct_v2(nlohmann::json const & product_json)
     {
         /*
-        NOTE:  All values in v2 json are strings
+        NOTE:  All values in v2 json are strings.  Actually this is unfortunately not true.
+		Some values are strings like wavelength values but some are numbers like thickness.
         */
         std::shared_ptr<ProductData> product = std::make_shared<ProductData>();
         product->name = product_json.at("name").get<std::string>();
