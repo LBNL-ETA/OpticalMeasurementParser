@@ -17,13 +17,22 @@ namespace OpticsParser
         double rb;
     };
 
+    struct PVWavelengthData
+    {
+        double eqef;
+        double eqeb;
+    };
+
     struct WLData
     {
     public:
-        WLData(double wavelength,
-               MeasurementComponent directComponent,
-               std::optional<MeasurementComponent> diffuseComponent =
-                 std::optional<MeasurementComponent>());
+        WLData(
+          double wavelength,
+          std::optional<MeasurementComponent> const & directComponent =
+            std::optional<MeasurementComponent>(),
+          std::optional<MeasurementComponent> const & diffuseComponent =
+            std::optional<MeasurementComponent>(),
+          std::optional<PVWavelengthData> const & pvComponent = std::optional<PVWavelengthData>());
 
         WLData(double wavelength, double tDirect, double rfDirect, double rbDirect);
         WLData(double wavelength,
@@ -37,8 +46,9 @@ namespace OpticsParser
                double rbDiffuse);
 
         double wavelength;
-        MeasurementComponent directComponent;
+        std::optional<MeasurementComponent> directComponent;
         std::optional<MeasurementComponent> diffuseComponent;
+        std::optional<PVWavelengthData> pvComponent;
     };
 
     struct BSDF
@@ -141,6 +151,15 @@ namespace OpticsParser
         std::optional<CIEValue> cieReflectanceFront;
     };
 
+	struct PVPowerProperty
+	{
+		double jsc;
+		double voc;
+		double ff;
+	};
+
+	using PVPowerProperties = std::map<double, std::vector<PVPowerProperty>>;
+
     struct ProductData : std::enable_shared_from_this<ProductData>
     {
         ProductData() = default;
@@ -196,6 +215,7 @@ namespace OpticsParser
         std::optional<DualBandValues> dualBandSpecular;
         std::optional<DualBandValues> dualBandDiffuse;
         std::optional<PrecalculatedResults> precalculatedResults;
+		std::optional<PVPowerProperties> pvPowerProperties;
     };
 
     // Converting to json requires updating and is not currently being

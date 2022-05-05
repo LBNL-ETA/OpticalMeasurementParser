@@ -76,11 +76,11 @@ TEST_F(TestFile1, Test1)
 		EXPECT_NEAR(
 			correctResults[i].wavelength, givenResults[i].wavelength, 1e-6);
 		EXPECT_NEAR(
-			correctResults[i].directComponent.tf, givenResults[i].directComponent.tf, 1e-6);
+			correctResults[i].directComponent.value().tf, givenResults[i].directComponent.value().tf, 1e-6);
 		EXPECT_NEAR(
-			correctResults[i].directComponent.rf, givenResults[i].directComponent.rf, 1e-6);
+			correctResults[i].directComponent.value().rf, givenResults[i].directComponent.value().rf, 1e-6);
 		EXPECT_NEAR(
-			correctResults[i].directComponent.rb, givenResults[i].directComponent.rb, 1e-6);
+			correctResults[i].directComponent.value().rb, givenResults[i].directComponent.value().rb, 1e-6);
 	}
 }
 
@@ -112,14 +112,14 @@ TEST_F(TestFile1, TestParseFile)
 	for(auto i = 0u; i < correctResults.size(); ++i)
 	{
 		EXPECT_NEAR(correctResults[i].wavelength, givenResults[i].wavelength, 1e-6);
-		EXPECT_NEAR(correctResults[i].directComponent.tf,
-			givenResults[i].directComponent.tf,
+		EXPECT_NEAR(correctResults[i].directComponent.value().tf,
+			givenResults[i].directComponent.value().tf,
 			1e-6);
-		EXPECT_NEAR(correctResults[i].directComponent.rf,
-			givenResults[i].directComponent.rf,
+		EXPECT_NEAR(correctResults[i].directComponent.value().rf,
+			givenResults[i].directComponent.value().rf,
 			1e-6);
-		EXPECT_NEAR(correctResults[i].directComponent.rb,
-			givenResults[i].directComponent.rb,
+		EXPECT_NEAR(correctResults[i].directComponent.value().rb,
+			givenResults[i].directComponent.value().rb,
 			1e-6);
 	}
 }

@@ -61,6 +61,7 @@ namespace OpticsParser
         return result;
     }
 
+
     void Parser::parseHeaderLine(const std::string & line, std::shared_ptr<ProductData> product)
     {
         parseUnits(line, product);
@@ -456,11 +457,11 @@ namespace OpticsParser
         {
             result.cieReflectanceFront = CIEValue{*rfcie_x, *rfcie_y, *rfcie_z};
         }
-		product->precalculatedResults = result;
+        product->precalculatedResults = result;
     }
 
     std::shared_ptr<ProductData>
-      parseIGSDBJsonUncomposedProduct(nlohmann::json const & product_json)
+      parseIGSDBJsonUncomposedProduct_v1(nlohmann::json const & product_json)
     {
         std::shared_ptr<ProductData> product(new ProductData);
         product->name = product_json.at("name").get<std::string>();
@@ -546,6 +547,176 @@ namespace OpticsParser
         }
         parseIntegratedResults(product, product_json);
 
+        return product;
+    }
+
+    PVPowerProperties parsePowerProperties(nlohmann::json const & power_properties_json)
+    {
+        PVPowerProperties res;
+        for(auto & tempeartaure_power_properties_json : power_properties_json)
+        {
+            double temperature =
+              std::stod(tempeartaure_power_properties_json.at("temperature").get<std::string>());
+            auto values_json = tempeartaure_power_properties_json.at("values");
+            std::vector<PVPowerProperty> properties;
+            for(auto & value_json : values_json)
+            {
+                double jsc = std::stod(value_json.at("jsc").get<std::string>());
+                double voc = std::stod(value_json.at("voc").get<std::string>());
+                double ff = std::stod(value_json.at("ff").get<std::string>());
+                properties.push_back(PVPowerProperty{jsc, voc, ff});
+            }
+            res[temperature] = properties;
+        }
+        return res;
+    }
+
+    std::shared_ptr<ProductData>
+      parseIGSDBJsonUncomposedProduct_v2(nlohmann::json const & product_json)
+    {
+        /*
+        NOTE:  All values in v2 json are strings.  Actually this is unfortunately not true.
+		Some values are strings like wavelength values but some are numbers like thickness.
+        */
+        std::shared_ptr<ProductData> product = std::make_shared<ProductData>();
+        product->name = product_json.at("name").get<std::string>();
+        product->productName = get_optional_field<std::string>(product_json, "product_name");
+        product->productType = product_json.at("type").get<std::string>();
+        product->productSubtype = get_optional_field<std::string>(product_json, "subtype");
+
+        product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
+        product->cgdbShadingLayerId = get_optional_field<int>(product_json, "cgdb_id");
+        product->cgdbShadeMaterialId = get_optional_field<int>(product_json, "cgdb_id");
+        product->igdbDatabaseVersion =
+          get_optional_field<std::string>(product_json, "igdb_database_version");
+        product->cgdbDatabaseVersion =
+          get_optional_field<std::string>(product_json, "cgdb_database_version");
+        product->igdbChecksum = get_optional_field<int>(product_json, "igdb_checksum");
+        product->cgdbChecksum = get_optional_field<int>(product_json, "cgdb_checksum");
+        product->manufacturer = product_json.at("manufacturer").get<std::string>();
+        product->material =
+          get_optional_field<std::string>(product_json, "material_bulk_properties");
+
+        product->coatingName = get_optional_field<std::string>(product_json, "coating_name");
+        product->coatedSide = get_optional_field<std::string>(product_json, "coated_side");
+
+        product->substrateFilename =
+          get_optional_field<std::string>(product_json, "interlayer_name");
+
+
+        product->appearance = get_optional_field<std::string>(product_json, "appearance");
+        product->acceptance = get_optional_field<std::string>(product_json, "acceptance");
+        product->fileName = get_optional_field<std::string>(product_json, "filename");
+        product->dataFileName = get_optional_field<std::string>(product_json, "data_file_name");
+        product->unitSystem = get_optional_field<std::string>(product_json, "unit_system");
+        product->opticalOpenness = get_optional_field<double>(product_json, "optical_openness");
+
+        nlohmann::json measured_data_json = product_json.at("physical_properties");
+
+        product->thickness = get_optional_field<double>(measured_data_json, "thickness");
+        product->conductivity = get_optional_field<double>(measured_data_json, "conductivity");
+        product->IRTransmittance =
+          get_optional_field<double>(measured_data_json, "predefined_tir_front");
+        product->frontEmissivity =
+          get_optional_field<double>(measured_data_json, "predefined_emissivity_front");
+        product->backEmissivity =
+          get_optional_field<double>(measured_data_json, "predefined_emissivity_back");
+
+        product->frontEmissivitySource =
+          get_optional_field<std::string>(measured_data_json, "emissivity_front_source");
+
+        product->backEmissivitySource =
+          get_optional_field<std::string>(measured_data_json, "emissivity_back_source");
+
+        product->permeabilityFactor =
+          get_optional_field<double>(measured_data_json, "permeability_factor");
+
+        product->backEmissivitySource =
+          get_optional_field<std::string>(measured_data_json, "wavelength_units");
+
+        if(measured_data_json.find("power_properties") != measured_data_json.end())
+        {
+            product->pvPowerProperties =
+              parsePowerProperties(measured_data_json.at("power_properties"));
+        }
+
+        nlohmann::json optical_properties_json = measured_data_json.at("optical_properties");
+        nlohmann::json optical_data_json = optical_properties_json.at("optical_data");
+        nlohmann::json angle_blocks_json = optical_data_json.at("angle_blocks");
+
+        std::vector<WLData> measurements;
+        for(auto & angle_block_json : angle_blocks_json)
+        {
+            nlohmann::json wavelength_data_json = angle_block_json.at("wavelength_data");
+            for(auto & individual_wavelength_json : wavelength_data_json)
+            {
+                double wavelength =
+                  std::stod(individual_wavelength_json.at("w").get<std::string>());
+                std::optional<MeasurementComponent> specular;
+                std::optional<MeasurementComponent> diffuse;
+                std::optional<PVWavelengthData> pv;
+                if(individual_wavelength_json.find("specular") != individual_wavelength_json.end())
+                {
+                    nlohmann::json specular_json = individual_wavelength_json.at("specular");
+                    double tf = std::stod(specular_json.at("tf").get<std::string>());
+                    double tb = std::stod(specular_json.at("tb").get<std::string>());
+                    double rf = std::stod(specular_json.at("rf").get<std::string>());
+                    double rb = std::stod(specular_json.at("rb").get<std::string>());
+                    specular = MeasurementComponent{tf, tb, rf, rb};
+                }
+                if(individual_wavelength_json.find("diffuse") != individual_wavelength_json.end())
+                {
+                    nlohmann::json diffuse_json = individual_wavelength_json.at("diffuse");
+                    double tf = std::stod(diffuse_json.at("tf").get<std::string>());
+                    double tb = std::stod(diffuse_json.at("tb").get<std::string>());
+                    double rf = std::stod(diffuse_json.at("rf").get<std::string>());
+                    double rb = std::stod(diffuse_json.at("rb").get<std::string>());
+                    diffuse = MeasurementComponent{tf, tb, rf, rb};
+                }
+                if(individual_wavelength_json.find("pv") != individual_wavelength_json.end())
+                {
+                    nlohmann::json pv_json = individual_wavelength_json.at("pv");
+                    double eqef = std::stod(pv_json.at("eqef").get<std::string>());
+                    double eqeb = std::stod(pv_json.at("eqeb").get<std::string>());
+                    pv = PVWavelengthData{eqef, eqeb};
+                }
+                measurements.push_back(WLData(wavelength, specular, diffuse, pv));
+            }
+        }
+
+        if(!measurements.empty())
+        {
+            product->measurements = measurements;
+        }
+
+
+#if 0
+		if(!spectral_data_json.is_null())
+		{
+			nlohmann::json wavelength_data_json = spectral_data_json.at("spectral_data");
+
+			std::vector<WLData> measurements;
+
+			for(nlohmann::json::iterator itr = wavelength_data_json.begin();
+				itr != wavelength_data_json.end();
+				++itr)
+			{
+				auto val = itr.value();
+				double wl = val.at("wavelength").get<double>();
+				double t = val.at("T").get<double>();
+				double rf = val.at("Rf").get<double>();
+				double rb = val.at("Rb").get<double>();
+				MeasurementComponent directValues{t, t, rf, rb};
+				measurements.push_back(WLData(wl, directValues));
+			}
+			if(!measurements.empty())
+			{
+				product->measurements = measurements;
+			}
+			parseDualBandValues(product, spectral_data_json);
+		}
+		parseIntegratedResults(product, product_json);
+#endif
         return product;
     }
 
@@ -638,31 +809,44 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         }
     }
 
-    std::shared_ptr<ProductData> parseIGSDBJsonComposedProduct(nlohmann::json const & product_json)
+    std::shared_ptr<ProductData>
+      parseIGSDBJsonComposedProduct_v1(nlohmann::json const & product_json)
     {
         auto subtype = product_json.at("subtype").get<std::string>();
         auto composition_information = product_json.at("composition");
         auto product_material = composition_information[0].at("child_product");
         auto product_geometry = composition_information[0].at("extra_data").at("geometry");
-        auto material = parseIGSDBJsonUncomposedProduct(product_material);
+        auto material = parseIGSDBJsonUncomposedProduct_v1(product_material);
         auto geometry = parseGeometry(subtype, product_geometry);
         std::shared_ptr<CompositionInformation> compositionInformation(
           new CompositionInformation{material, geometry});
-        auto product = parseIGSDBJsonUncomposedProduct(product_json);
+        auto product = parseIGSDBJsonUncomposedProduct_v1(product_json);
         std::shared_ptr<ProductData> composedProduct(
           new ComposedProductData(*product, compositionInformation));
         return composedProduct;
     }
 
-    std::shared_ptr<ProductData> parseIGSDBJson(nlohmann::json const & product_json)
+    std::shared_ptr<ProductData> parseIGSDBJson_v1(nlohmann::json const & product_json)
     {
         if(product_json.count("composition") && !product_json.at("composition").empty())
         {
-            return parseIGSDBJsonComposedProduct(product_json);
+            return parseIGSDBJsonComposedProduct_v1(product_json);
         }
         else
         {
-            return parseIGSDBJsonUncomposedProduct(product_json);
+            return parseIGSDBJsonUncomposedProduct_v1(product_json);
+        }
+    }
+
+    std::shared_ptr<ProductData> parseIGSDBJson_v2(nlohmann::json const & product_json)
+    {
+        if(product_json.count("composition") && !product_json.at("composition").empty())
+        {
+            throw std::runtime_error("Composed products in IGSDB v2 are not yet supported.");
+        }
+        else
+        {
+            return parseIGSDBJsonUncomposedProduct_v2(product_json);
         }
     }
 
@@ -670,24 +854,24 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
     {
         nlohmann::json product_json = nlohmann::json::parse(json_str);
 
-        // There are now two different json formats, one output from the IGSDB and one
-        // that is input to the checker tool app.  They are similar but different enough that
-        // they are getting two different parsing paths with the common aspects abstracted out
-        if(product_json.find("name") != product_json.end())
+        // There are now two different json formats: IGSDB v1 and IGSDB v2
+        // There are many different field names one of which is v1 has "product_id"
+        // and v2 has "id".  Using that to detect which version is being handled
+        if(product_json.find("product_id") != product_json.end())
         {
-            // The IGSDB json format has a "name" field
-            return parseIGSDBJson(product_json);
+            return parseIGSDBJson_v1(product_json);
         }
         else
         {
-            // The checker tool JSON format has a "product_name" field instead of a "name" field
-            if(product_json.find("product_name") == product_json.end())
+            // Check to make sure there is an id field.  If it is missing both product_id
+            // and id then it is some other format that is not currently supporte
+            if(product_json.find("id") == product_json.end())
             {
                 throw std::runtime_error("Unable to parse json.  It does not appear to be "
                                          "either of the two recognized formats.  Currently "
-                                         "only IGSDB and checker tool formats are supported.");
+                                         "only IGSDB v1 and v2 formats are supported.");
             }
-            return parseCheckerToolJson(product_json);
+            return parseIGSDBJson_v2(product_json);
         }
     }
 

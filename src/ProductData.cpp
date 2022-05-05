@@ -3,9 +3,13 @@
 #include <sstream>
 
 OpticsParser::WLData::WLData(double wavelength,
-                             MeasurementComponent directComponent,
-                             std::optional<MeasurementComponent> diffuseComponent) :
-    wavelength(wavelength), directComponent(directComponent), diffuseComponent(diffuseComponent)
+                             std::optional<MeasurementComponent> const & directComponent,
+                             std::optional<MeasurementComponent> const & diffuseComponent,
+                             std::optional<PVWavelengthData> const & pvComponent) :
+    wavelength(wavelength),
+    directComponent(directComponent),
+    diffuseComponent(diffuseComponent),
+    pvComponent(pvComponent)
 {}
 
 OpticsParser::WLData::WLData(double wavelength, double tDirect, double rfDirect, double rbDirect) :
@@ -175,13 +179,17 @@ OpticsParser::ComposedProductData::ComposedProductData(
     ProductData(), compositionInformation(composition)
 {}
 
-OpticsParser::VenetianGeometry::VenetianGeometry(
-  double slatWidth, double slatSpacing, double slatCurvature, double slatTilt, std::string const& tiltChoice, int numberSegments) :
+OpticsParser::VenetianGeometry::VenetianGeometry(double slatWidth,
+                                                 double slatSpacing,
+                                                 double slatCurvature,
+                                                 double slatTilt,
+                                                 std::string const & tiltChoice,
+                                                 int numberSegments) :
     slatWidth(slatWidth),
     slatSpacing(slatSpacing),
     slatCurvature(slatCurvature),
     slatTilt(slatTilt),
-	tiltChoice(tiltChoice),
+    tiltChoice(tiltChoice),
     numberSegments(numberSegments)
 {}
 
