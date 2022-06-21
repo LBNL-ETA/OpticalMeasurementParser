@@ -59,7 +59,7 @@ TEST_F(TestLoadJSONFromDisk, TestLoadClear3IGSDBV2JSON)
 	std::filesystem::path clear_3_path(test_dir);
 	clear_3_path /= "products";
 	clear_3_path /= "igsdb_v2_clear_3.json";
-
+	EXPECT_EQ(1, 2);
 	std::shared_ptr<OpticsParser::ProductData> product = OpticsParser::parseJSONFile(clear_3_path.string());
 	//    EXPECT_EQ(product->nfrcid.value(), 102);
 	EXPECT_EQ(product->name, "Generic Clear Glass");
