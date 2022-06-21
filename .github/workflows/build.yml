@@ -2,9 +2,9 @@ name: Build and test
 
 on:
   push:
-    branches: [ github_actions_june_2022 ]
+    branches: [ main ]
   pull_request:
-    branches: [ github_actions_june_2022 ]
+    branches: [ main ]
     
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
