@@ -31,4 +31,4 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: bin\Release\OpticalMeasurementParser-test.exe
+        run: bin\${{env.BUILD_TYPE}}\OpticalMeasurementParser-test.exe
