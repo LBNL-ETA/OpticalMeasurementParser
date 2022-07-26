@@ -576,7 +576,7 @@ namespace OpticsParser
     {
         /*
         NOTE:  All values in v2 json are strings.  Actually this is unfortunately not true.
-		Some values are strings like wavelength values but some are numbers like thickness.
+                Some values are strings like wavelength values but some are numbers like thickness.
         */
         std::shared_ptr<ProductData> product = std::make_shared<ProductData>();
         product->name = product_json.at("name").get<std::string>();
@@ -728,13 +728,6 @@ namespace OpticsParser
         auto numberSegments = geometry_json.at("number_segments").get<int>();
         double slatTilt = geometry_json.value("slat_tilt", 0.0);
         std::string tiltChoice = geometry_json.at("tilt_choice").get<std::string>();
-
-        // These values are stored as mm in the sources being parsed.
-        // Convert to meters here for consistancy with other non-wavelength
-        // length units.
-        slatWidth /= 1000.0;
-        slatSpacing /= 1000.0;
-        slatCurvature /= 1000.0;
 
         return std::shared_ptr<ProductGeometry>(new VenetianGeometry(
           slatWidth, slatSpacing, slatCurvature, slatTilt, tiltChoice, numberSegments));
@@ -981,6 +974,10 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         {}
         else if(thickness.has_value() && toLower(thicknessUnitStr) == "meter")
         {
+            // Convert to mm here.  This is the only case of unit conversion
+            // and is only here so that the very rare (possibly only theoretical)
+            // case when BSDF XML files have thickness in meters result in a parsed
+            // product that has the same thickness as optics files and IGSDB v1 and v2 json
             *thickness *= 1000.0;
         }
         else
