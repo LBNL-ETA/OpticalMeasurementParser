@@ -970,20 +970,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         product->manufacturer = matNode.getChildNode("Manufacturer").getText();
         auto thickness = parseOptionalDoubleNode(matNode.getChildNode("Thickness"));
         auto thicknessUnitStr = matNode.getChildNode("Thickness").getAttribute("unit");
-        if(toLower(thicknessUnitStr) == "millimeter")
-        {}
-        else if(thickness.has_value() && toLower(thicknessUnitStr) == "meter")
-        {
-            // Convert to mm here.  This is the only case of unit conversion
-            // and is only here so that the very rare (possibly only theoretical)
-            // case when BSDF XML files have thickness in meters result in a parsed
-            // product that has the same thickness as optics files and IGSDB v1 and v2 json
-            *thickness *= 1000.0;
-        }
-        else
-        {
-            throw std::runtime_error("XML error: Unsupported thickness unit");
-        }
+		product->thicknessUnit = thicknessUnitStr;
         product->thickness = thickness;
         product->frontEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityFront"));
         product->backEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityBack"));

@@ -216,6 +216,7 @@ namespace OpticsParser
         std::optional<DualBandValues> dualBandDiffuse;
         std::optional<PrecalculatedResults> precalculatedResults;
 		std::optional<PVPowerProperties> pvPowerProperties;
+		std::optional<std::string> thicknessUnit;
     };
 
     // Converting to json requires updating and is not currently being
