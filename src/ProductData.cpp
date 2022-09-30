@@ -48,16 +48,18 @@ OpticsParser::ProductData::ProductData(std::string const & productName,
     productSubtype(productSubtype)
 {}
 
-
+#if 0
 std::shared_ptr<OpticsParser::ProductData> OpticsParser::ProductData::composedProduct()
 {
     return shared_from_this();
 }
 
+
 std::shared_ptr<OpticsParser::ProductData> OpticsParser::ComposedProductData::composedProduct()
 {
     return compositionInformation->material;
 }
+#endif
 
 // Converting to json requires updating and is not currently being
 // used so disabling for now.
@@ -169,6 +171,7 @@ void OpticsParser::to_json(nlohmann::json & j, OpticsParser::ProductData const &
 }
 #endif
 
+#if 0
 OpticsParser::ComposedProductData::ComposedProductData(
   ProductData const & product, std::shared_ptr<CompositionInformation> composition) :
     ProductData(product), compositionInformation(composition)
@@ -178,6 +181,7 @@ OpticsParser::ComposedProductData::ComposedProductData(
   std::shared_ptr<CompositionInformation> composition) :
     ProductData(), compositionInformation(composition)
 {}
+#endif
 
 OpticsParser::VenetianGeometry::VenetianGeometry(double slatWidth,
                                                  double slatSpacing,
