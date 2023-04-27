@@ -48,17 +48,17 @@ TEST_F(TestDifferentEmissivities, Test1)
 {
 	const std::string inputFile = R"(InputDifferentEmissivities.dat)";
 	OpticsParser::Parser parser;
-	std::shared_ptr<OpticsParser::ProductData> product = parser.parseFile(inputFile);
+	auto product = parser.parseFile(inputFile);
 
-	EXPECT_NEAR(3.048, product->thickness.value(), 1e-6);
-	EXPECT_NEAR(1, product->conductivity.value(), 1e-6);
-	EXPECT_NEAR(0, product->IRTransmittance.value(), 1e-6);
-	EXPECT_NEAR(0.5, product->frontEmissivity.value(), 1e-6);
-	EXPECT_NEAR(0.84, product->backEmissivity.value(), 1e-6);
-	EXPECT_EQ(102, product->nfrcid.value());
-	EXPECT_EQ("Generic Clear Glass", product->productName);
-	EXPECT_EQ("glazing", product->productType);
-	EXPECT_EQ("Monolithic", product->productSubtype);
+	EXPECT_NEAR(3.048, product.thickness.value(), 1e-6);
+	EXPECT_NEAR(1, product.conductivity.value(), 1e-6);
+	EXPECT_NEAR(0, product.IRTransmittance.value(), 1e-6);
+	EXPECT_NEAR(0.5, product.frontEmissivity.value(), 1e-6);
+	EXPECT_NEAR(0.84, product.backEmissivity.value(), 1e-6);
+	EXPECT_EQ(102, product.nfrcid.value());
+	EXPECT_EQ("Generic Clear Glass", product.productName);
+	EXPECT_EQ("glazing", product.productType);
+	EXPECT_EQ("Monolithic", product.productSubtype);
 
 	std::vector<OpticsParser::WLData> correctResults{{0.300, 0.0020, 0.0470, 0.0480},
 													 {0.305, 0.0030, 0.0470, 0.0480},
@@ -68,7 +68,7 @@ TEST_F(TestDifferentEmissivities, Test1)
 													 {0.325, 0.2180, 0.0490, 0.0500}};
 
 	auto & givenResults =
-		std::get<std::vector<OpticsParser::WLData>>(product->measurements.value());
+		std::get<std::vector<OpticsParser::WLData>>(product.measurements.value());
 	EXPECT_EQ(correctResults.size(), givenResults.size());
 	for(auto i = 0u; i < correctResults.size(); ++i)
 	{
