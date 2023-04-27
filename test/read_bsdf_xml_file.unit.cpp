@@ -25,21 +25,21 @@ TEST_F(TestLoadBSDFXMLFromDisk, TestLoad2011SA1)
 	product_path /= "products";
 	product_path /= "2011-SA1.XML";
 
-	std::shared_ptr<OpticsParser::ProductData> product =
+	auto product =
 		OpticsParser::parseBSDFXMLFile(product_path.string());
 
-	//    EXPECT_EQ(product->nfrcid.value(), 102);
-	EXPECT_EQ(product->productName, "Satine 5500 5%, White Pearl");
-	EXPECT_EQ(product->productType, "");
-	EXPECT_EQ(product->manufacturer, "Nysan");
-	EXPECT_EQ(product->thickness, 1);
-	EXPECT_EQ(product->conductivity, .15);
-	EXPECT_EQ(product->IRTransmittance, 0.10916);
-	EXPECT_EQ(product->frontEmissivity, 0.79626);
-	EXPECT_EQ(product->backEmissivity, 0.79626);
-	EXPECT_TRUE(product->measurements.has_value());
-	EXPECT_TRUE(std::holds_alternative<OpticsParser::DualBandBSDF>(product->measurements.value()));
-	auto & measurements = std::get<OpticsParser::DualBandBSDF>(product->measurements.value());
+	//    EXPECT_EQ(product.nfrcid.value(), 102);
+	EXPECT_EQ(product.productName, "Satine 5500 5%, White Pearl");
+	EXPECT_EQ(product.productType, "");
+	EXPECT_EQ(product.manufacturer, "Nysan");
+	EXPECT_EQ(product.thickness, 1);
+	EXPECT_EQ(product.conductivity, .15);
+	EXPECT_EQ(product.IRTransmittance, 0.10916);
+	EXPECT_EQ(product.frontEmissivity, 0.79626);
+	EXPECT_EQ(product.backEmissivity, 0.79626);
+	EXPECT_TRUE(product.measurements.has_value());
+	EXPECT_TRUE(std::holds_alternative<OpticsParser::DualBandBSDF>(product.measurements.value()));
+	auto & measurements = std::get<OpticsParser::DualBandBSDF>(product.measurements.value());
 	auto & solar = measurements.solar;
 	auto & visible = measurements.visible;
 	EXPECT_EQ(solar.tf.rowAngleBasisName, "LBNL/Klems Full");

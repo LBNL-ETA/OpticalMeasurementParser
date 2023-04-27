@@ -28,18 +28,18 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadClear3)
 	clear_3_path += "/CLEAR_3.DAT";
 
 	OpticsParser::Parser parser;
-	std::shared_ptr<OpticsParser::ProductData> product = parser.parseFile(clear_3_path);
-	EXPECT_EQ(product->nfrcid.value(), 102);
-	EXPECT_EQ(product->productName, "Generic Clear Glass");
-	EXPECT_EQ("glazing", product->productType);
-	EXPECT_EQ("Monolithic", product->productSubtype);
-	EXPECT_EQ(product->thickness.value(), 3.048);
-	EXPECT_EQ(product->conductivity, 1.0);
-	EXPECT_EQ(product->IRTransmittance.value(), 0.0);
-	EXPECT_EQ(product->frontEmissivity.value(), 0.84);
-	EXPECT_EQ(product->backEmissivity.value(), 0.84);
+	auto product = parser.parseFile(clear_3_path);
+	EXPECT_EQ(product.nfrcid.value(), 102);
+	EXPECT_EQ(product.productName, "Generic Clear Glass");
+	EXPECT_EQ("glazing", product.productType);
+	EXPECT_EQ("Monolithic", product.productSubtype);
+	EXPECT_EQ(product.thickness.value(), 3.048);
+	EXPECT_EQ(product.conductivity, 1.0);
+	EXPECT_EQ(product.IRTransmittance.value(), 0.0);
+	EXPECT_EQ(product.frontEmissivity.value(), 0.84);
+	EXPECT_EQ(product.backEmissivity.value(), 0.84);
 	auto & givenResults =
-		std::get<std::vector<OpticsParser::WLData>>(product->measurements.value());
+		std::get<std::vector<OpticsParser::WLData>>(product.measurements.value());
 	EXPECT_EQ(givenResults.size(), 111);
 	EXPECT_EQ(givenResults[0].wavelength, 0.3);
 	EXPECT_EQ(givenResults[0].directComponent.value().tf, 0.002);
@@ -49,17 +49,17 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadClear3)
 	EXPECT_EQ(givenResults[110].directComponent.value().tf, 0.822);
 	EXPECT_EQ(givenResults[110].directComponent.value().rf, 0.068);
 	EXPECT_EQ(givenResults[110].directComponent.value().rb, 0.068);
-	EXPECT_EQ(product->frontEmissivitySource.value(), "Material");
-	EXPECT_EQ(product->backEmissivitySource.value(), "Material");
-	EXPECT_EQ(product->manufacturer, "Generic");
-	EXPECT_EQ(product->material, "Glass");
-	EXPECT_EQ(product->coatingName, "N/A");
-	EXPECT_EQ(product->coatedSide, "Neither");
-	EXPECT_EQ(product->substrateFilename, "N/A");
-	EXPECT_EQ(product->appearance, "Clear");
-	EXPECT_EQ(product->acceptance, "#");
-	EXPECT_EQ(product->unitSystem, "SI");
-	EXPECT_EQ(product->wavelengthUnit, "Microns");
+	EXPECT_EQ(product.frontEmissivitySource.value(), "Material");
+	EXPECT_EQ(product.backEmissivitySource.value(), "Material");
+	EXPECT_EQ(product.manufacturer, "Generic");
+	EXPECT_EQ(product.material, "Glass");
+	EXPECT_EQ(product.coatingName, "N/A");
+	EXPECT_EQ(product.coatedSide, "Neither");
+	EXPECT_EQ(product.substrateFilename, "N/A");
+	EXPECT_EQ(product.appearance, "Clear");
+	EXPECT_EQ(product.acceptance, "#");
+	EXPECT_EQ(product.unitSystem, "SI");
+	EXPECT_EQ(product.wavelengthUnit, "Microns");
 }
 
 TEST_F(TestLoadOpticsFileFromDisk, TestLoadDiffuseData)
@@ -71,18 +71,18 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadDiffuseData)
 	product_path += "/diffuse_optics_file_2.txt";
 
 	OpticsParser::Parser parser;
-	std::shared_ptr<OpticsParser::ProductData> product = parser.parseFile(product_path);
-	EXPECT_EQ(product->nfrcid, std::optional<int>());
-	EXPECT_EQ(product->productName, "Generic frit 38mm aperture");
-	EXPECT_EQ("glazing", product->productType);
-	EXPECT_EQ("Coated", product->productSubtype);
-	EXPECT_EQ(product->thickness.value(), 6.0);
-	EXPECT_EQ(product->conductivity, 1.0);
-	EXPECT_EQ(product->IRTransmittance.value(), 0.0);
-	EXPECT_EQ(product->frontEmissivity.value(), 0.86);
-	EXPECT_EQ(product->backEmissivity.value(), 0.86);
+	auto product = parser.parseFile(product_path);
+	EXPECT_EQ(product.nfrcid, std::optional<int>());
+	EXPECT_EQ(product.productName, "Generic frit 38mm aperture");
+	EXPECT_EQ("glazing", product.productType);
+	EXPECT_EQ("Coated", product.productSubtype);
+	EXPECT_EQ(product.thickness.value(), 6.0);
+	EXPECT_EQ(product.conductivity, 1.0);
+	EXPECT_EQ(product.IRTransmittance.value(), 0.0);
+	EXPECT_EQ(product.frontEmissivity.value(), 0.86);
+	EXPECT_EQ(product.backEmissivity.value(), 0.86);
 	auto & givenMeasurements =
-		std::get<std::vector<OpticsParser::WLData>>(product->measurements.value());
+		std::get<std::vector<OpticsParser::WLData>>(product.measurements.value());
 	EXPECT_EQ(givenMeasurements.size(), 451);
 	EXPECT_EQ(givenMeasurements[0].wavelength, 0.250);
 	EXPECT_EQ(givenMeasurements[0].directComponent.value().tf, 0.001);
@@ -102,16 +102,16 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadDiffuseData)
 	EXPECT_EQ(givenMeasurements[450].diffuseComponent.value().tb, 0.240);
 	EXPECT_EQ(givenMeasurements[450].diffuseComponent.value().rf, 0.0970);
 	EXPECT_EQ(givenMeasurements[450].diffuseComponent.value().rb, 0.0940);
-	EXPECT_EQ(product->frontEmissivitySource, std::optional<std::string>());
-	EXPECT_EQ(product->backEmissivitySource, std::optional<std::string>());
-	EXPECT_EQ(product->manufacturer, "LBNL demo");
-	EXPECT_EQ(product->material, std::optional<std::string>());
-	EXPECT_EQ(product->coatingName, "Generic clear frit");
-	EXPECT_EQ(product->coatedSide, "Back");
-	EXPECT_EQ(product->substrateFilename, "CLEAR_6.DAT");
-	EXPECT_EQ(product->appearance, "Hazy");
-	EXPECT_EQ(product->acceptance, std::optional<std::string>());
-	EXPECT_EQ(product->unitSystem, "SI");
-	EXPECT_EQ(product->wavelengthUnit, "Microns");
-	EXPECT_EQ(product->permeabilityFactor, 0.0);
+	EXPECT_EQ(product.frontEmissivitySource, std::optional<std::string>());
+	EXPECT_EQ(product.backEmissivitySource, std::optional<std::string>());
+	EXPECT_EQ(product.manufacturer, "LBNL demo");
+	EXPECT_EQ(product.material, std::optional<std::string>());
+	EXPECT_EQ(product.coatingName, "Generic clear frit");
+	EXPECT_EQ(product.coatedSide, "Back");
+	EXPECT_EQ(product.substrateFilename, "CLEAR_6.DAT");
+	EXPECT_EQ(product.appearance, "Hazy");
+	EXPECT_EQ(product.acceptance, std::optional<std::string>());
+	EXPECT_EQ(product.unitSystem, "SI");
+	EXPECT_EQ(product.wavelengthUnit, "Microns");
+	EXPECT_EQ(product.permeabilityFactor, 0.0);
 }
