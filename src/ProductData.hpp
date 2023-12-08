@@ -151,14 +151,21 @@ namespace OpticsParser
         std::optional<CIEValue> cieReflectanceFront;
     };
 
-	struct PVPowerProperty
-	{
-		double jsc;
-		double voc;
-		double ff;
-	};
+    struct PVPowerProperty
+    {
+        double jsc;
+        double voc;
+        double ff;
+    };
 
-	using PVPowerProperties = std::map<double, std::vector<PVPowerProperty>>;
+    using PVPowerProperties = std::map<double, std::vector<PVPowerProperty>>;
+
+    struct ProductData;
+    struct CompositionInformation
+    {
+        std::shared_ptr<ProductData> material;
+        std::shared_ptr<ProductGeometry> geometry;
+    };
 
     struct ProductData : std::enable_shared_from_this<ProductData>
     {
@@ -172,8 +179,6 @@ namespace OpticsParser
                     std::string const & productType,
                     std::string const & productSubtype,
                     std::string const & manufacturer);
-
-        virtual std::shared_ptr<ProductData> composedProduct();
 
         std::string name;
         std::optional<std::string> productName;
@@ -215,7 +220,9 @@ namespace OpticsParser
         std::optional<DualBandValues> dualBandSpecular;
         std::optional<DualBandValues> dualBandDiffuse;
         std::optional<PrecalculatedResults> precalculatedResults;
-		std::optional<PVPowerProperties> pvPowerProperties;
+        std::optional<PVPowerProperties> pvPowerProperties;
+        std::optional<std::string> thicknessUnit;
+        std::optional<CompositionInformation> composition;
     };
 
     // Converting to json requires updating and is not currently being
@@ -223,19 +230,5 @@ namespace OpticsParser
     // void to_json(nlohmann::json & j, WLData const & wl);
     // void to_json(nlohmann::json & j, ProductData const & wl);
 
-    struct CompositionInformation
-    {
-        std::shared_ptr<ProductData> material;
-        std::shared_ptr<ProductGeometry> geometry;
-    };
 
-    struct ComposedProductData : ProductData
-    {
-        ComposedProductData(ProductData const & product,
-                            std::shared_ptr<CompositionInformation> composition);
-        ComposedProductData(std::shared_ptr<CompositionInformation> composition);
-
-        std::shared_ptr<ProductData> composedProduct() override;
-        std::shared_ptr<CompositionInformation> compositionInformation;
-    };
 }   // namespace OpticsParser

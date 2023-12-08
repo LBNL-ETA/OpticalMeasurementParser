@@ -23,11 +23,11 @@ namespace OpticsParser
         return s;
     }
 
-    std::shared_ptr<ProductData> Parser::parseFile(const std::string & inputFile)
+    ProductData Parser::parseFile(const std::string & inputFile)
     {
         std::string fileName = inputFile.substr(inputFile.find_last_of("/\\") + 1);
-        std::shared_ptr<ProductData> product(new ProductData);
-        product->measurements = std::vector<WLData>();
+        ProductData product;
+        product.measurements = std::vector<WLData>();
         std::ifstream inFile(inputFile);
         std::string line;
         while(std::getline(inFile, line))
@@ -44,8 +44,8 @@ namespace OpticsParser
                 }
             }
         }
-        product->fileName = fileName;
-        // product->token = fileName;
+        product.fileName = fileName;
+        // product.token = fileName;
 
         return product;
     }
@@ -62,28 +62,28 @@ namespace OpticsParser
     }
 
 
-    void Parser::parseHeaderLine(const std::string & line, std::shared_ptr<ProductData> product)
+    void Parser::parseHeaderLine(const std::string & line, ProductData & product)
     {
         parseUnits(line, product);
-        parsePropertyAtTheEnd("Thickness", "}", line, product->thickness);
-        parsePropertyAtTheEnd("Conductivity", "}", line, product->conductivity);
-        parsePropertyAtTheEnd("IR Transmittance", "TIR=", line, product->IRTransmittance);
+        parsePropertyAtTheEnd("Thickness", "}", line, product.thickness);
+        parsePropertyAtTheEnd("Conductivity", "}", line, product.conductivity);
+        parsePropertyAtTheEnd("IR Transmittance", "TIR=", line, product.IRTransmittance);
         parseEmissivities(line, product);
-        parseStringPropertyInsideBraces(line, "Product Name", product->productName);
-        product->productType = "glazing";   // There are only glazing optics files.
-        parseStringPropertyInsideBraces(line, "Type", product->productSubtype);
-        parseStringPropertyInsideBraces(line, "Ef_Source", product->frontEmissivitySource);
-        parseStringPropertyInsideBraces(line, "Eb_Source", product->backEmissivitySource);
-        parseStringPropertyInsideBraces(line, "Manufacturer", product->manufacturer);
-        parseStringPropertyInsideBraces(line, "Material", product->material);
-        parseStringPropertyInsideBraces(line, "Coating Name", product->coatingName);
-        parseStringPropertyInsideBraces(line, "Coated Side", product->coatedSide);
-        parseStringPropertyInsideBraces(line, "Substrate Filename", product->substrateFilename);
-        parseStringPropertyInsideBraces(line, "Appearance", product->appearance);
-        parseStringPropertyInsideBraces(line, "Acceptance", product->acceptance);
-        parseStringPropertyInsideBraces(line, "Extrapolation", product->extrapolation);
-        parseBoolPropertyInsideBraces(line, "Specularity", product->specularity);
-        parseDoublePropertyInsideBraces(line, "Permeability Factor", product->permeabilityFactor);
+        parseStringPropertyInsideBraces(line, "Product Name", product.productName);
+        product.productType = "glazing";   // There are only glazing optics files.
+        parseStringPropertyInsideBraces(line, "Type", product.productSubtype);
+        parseStringPropertyInsideBraces(line, "Ef_Source", product.frontEmissivitySource);
+        parseStringPropertyInsideBraces(line, "Eb_Source", product.backEmissivitySource);
+        parseStringPropertyInsideBraces(line, "Manufacturer", product.manufacturer);
+        parseStringPropertyInsideBraces(line, "Material", product.material);
+        parseStringPropertyInsideBraces(line, "Coating Name", product.coatingName);
+        parseStringPropertyInsideBraces(line, "Coated Side", product.coatedSide);
+        parseStringPropertyInsideBraces(line, "Substrate Filename", product.substrateFilename);
+        parseStringPropertyInsideBraces(line, "Appearance", product.appearance);
+        parseStringPropertyInsideBraces(line, "Acceptance", product.acceptance);
+        parseStringPropertyInsideBraces(line, "Extrapolation", product.extrapolation);
+        parseBoolPropertyInsideBraces(line, "Specularity", product.specularity);
+        parseDoublePropertyInsideBraces(line, "Permeability Factor", product.permeabilityFactor);
         parseNFRCID(line, product);
         parseAERCID(line, product);
     }
@@ -116,8 +116,7 @@ namespace OpticsParser
         return WLData(wl, directValues, diffuseValues);
     }
 
-    void Parser::parseMeasurementLine(const std::string & line,
-                                      std::shared_ptr<ProductData> product)
+    void Parser::parseMeasurementLine(const std::string & line, ProductData & product)
     {
         std::vector<double> result;
         std::istringstream iss(line);
@@ -135,7 +134,7 @@ namespace OpticsParser
         if(parser != measuredValueToParser.end())
         {
             std::vector<WLData> & measurements =
-              std::get<std::vector<WLData>>(product->measurements.value());
+              std::get<std::vector<WLData>>(product.measurements.value());
             auto parsedValues = parser->second(result);
             measurements.push_back(parsedValues);
         }
@@ -146,7 +145,7 @@ namespace OpticsParser
     }
 
 
-    void Parser::parseEmissivities(const std::string & line, std::shared_ptr<ProductData> product)
+    void Parser::parseEmissivities(const std::string & line, ProductData & product)
     {
         if(line.find("Emissivity") != std::string::npos)
         {
@@ -179,12 +178,12 @@ namespace OpticsParser
                 eb = result[0];
                 ef = result[1];
             }
-            product->frontEmissivity = ef;
-            product->backEmissivity = eb;
+            product.frontEmissivity = ef;
+            product.backEmissivity = eb;
         }
     }
 
-    void Parser::parseUnits(const std::string & line, std::shared_ptr<ProductData> product)
+    void Parser::parseUnits(const std::string & line, ProductData & product)
     {
         if(line.find("Units, Wavelength Units") != std::string::npos)
         {
@@ -202,30 +201,30 @@ namespace OpticsParser
                 throw std::runtime_error("Units line has incorrect number of values.");
             }
 
-            product->unitSystem = result[0];
-            product->wavelengthUnit = result[1];
+            product.unitSystem = result[0];
+            product.wavelengthUnit = result[1];
         }
     }
 
-    void Parser::parseNFRCID(const std::string & line, std::shared_ptr<ProductData> product)
+    void Parser::parseNFRCID(const std::string & line, ProductData & product)
     {
         if(line.find("NFRC") != std::string::npos)
         {
             std::string str = line.substr(line.find("ID:") + 3);
             auto erasePos = str.find('}');
             str.erase(erasePos, 1);
-            product->nfrcid = std::stoi(str);
+            product.nfrcid = std::stoi(str);
         }
     }
 
-    void Parser::parseAERCID(const std::string & line, std::shared_ptr<ProductData> product)
+    void Parser::parseAERCID(const std::string & line, ProductData & product)
     {
         if(line.find("AERC") != std::string::npos)
         {
             std::string str = line.substr(line.find("ID:") + 3);
             auto erasePos = str.find('}');
             str.erase(erasePos, 1);
-            product->aercID = std::stoi(str);
+            product.aercID = std::stoi(str);
         }
     }
 
@@ -291,103 +290,7 @@ namespace OpticsParser
         return data;
     }
 
-
-    std::shared_ptr<ProductData> parseCheckerToolJson(nlohmann::json const & product_json)
-    {
-        std::shared_ptr<ProductData> product(new ProductData);
-        product->productName = product_json.at("product_name").get<std::string>();
-        product->productType = product_json.at("product_type").get<std::string>();
-
-        product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
-        product->cgdbShadingLayerId =
-          get_optional_field<int>(product_json, "cgdb_shading_layer_id");
-        product->cgdbShadeMaterialId =
-          get_optional_field<int>(product_json, "cgdb_shade_material_id");
-        product->igdbDatabaseVersion =
-          get_optional_field<std::string>(product_json, "igdb_database_version");
-        product->cgdbDatabaseVersion =
-          get_optional_field<std::string>(product_json, "cgdb_database_version");
-        product->manufacturer = product_json.at("manufacturer").get<std::string>();
-        if(product_json.count("material_bulk_properties"))
-        {
-            product->material =
-              get_optional_field<std::string>(product_json.at("material_bulk_properties"), "name");
-        }
-
-        if(product_json.count("coating_properties"))
-        {
-            product->coatingName = get_optional_field<std::string>(
-              product_json.at("coating_properties"), "coating_name");
-            product->coatedSide =
-              get_optional_field<std::string>(product_json.at("coating_properties"), "coated_side");
-        }
-
-        if(product_json.count("interlayer_properties"))
-        {
-            product->substrateFilename = get_optional_field<std::string>(
-              product_json.at("interlayer_properties"), "interlayer_name");
-        }
-
-        product->appearance = get_optional_field<std::string>(product_json, "appearance");
-        product->acceptance = get_optional_field<std::string>(product_json, "acceptance");
-        product->fileName = get_optional_field<std::string>(product_json, "filename");
-        product->unitSystem = get_optional_field<std::string>(product_json, "unit_system");
-
-        nlohmann::json measured_data_json = product_json.at("measured_data");
-
-        product->thickness = get_optional_field<double>(
-          measured_data_json, "thickness");   // measured_data_json.at("thickness").get<double>();
-        if(measured_data_json.count("bulk_properties_override"))
-        {
-            product->conductivity = get_optional_field<double>(
-              measured_data_json.at("bulk_properties_override"), "thermal_conductivity");
-        }
-
-        product->IRTransmittance = get_optional_field<double>(measured_data_json, "tir_front");
-        product->frontEmissivity =
-          get_optional_field<double>(measured_data_json, "emissivity_front");
-        product->backEmissivity = get_optional_field<double>(measured_data_json, "emissivity_back");
-
-        product->frontEmissivitySource =
-          get_optional_field<std::string>(measured_data_json, "emissivity_front_source");
-
-        product->backEmissivitySource =
-          get_optional_field<std::string>(measured_data_json, "emissivity_back_source");
-
-        product->backEmissivitySource =
-          get_optional_field<std::string>(measured_data_json, "wavelength_units");
-
-        std::vector<WLData> measurements;
-
-        nlohmann::json spectral_data_json = measured_data_json.at("spectral_data");
-        if(!spectral_data_json.is_null())
-        {
-            nlohmann::json wavelength_data_json =
-              spectral_data_json.at("angle_block")[0].at("wavelength_data");
-
-            for(nlohmann::json::iterator itr = wavelength_data_json.begin();
-                itr != wavelength_data_json.end();
-                ++itr)
-            {
-                auto val = itr.value();
-                double wl = val.at("w").get<double>();
-                double t = val.at("tf").get<double>();
-                double rf = val.at("rf").get<double>();
-                double rb = val.at("rb").get<double>();
-                MeasurementComponent directValues{t, t, rf, rb};
-                measurements.push_back(WLData(wl, directValues));
-            }
-        }
-        if(!measurements.empty())
-        {
-            product->measurements = measurements;
-        }
-
-        return product;
-    }
-
-    void parseDualBandValues(std::shared_ptr<ProductData> product,
-                             nlohmann::json const & spectral_data_json)
+    void parseDualBandValues(ProductData & product, nlohmann::json const & spectral_data_json)
     {
         if(spectral_data_json.count("dual_band_values") == 0
            || spectral_data_json.at("dual_band_values").empty())
@@ -420,12 +323,11 @@ namespace OpticsParser
         diffuse.visibleReflectanceFront = get_optional_field<double>(dual_band, "Rf_vis_diffuse");
         diffuse.visibleReflectanceBack = get_optional_field<double>(dual_band, "Rb_vis_diffuse");
 
-        product->dualBandSpecular = specular;
-        product->dualBandDiffuse = diffuse;
+        product.dualBandSpecular = specular;
+        product.dualBandDiffuse = diffuse;
     }
 
-    void parseIntegratedResults(std::shared_ptr<ProductData> product,
-                                nlohmann::json const & product_json)
+    void parseIntegratedResults(ProductData & product, nlohmann::json const & product_json)
     {
         if(product_json.count("integrated_results_summary") == 0
            || product_json.at("integrated_results_summary").empty())
@@ -457,66 +359,64 @@ namespace OpticsParser
         {
             result.cieReflectanceFront = CIEValue{*rfcie_x, *rfcie_y, *rfcie_z};
         }
-        product->precalculatedResults = result;
+        product.precalculatedResults = result;
     }
 
-    std::shared_ptr<ProductData>
-      parseIGSDBJsonUncomposedProduct_v1(nlohmann::json const & product_json)
+    ProductData parseIGSDBJsonUncomposedProduct_v1(nlohmann::json const & product_json)
     {
-        std::shared_ptr<ProductData> product(new ProductData);
-        product->name = product_json.at("name").get<std::string>();
-        product->productName = get_optional_field<std::string>(product_json, "product_name");
-        product->productType = product_json.at("type").get<std::string>();
-        product->productSubtype = get_optional_field<std::string>(product_json, "subtype");
+        ProductData product;
+        product.name = product_json.at("name").get<std::string>();
+        product.productName = get_optional_field<std::string>(product_json, "product_name");
+        product.productType = product_json.at("type").get<std::string>();
+        product.productSubtype = get_optional_field<std::string>(product_json, "subtype");
 
-        product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
-        product->cgdbShadingLayerId =
-          get_optional_field<int>(product_json, "cgdb_shading_layer_id");
-        product->cgdbShadeMaterialId =
+        product.nfrcid = get_optional_field<int>(product_json, "nfrc_id");
+        product.cgdbShadingLayerId = get_optional_field<int>(product_json, "cgdb_shading_layer_id");
+        product.cgdbShadeMaterialId =
           get_optional_field<int>(product_json, "cgdb_shade_material_id");
-        product->igdbDatabaseVersion =
+        product.igdbDatabaseVersion =
           get_optional_field<std::string>(product_json, "igdb_database_version");
-        product->cgdbDatabaseVersion =
+        product.cgdbDatabaseVersion =
           get_optional_field<std::string>(product_json, "cgdb_database_version");
-        product->igdbChecksum = get_optional_field<int>(product_json, "igdb_checksum");
-        product->cgdbChecksum = get_optional_field<int>(product_json, "cgdb_checksum");
-        product->manufacturer = product_json.at("manufacturer_name").get<std::string>();
-        product->material =
+        product.igdbChecksum = get_optional_field<int>(product_json, "igdb_checksum");
+        product.cgdbChecksum = get_optional_field<int>(product_json, "cgdb_checksum");
+        product.manufacturer = product_json.at("manufacturer_name").get<std::string>();
+        product.material =
           get_optional_field<std::string>(product_json, "material_bulk_properties");
 
-        product->coatingName = get_optional_field<std::string>(product_json, "coating_name");
-        product->coatedSide = get_optional_field<std::string>(product_json, "coated_side");
+        product.coatingName = get_optional_field<std::string>(product_json, "coating_name");
+        product.coatedSide = get_optional_field<std::string>(product_json, "coated_side");
 
-        product->substrateFilename =
+        product.substrateFilename =
           get_optional_field<std::string>(product_json, "interlayer_name");
 
 
-        product->appearance = get_optional_field<std::string>(product_json, "appearance");
-        product->acceptance = get_optional_field<std::string>(product_json, "acceptance");
-        product->fileName = get_optional_field<std::string>(product_json, "filename");
-        product->dataFileName = get_optional_field<std::string>(product_json, "data_file_name");
-        product->unitSystem = get_optional_field<std::string>(product_json, "unit_system");
-        product->opticalOpenness = get_optional_field<double>(product_json, "optical_openness");
+        product.appearance = get_optional_field<std::string>(product_json, "appearance");
+        product.acceptance = get_optional_field<std::string>(product_json, "acceptance");
+        product.fileName = get_optional_field<std::string>(product_json, "filename");
+        product.dataFileName = get_optional_field<std::string>(product_json, "data_file_name");
+        product.unitSystem = get_optional_field<std::string>(product_json, "unit_system");
+        product.opticalOpenness = get_optional_field<double>(product_json, "optical_openness");
 
         nlohmann::json measured_data_json = product_json.at("measured_data");
 
-        product->thickness = get_optional_field<double>(measured_data_json, "thickness");
-        product->conductivity = get_optional_field<double>(measured_data_json, "conductivity");
-        product->IRTransmittance = get_optional_field<double>(measured_data_json, "tir_front");
-        product->frontEmissivity =
+        product.thickness = get_optional_field<double>(measured_data_json, "thickness");
+        product.conductivity = get_optional_field<double>(measured_data_json, "conductivity");
+        product.IRTransmittance = get_optional_field<double>(measured_data_json, "tir_front");
+        product.frontEmissivity =
           get_optional_field<double>(measured_data_json, "emissivity_front");
-        product->backEmissivity = get_optional_field<double>(measured_data_json, "emissivity_back");
+        product.backEmissivity = get_optional_field<double>(measured_data_json, "emissivity_back");
 
-        product->frontEmissivitySource =
+        product.frontEmissivitySource =
           get_optional_field<std::string>(measured_data_json, "emissivity_front_source");
 
-        product->backEmissivitySource =
+        product.backEmissivitySource =
           get_optional_field<std::string>(measured_data_json, "emissivity_back_source");
 
-        product->permeabilityFactor =
+        product.permeabilityFactor =
           get_optional_field<double>(measured_data_json, "permeability_factor");
 
-        product->backEmissivitySource =
+        product.backEmissivitySource =
           get_optional_field<std::string>(measured_data_json, "wavelength_units");
 
 
@@ -541,7 +441,7 @@ namespace OpticsParser
             }
             if(!measurements.empty())
             {
-                product->measurements = measurements;
+                product.measurements = measurements;
             }
             parseDualBandValues(product, spectral_data_json);
         }
@@ -571,72 +471,71 @@ namespace OpticsParser
         return res;
     }
 
-    std::shared_ptr<ProductData>
-      parseIGSDBJsonUncomposedProduct_v2(nlohmann::json const & product_json)
+    ProductData parseIGSDBJsonUncomposedProduct_v2(nlohmann::json const & product_json)
     {
         /*
         NOTE:  All values in v2 json are strings.  Actually this is unfortunately not true.
-		Some values are strings like wavelength values but some are numbers like thickness.
+                Some values are strings like wavelength values but some are numbers like thickness.
         */
-        std::shared_ptr<ProductData> product = std::make_shared<ProductData>();
-        product->name = product_json.at("name").get<std::string>();
-        product->productName = get_optional_field<std::string>(product_json, "product_name");
-        product->productType = product_json.at("type").get<std::string>();
-        product->productSubtype = get_optional_field<std::string>(product_json, "subtype");
+        ProductData product;
+        product.name = product_json.at("name").get<std::string>();
+        product.productName = get_optional_field<std::string>(product_json, "product_name");
+        product.productType = product_json.at("type").get<std::string>();
+        product.productSubtype = get_optional_field<std::string>(product_json, "subtype");
 
-        product->nfrcid = get_optional_field<int>(product_json, "nfrc_id");
-        product->cgdbShadingLayerId = get_optional_field<int>(product_json, "cgdb_id");
-        product->cgdbShadeMaterialId = get_optional_field<int>(product_json, "cgdb_id");
-        product->igdbDatabaseVersion =
+        product.nfrcid = get_optional_field<int>(product_json, "nfrc_id");
+        product.cgdbShadingLayerId = get_optional_field<int>(product_json, "cgdb_id");
+        product.cgdbShadeMaterialId = get_optional_field<int>(product_json, "cgdb_id");
+        product.igdbDatabaseVersion =
           get_optional_field<std::string>(product_json, "igdb_database_version");
-        product->cgdbDatabaseVersion =
+        product.cgdbDatabaseVersion =
           get_optional_field<std::string>(product_json, "cgdb_database_version");
-        product->igdbChecksum = get_optional_field<int>(product_json, "igdb_checksum");
-        product->cgdbChecksum = get_optional_field<int>(product_json, "cgdb_checksum");
-        product->manufacturer = product_json.at("manufacturer").get<std::string>();
-        product->material =
+        product.igdbChecksum = get_optional_field<int>(product_json, "igdb_checksum");
+        product.cgdbChecksum = get_optional_field<int>(product_json, "cgdb_checksum");
+        product.manufacturer = product_json.at("manufacturer").get<std::string>();
+        product.material =
           get_optional_field<std::string>(product_json, "material_bulk_properties");
 
-        product->coatingName = get_optional_field<std::string>(product_json, "coating_name");
-        product->coatedSide = get_optional_field<std::string>(product_json, "coated_side");
+        product.coatingName = get_optional_field<std::string>(product_json, "coating_name");
+        product.coatedSide = get_optional_field<std::string>(product_json, "coated_side");
 
-        product->substrateFilename =
+        product.substrateFilename =
           get_optional_field<std::string>(product_json, "interlayer_name");
 
 
-        product->appearance = get_optional_field<std::string>(product_json, "appearance");
-        product->acceptance = get_optional_field<std::string>(product_json, "acceptance");
-        product->fileName = get_optional_field<std::string>(product_json, "filename");
-        product->dataFileName = get_optional_field<std::string>(product_json, "data_file_name");
-        product->unitSystem = get_optional_field<std::string>(product_json, "unit_system");
-        product->opticalOpenness = get_optional_field<double>(product_json, "optical_openness");
+        product.appearance = get_optional_field<std::string>(product_json, "appearance");
+        product.acceptance = get_optional_field<std::string>(product_json, "acceptance");
+        product.fileName = get_optional_field<std::string>(product_json, "filename");
+        product.dataFileName = get_optional_field<std::string>(product_json, "data_file_name");
+        product.unitSystem = get_optional_field<std::string>(product_json, "unit_system");
+        product.opticalOpenness = get_optional_field<double>(product_json, "optical_openness");
 
         nlohmann::json measured_data_json = product_json.at("physical_properties");
 
-        product->thickness = get_optional_field<double>(measured_data_json, "thickness");
-        product->conductivity = get_optional_field<double>(measured_data_json, "conductivity");
-        product->IRTransmittance =
+        product.thickness = get_optional_field<double>(measured_data_json, "thickness");
+        product.conductivity = get_optional_field<double>(measured_data_json, "conductivity");
+        product.IRTransmittance =
           get_optional_field<double>(measured_data_json, "predefined_tir_front");
-        product->frontEmissivity =
+        product.frontEmissivity =
           get_optional_field<double>(measured_data_json, "predefined_emissivity_front");
-        product->backEmissivity =
+        product.backEmissivity =
           get_optional_field<double>(measured_data_json, "predefined_emissivity_back");
 
-        product->frontEmissivitySource =
+        product.frontEmissivitySource =
           get_optional_field<std::string>(measured_data_json, "emissivity_front_source");
 
-        product->backEmissivitySource =
+        product.backEmissivitySource =
           get_optional_field<std::string>(measured_data_json, "emissivity_back_source");
 
-        product->permeabilityFactor =
+        product.permeabilityFactor =
           get_optional_field<double>(measured_data_json, "permeability_factor");
 
-        product->backEmissivitySource =
+        product.backEmissivitySource =
           get_optional_field<std::string>(measured_data_json, "wavelength_units");
 
         if(measured_data_json.find("power_properties") != measured_data_json.end())
         {
-            product->pvPowerProperties =
+            product.pvPowerProperties =
               parsePowerProperties(measured_data_json.at("power_properties"));
         }
 
@@ -686,7 +585,7 @@ namespace OpticsParser
 
         if(!measurements.empty())
         {
-            product->measurements = measurements;
+            product.measurements = measurements;
         }
 
 
@@ -711,7 +610,7 @@ namespace OpticsParser
 			}
 			if(!measurements.empty())
 			{
-				product->measurements = measurements;
+				product.measurements = measurements;
 			}
 			parseDualBandValues(product, spectral_data_json);
 		}
@@ -728,13 +627,6 @@ namespace OpticsParser
         auto numberSegments = geometry_json.at("number_segments").get<int>();
         double slatTilt = geometry_json.value("slat_tilt", 0.0);
         std::string tiltChoice = geometry_json.at("tilt_choice").get<std::string>();
-
-        // These values are stored as mm in the sources being parsed.
-        // Convert to meters here for consistancy with other non-wavelength
-        // length units.
-        slatWidth /= 1000.0;
-        slatSpacing /= 1000.0;
-        slatCurvature /= 1000.0;
 
         return std::shared_ptr<ProductGeometry>(new VenetianGeometry(
           slatWidth, slatSpacing, slatCurvature, slatTilt, tiltChoice, numberSegments));
@@ -809,24 +701,22 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         }
     }
 
-    std::shared_ptr<ProductData>
-      parseIGSDBJsonComposedProduct_v1(nlohmann::json const & product_json)
+    ProductData parseIGSDBJsonComposedProduct_v1(nlohmann::json const & product_json)
     {
         auto subtype = product_json.at("subtype").get<std::string>();
         auto composition_information = product_json.at("composition");
         auto product_material = composition_information[0].at("child_product");
         auto product_geometry = composition_information[0].at("extra_data").at("geometry");
-        auto material = parseIGSDBJsonUncomposedProduct_v1(product_material);
+        auto material =
+          std::make_shared<ProductData>(parseIGSDBJsonUncomposedProduct_v1(product_material));
         auto geometry = parseGeometry(subtype, product_geometry);
-        std::shared_ptr<CompositionInformation> compositionInformation(
-          new CompositionInformation{material, geometry});
+        CompositionInformation compositionInformation{material, geometry};
         auto product = parseIGSDBJsonUncomposedProduct_v1(product_json);
-        std::shared_ptr<ProductData> composedProduct(
-          new ComposedProductData(*product, compositionInformation));
-        return composedProduct;
+        product.composition = compositionInformation;
+        return product;
     }
 
-    std::shared_ptr<ProductData> parseIGSDBJson_v1(nlohmann::json const & product_json)
+    ProductData parseIGSDBJson_v1(nlohmann::json const & product_json)
     {
         if(product_json.count("composition") && !product_json.at("composition").empty())
         {
@@ -838,7 +728,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         }
     }
 
-    std::shared_ptr<ProductData> parseIGSDBJson_v2(nlohmann::json const & product_json)
+    ProductData parseIGSDBJson_v2(nlohmann::json const & product_json)
     {
         if(product_json.count("composition") && !product_json.at("composition").empty())
         {
@@ -850,7 +740,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         }
     }
 
-    std::shared_ptr<ProductData> Parser::parseJSONString(std::string const & json_str)
+    ProductData Parser::parseJSONString(std::string const & json_str)
     {
         nlohmann::json product_json = nlohmann::json::parse(json_str);
 
@@ -876,7 +766,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
     }
 
 
-    std::shared_ptr<ProductData> Parser::parseJSONFile(std::string const & fname)
+    ProductData Parser::parseJSONFile(std::string const & fname)
     {
         std::ifstream fin(fname);
         std::string content((std::istreambuf_iterator<char>(fin)),
@@ -884,19 +774,19 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         return parseJSONString(content);
     }
 
-    std::shared_ptr<ProductData> parseOpticsFile(const std::string & inputFile)
+    ProductData parseOpticsFile(const std::string & inputFile)
     {
         Parser parser;
         return parser.parseFile(inputFile);
     }
 
-    std::shared_ptr<ProductData> parseJSONString(std::string const & json)
+    ProductData parseJSONString(std::string const & json)
     {
         Parser parser;
         return parser.parseJSONString(json);
     }
 
-    std::shared_ptr<ProductData> parseJSONFile(std::string const & fname)
+    ProductData parseJSONFile(std::string const & fname)
     {
         Parser parser;
         return parser.parseJSONFile(fname);
@@ -962,9 +852,9 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
     }
 
 
-    std::shared_ptr<ProductData> parseBSDFXML(XMLParser::XMLNode const & xWindowElementNode)
+    ProductData parseBSDFXML(XMLParser::XMLNode const & xWindowElementNode)
     {
-        std::shared_ptr<ProductData> product(new ProductData());
+        ProductData product;
         if(xWindowElementNode.isEmpty())
         {
             throw std::runtime_error("XML error : WindowElement not found");
@@ -973,26 +863,16 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
           xWindowElementNode.getChildNode("Optical").getChildNode("Layer");
 
         XMLParser::XMLNode matNode = xLayerNode.getChildNode("Material");
-        product->productName = matNode.getChildNode("Name").getText();
-        product->manufacturer = matNode.getChildNode("Manufacturer").getText();
+        product.productName = matNode.getChildNode("Name").getText();
+        product.manufacturer = matNode.getChildNode("Manufacturer").getText();
         auto thickness = parseOptionalDoubleNode(matNode.getChildNode("Thickness"));
         auto thicknessUnitStr = matNode.getChildNode("Thickness").getAttribute("unit");
-        if(toLower(thicknessUnitStr) == "millimeter")
-        {}
-        else if(thickness.has_value() && toLower(thicknessUnitStr) == "meter")
-        {
-            *thickness *= 1000.0;
-        }
-        else
-        {
-            throw std::runtime_error("XML error: Unsupported thickness unit");
-        }
-        product->thickness = thickness;
-        product->frontEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityFront"));
-        product->backEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityBack"));
-        product->IRTransmittance = parseOptionalDoubleNode(matNode.getChildNode("TIR"));
-        product->conductivity =
-          parseOptionalDoubleNode(matNode.getChildNode("ThermalConductivity"));
+        product.thicknessUnit = thicknessUnitStr;
+        product.thickness = thickness;
+        product.frontEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityFront"));
+        product.backEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityBack"));
+        product.IRTransmittance = parseOptionalDoubleNode(matNode.getChildNode("TIR"));
+        product.conductivity = parseOptionalDoubleNode(matNode.getChildNode("ThermalConductivity"));
         auto opennessNode = matNode.getChildNode("PermeabilityFactor");
 
         auto xEffectiveOpenness = matNode.getChildNode("EffectiveOpennessFraction");
@@ -1000,7 +880,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         {
             opennessNode = xEffectiveOpenness;
         }
-        product->permeabilityFactor = parseOptionalDoubleNode(opennessNode);
+        product.permeabilityFactor = parseOptionalDoubleNode(opennessNode);
 
         int wavelengthDataNodeCt = xLayerNode.nChildNode("WavelengthData");
 
@@ -1087,19 +967,19 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
             }
         }
 
-        product->measurements = DualBandBSDF{solarBSDFs, visibleBSDFs};
+        product.measurements = DualBandBSDF{solarBSDFs, visibleBSDFs};
 
         return product;
     }
 
-    std::shared_ptr<ProductData> parseBSDFXMLString(std::string const & contents)
+    ProductData parseBSDFXMLString(std::string const & contents)
     {
         XMLParser::XMLNode xWindowElementNode =
           XMLParser::XMLNode::parseString(contents.c_str(), "WindowElement");
         return parseBSDFXML(xWindowElementNode);
     }
 
-    std::shared_ptr<ProductData> parseBSDFXMLFile(std::string const & fname)
+    ProductData parseBSDFXMLFile(std::string const & fname)
     {
         XMLParser::XMLNode xWindowElementNode =
           XMLParser::XMLNode::openFileHelper(fname.c_str(), "WindowElement");
