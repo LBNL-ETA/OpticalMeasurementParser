@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-project( OpticalMeasurementParser VERSION 2.0.0 LANGUAGES CXX )
+project( OpticalMeasurementParser VERSION 2.1.0 LANGUAGES CXX )
 set(LIB_NAME ${PROJECT_NAME})
 
 if(NOT "${CMAKE_CXX_STANDARD}")
