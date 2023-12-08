@@ -29,6 +29,12 @@ namespace OpticsParser
         ProductData product;
         product.measurements = std::vector<WLData>();
         std::ifstream inFile(inputFile);
+        if(!inFile.is_open())
+        {
+            std::stringstream msg;
+            msg << "Cannot open file: " << inputFile;
+            throw std::runtime_error(msg.str());
+        }
         std::string line;
         while(std::getline(inFile, line))
         {
@@ -769,6 +775,12 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
     ProductData Parser::parseJSONFile(std::string const & fname)
     {
         std::ifstream fin(fname);
+        if(!fin.is_open())
+        {
+            std::stringstream msg;
+            msg << "Cannot open file: " << fname;
+            throw std::runtime_error(msg.str());
+        }
         std::string content((std::istreambuf_iterator<char>(fin)),
                             (std::istreambuf_iterator<char>()));
         return parseJSONString(content);
@@ -981,6 +993,19 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
 
     ProductData parseBSDFXMLFile(std::string const & fname)
     {
+        // Checking to see if the file exists this way because sometimes XMLParser
+        // tries to open a messagebox and because std::filesystem support is not
+        // necessairly universal in users.  This should hopefully ensure an exception
+        // for trying to open a file that doesn't exist is propagated through the python
+        // bindings for pywincalc
+        std::ifstream inFile(fname);
+        if(!inFile.is_open())
+        {
+            std::stringstream msg;
+            msg << "Cannot open file: " << fname;
+            throw std::runtime_error(msg.str());
+        }
+        inFile.close();
         XMLParser::XMLNode xWindowElementNode =
           XMLParser::XMLNode::openFileHelper(fname.c_str(), "WindowElement");
         return parseBSDFXML(xWindowElementNode);
