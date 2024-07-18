@@ -1007,7 +1007,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         }
         inFile.close();
         XMLParser::XMLNode xWindowElementNode =
-          XMLParser::XMLNode::openFileHelper(fname.c_str(), "WindowElement");
+          XMLParser::XMLNode::openFileHelperThrows(fname.c_str(), "WindowElement");
         return parseBSDFXML(xWindowElementNode);
     }
 

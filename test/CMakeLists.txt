@@ -30,6 +30,7 @@ if(DOWNLOAD_GTEST STREQUAL ON)
 endif()
 
 add_executable(${PROJECT_TEST_NAME} 
+		invalid_xml.unit.cpp
 		InputDifferentEmissivities.unit.cpp
 		InputInvertedEmissivities.unit.cpp
 		InputFile1.unit.cpp
