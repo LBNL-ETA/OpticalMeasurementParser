@@ -34,15 +34,17 @@ else()
 endif()
 
 set( JSON_BuildTests OFF CACHE BOOL "")
+set( BUILD_FileParse_tests OFF CACHE BOOL "")
 
 include(CMakeLists-nlohmann_json.txt)
 include(CMakeLists-xmlParser.txt)
+include(CMakeLists-FileParse.txt)
 
 add_subdirectory( src )
 
 target_include_directories(${LIB_NAME}
-    PUBLIC 
-        $<INSTALL_INTERFACE:include>    
+    PUBLIC
+        $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -53,6 +55,14 @@ Option(BUILD_Optical_Measurement_Parser_Tests "Build tests for optical measureme
 if(BUILD_Optical_Measurement_Parser_Tests)
 	enable_testing()
 	add_subdirectory( test )
+
+	# Set the path to the test directory
+	set(TEST_DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/test")
+	target_compile_definitions(OpticalMeasurementParser-test PRIVATE TEST_DATA_DIR="${TEST_DATA_DIR}")
+
+	# Add the test with the specified arguments
+    add_test(NAME OpticalMeasurementParser-test
+             COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpticalMeasurementParser-test --gtest_catch_exceptions=0)
 endif()
 
 
