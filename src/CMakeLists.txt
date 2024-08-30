@@ -1,6 +1,7 @@
 set( CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON )
 
-add_library( ${LIB_NAME} 
+add_library( ${LIB_NAME}
+        Serializers.hpp
 		Parser.hpp
 		Parser.cpp
 		ProductData.hpp
