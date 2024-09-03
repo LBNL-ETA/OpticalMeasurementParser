@@ -79,25 +79,25 @@ namespace BSDFXML
     {
         using FileParse::Child;
         node >> Child{"Name", material.name};
-        node >> Child{"productName", material.productName};
+        node >> Child{"ProductName", material.productName};
         node >> Child{"Manufacturer", material.manufacturer};
         node >> Child{"Thickness", material.thickness};
         FileParse::deserializeEnum(
-          node, "deviceType", material.deviceType, BSDFXML::DeviceTypeFromString);
-        node >> Child{"thermalConductivity", material.thermalConductivity};
-        node >> Child{"airPermeability", material.airPermeability};
-        node >> Child{"emissivityFront", material.emissivityFront};
-        node >> Child{"emissivityBack", material.emissivityBack};
+          node, "DeviceType", material.deviceType, BSDFXML::DeviceTypeFromString);
+        node >> Child{"ThermalConductivity", material.thermalConductivity};
+        node >> Child{"AirPermeability", material.airPermeability};
+        node >> Child{"EmissivityFront", material.emissivityFront};
+        node >> Child{"EmissivityBack", material.emissivityBack};
         node >> Child{"TIR", material.TIR};
-        node >> Child{"effectiveOpennessFraction", material.effectiveOpennessFraction};
-        node >> Child{"permeabilityFactor", material.permeabilityFactor};
-        node >> Child{"opticalProperties", material.opticalProperties};
-        node >> Child{"color", material.color};
+        node >> Child{"EffectiveOpennessFraction", material.effectiveOpennessFraction};
+        node >> Child{"PermeabilityFactor", material.permeabilityFactor};
+        node >> Child{"OpticalProperties", material.opticalProperties};
+        node >> Child{"Color", material.color};
         node >> Child{"AERCAcceptance", material.AERCAcceptance};
-        node >> Child{"comments", material.comments};
+        node >> Child{"Comments", material.comments};
         node >> Child{"Width", material.width};
         node >> Child{"Height", material.height};
-        node >> Child{"openness", material.openness};
+        node >> Child{"Openness", material.openness};
 
         return node;
     }
@@ -108,25 +108,122 @@ namespace BSDFXML
         using FileParse::Child;
 
         node << Child{"Name", material.name};
-        node << Child{"productName", material.productName};
+        node << Child{"ProductName", material.productName};
         node << Child{"Manufacturer", material.manufacturer};
         node << Child{"Thickness", material.thickness};
         FileParse::serializeEnum(
-          node, "deviceType", material.deviceType, BSDFXML::DeviceTypeToString);
-        node << Child{"thermalConductivity", material.thermalConductivity};
-        node << Child{"airPermeability", material.airPermeability};
-        node << Child{"emissivityFront", material.emissivityFront};
-        node << Child{"emissivityBack", material.emissivityBack};
+          node, "DeviceType", material.deviceType, BSDFXML::DeviceTypeToString);
+        node << Child{"ThermalConductivity", material.thermalConductivity};
+        node << Child{"AirPermeability", material.airPermeability};
+        node << Child{"EmissivityFront", material.emissivityFront};
+        node << Child{"EmissivityBack", material.emissivityBack};
         node << Child{"TIR", material.TIR};
-        node << Child{"effectiveOpennessFraction", material.effectiveOpennessFraction};
+        node << Child{"EffectiveOpennessFraction", material.effectiveOpennessFraction};
         node << Child{"permeabilityFactor", material.permeabilityFactor};
-        node << Child{"opticalProperties", material.opticalProperties};
-        node << Child{"color", material.color};
+        node << Child{"OpticalProperties", material.opticalProperties};
+        node << Child{"Color", material.color};
         node << Child{"AERCAcceptance", material.AERCAcceptance};
-        node << Child{"comments", material.comments};
+        node << Child{"Comments", material.comments};
         node << Child{"Width", material.width};
         node << Child{"Height", material.height};
-        node << Child{"openness", material.openness};
+        node << Child{"Openness", material.openness};
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::Length & length)
+    {
+        node >> length.value;
+        FileParse::loadAttribute(node, "unit", length.unit, LengthUnitFromString);
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::Length & length)
+    {
+        node << length.value;
+        FileParse::saveAttribute(node, "unit", length.unit, LengthUnitToString);
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    const NodeAdapter & operator>>(const NodeAdapter & node,
+                                   BSDFXML::LengthWithCavity & lengthWithCavity)
+    {
+        node >> lengthWithCavity.value;
+        FileParse::loadAttribute(node, "cavity", lengthWithCavity.cavity);
+        FileParse::loadAttribute(node, "unit", lengthWithCavity.unit, LengthUnitFromString);
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::LengthWithCavity & lengthWithCavity)
+    {
+        node << lengthWithCavity.value;
+        FileParse::saveAttribute(node, "cavity", lengthWithCavity.cavity);
+        FileParse::saveAttribute(node, "unit", lengthWithCavity.unit, LengthUnitToString);
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::Geometry & geometry)
+    {
+        FileParse::loadAttribute(node, "unit", geometry.unit, LengthUnitFromString);
+        FileParse::loadAttribute(node, "format", geometry.format);
+        node >> FileParse::Child{"BlindSlatThickness", geometry.blindSlatThickness};
+        node >> FileParse::Child{"BlindCurvature", geometry.blindCurvature};
+        node >> FileParse::Child{"BlindWidth", geometry.blindWidth};
+        node >> FileParse::Child{"BlindSpacing", geometry.blindSpacing};
+        node >> FileParse::Child{"BlindAngle", geometry.blindAngle};
+        node >> FileParse::Child{"DiffusingGlassCoverageFraction",
+                                 geometry.diffusingGlassCoverageFraction};
+        node >> FileParse::Child{"WovenShadeOpennessFraction", geometry.wovenShadeOpennessFraction};
+        node >> FileParse::Child{"WovenShadeThreadDiameter", geometry.wovenShadeThreadDiameter};
+        node >> FileParse::Child{"WovenShadeThreadSpacing", geometry.wovenShadeThreadSpacing};
+        node >> FileParse::Child{"WovenShadeThickness", geometry.wovenShadeThickness};
+        node >> FileParse::Child{"CellularShadeCellHeight", geometry.cellularShadeCellHeight};
+        node >> FileParse::Child{"CellularShadeInnerWallLength",
+                                 geometry.cellularShadeInnerWallLength};
+        node
+          >> FileParse::Child{"CellularShadeSideWallLength", geometry.cellularShadeSideWallLength};
+        node >> FileParse::Child{"PleatedShadeCellHeight", geometry.pleatedShadeCellHeight};
+        node >> FileParse::Child{"PleatedShadeCellSideWallLength",
+                                 geometry.pleatedShadeCellSideWallLength};
+        node >> FileParse::Child{"MgfBlock", geometry.mgfBlock};
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::Geometry & geometry)
+    {
+        FileParse::saveAttribute(node, "unit", geometry.unit, LengthUnitToString);
+        FileParse::saveAttribute(node, "format", geometry.format);
+        node << FileParse::Child{"BlindSlatThickness", geometry.blindSlatThickness};
+        node << FileParse::Child{"BlindCurvature", geometry.blindCurvature};
+        node << FileParse::Child{"BlindWidth", geometry.blindWidth};
+        node << FileParse::Child{"BlindSpacing", geometry.blindSpacing};
+        node << FileParse::Child{"BlindAngle", geometry.blindAngle};
+        node << FileParse::Child{"DiffusingGlassCoverageFraction",
+                                 geometry.diffusingGlassCoverageFraction};
+        node << FileParse::Child{"WovenShadeOpennessFraction", geometry.wovenShadeOpennessFraction};
+        node << FileParse::Child{"WovenShadeThreadDiameter", geometry.wovenShadeThreadDiameter};
+        node << FileParse::Child{"WovenShadeThreadSpacing", geometry.wovenShadeThreadSpacing};
+        node << FileParse::Child{"WovenShadeThickness", geometry.wovenShadeThickness};
+        node << FileParse::Child{"CellularShadeCellHeight", geometry.cellularShadeCellHeight};
+        node << FileParse::Child{"CellularShadeInnerWallLength",
+                                 geometry.cellularShadeInnerWallLength};
+        node << FileParse::Child{"CellularShadeSideWallLength",
+                                 geometry.cellularShadeSideWallLength};
+        node << FileParse::Child{"PleatedShadeCellHeight", geometry.pleatedShadeCellHeight};
+        node << FileParse::Child{"PleatedShadeCellSideWallLength",
+                                 geometry.pleatedShadeCellSideWallLength};
+        node << FileParse::Child{"MgfBlock", geometry.mgfBlock};
 
         return node;
     }
@@ -134,9 +231,9 @@ namespace BSDFXML
     template<typename NodeAdapter>
     const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::ThetaBounds & thetaBounds)
     {
-        node >> FileParse::Child{"lowerTheta", thetaBounds.lowerTheta};
-        node >> FileParse::Child{"upperTheta", thetaBounds.upperTheta};
-        node >> FileParse::Child{"comments", thetaBounds.comments};
+        node >> FileParse::Child{"LowerTheta", thetaBounds.lowerTheta};
+        node >> FileParse::Child{"UpperTheta", thetaBounds.upperTheta};
+        node >> FileParse::Child{"Comments", thetaBounds.comments};
 
         return node;
     }
@@ -144,9 +241,9 @@ namespace BSDFXML
     template<typename NodeAdapter>
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::ThetaBounds & thetaBounds)
     {
-        node << FileParse::Child{"lowerTheta", thetaBounds.lowerTheta};
-        node << FileParse::Child{"upperTheta", thetaBounds.upperTheta};
-        node << FileParse::Child{"comments", thetaBounds.comments};
+        node << FileParse::Child{"LowerTheta", thetaBounds.lowerTheta};
+        node << FileParse::Child{"UpperTheta", thetaBounds.upperTheta};
+        node << FileParse::Child{"Comments", thetaBounds.comments};
 
         return node;
     }
@@ -156,11 +253,11 @@ namespace BSDFXML
                                    BSDFXML::AngleBasisBlock & angleBasisBlock)
     {
         node >> angleBasisBlock.theta;
-        node >> FileParse::Child{"phi", angleBasisBlock.phi};
+        node >> FileParse::Child{"Phi", angleBasisBlock.phi};
         node >> FileParse::Child{"nPhis", angleBasisBlock.nPhis};
         FileParse::deserializeOptionalVariant(
           node, {"SolidAngle", "ThetaBounds"}, angleBasisBlock.bounds);
-        node >> FileParse::Child{"comments", angleBasisBlock.comments};
+        node >> FileParse::Child{"Comments", angleBasisBlock.comments};
 
         return node;
     }
@@ -169,12 +266,12 @@ namespace BSDFXML
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::AngleBasisBlock & angleBasisBlock)
     {
         node << angleBasisBlock.theta;
-        node << FileParse::Child{"phi", angleBasisBlock.phi};
+        node << FileParse::Child{"Phi", angleBasisBlock.phi};
         node << FileParse::Child{"nPhis", angleBasisBlock.nPhis};
         FileParse::serializeOptionalVariant(
           node, {"SolidAngle", "ThetaBounds"}, angleBasisBlock.bounds);
-        node << FileParse::Child{"bounds", angleBasisBlock.bounds};
-        node << FileParse::Child{"comments", angleBasisBlock.comments};
+        node << FileParse::Child{"Bounds", angleBasisBlock.bounds};
+        node << FileParse::Child{"Comments", angleBasisBlock.comments};
 
         return node;
     }
@@ -202,11 +299,11 @@ namespace BSDFXML
                                    BSDFXML::DataDefinition & dataDefinition)
     {
         FileParse::deserializeEnum(node,
-                                   "incidentDataStructure",
+                                   "IncidentDataStructure",
                                    dataDefinition.incidentDataStructure,
                                    BSDFXML::IncidentDataStructureFromString);
-        node >> FileParse::Child{"angleBasis", dataDefinition.angleBasis};
-        node >> FileParse::Child{"comments", dataDefinition.comments};
+        node >> FileParse::Child{"AngleBasis", dataDefinition.angleBasis};
+        node >> FileParse::Child{"Comments", dataDefinition.comments};
 
         return node;
     }
@@ -215,11 +312,11 @@ namespace BSDFXML
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::DataDefinition & dataDefinition)
     {
         FileParse::serializeEnum(node,
-                                 "incidentDataStructure",
+                                 "IncidentDataStructure",
                                  dataDefinition.incidentDataStructure,
                                  BSDFXML::IncidentDataStructureToString);
-        node << FileParse::Child{"angleBasis", dataDefinition.angleBasis};
-        node << FileParse::Child{"comments", dataDefinition.comments};
+        node << FileParse::Child{"AngleBasis", dataDefinition.angleBasis};
+        node << FileParse::Child{"Comments", dataDefinition.comments};
 
         return node;
     }
@@ -377,18 +474,33 @@ namespace BSDFXML
         return node;
     }
 
-        template<typename NodeAdapter>
-        const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::WavelengthData & wavelengthData)
-        {
-            node >> FileParse::Child{"LayerNumber", wavelengthData.layerNumber};
-            node >> FileParse::Child{"Angle", wavelengthData.angle};
-            node >> FileParse::Child{"Wavelength", wavelengthData.wavelength};
-            node >> FileParse::Child{"SourceSpectrum", wavelengthData.sourceSpectrum};
-            node >> FileParse::Child{"DetectorSpectrum", wavelengthData.detectorSpectrum};
-            node >> FileParse::Child{"WavelengthDataBlock", wavelengthData.blocks};
-            node >> FileParse::Child{"Comments", wavelengthData.comments};
+    template<typename NodeAdapter>
+    const NodeAdapter & operator>>(const NodeAdapter & node,
+                                   BSDFXML::WavelengthData & wavelengthData)
+    {
+        node >> FileParse::Child{"LayerNumber", wavelengthData.layerNumber};
+        node >> FileParse::Child{"Angle", wavelengthData.angle};
+        node >> FileParse::Child{"Wavelength", wavelengthData.wavelength};
+        node >> FileParse::Child{"SourceSpectrum", wavelengthData.sourceSpectrum};
+        node >> FileParse::Child{"DetectorSpectrum", wavelengthData.detectorSpectrum};
+        node >> FileParse::Child{"WavelengthDataBlock", wavelengthData.blocks};
+        node >> FileParse::Child{"Comments", wavelengthData.comments};
 
-            return node;
-        }
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::WavelengthData & wavelengthData)
+    {
+        node << FileParse::Child{"LayerNumber", wavelengthData.layerNumber};
+        node << FileParse::Child{"Angle", wavelengthData.angle};
+        node << FileParse::Child{"Wavelength", wavelengthData.wavelength};
+        node << FileParse::Child{"SourceSpectrum", wavelengthData.sourceSpectrum};
+        node << FileParse::Child{"DetectorSpectrum", wavelengthData.detectorSpectrum};
+        node << FileParse::Child{"WavelengthDataBlock", wavelengthData.blocks};
+        node << FileParse::Child{"Comments", wavelengthData.comments};
+
+        return node;
+    }
 
 }   // namespace BSDFXML

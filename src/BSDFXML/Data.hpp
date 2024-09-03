@@ -53,6 +53,44 @@ namespace BSDFXML
         std::optional<double> openness;
     };
 
+    /// Schema is actually using many different types that look like this. I will not repeat them
+    /// all here but will use single one. In case schema gets updated and one of the parameters is
+    /// updated, then additional parameter can be added here.
+    struct Length
+    {
+        double value;
+        std::string unit;
+    };
+
+    struct LengthWithCavity
+    {
+        double value;
+        std::optional<int> cavity;
+        std::string unit;
+    };
+
+    struct Geometry
+    {
+        std::optional<std::string> format;
+        std::optional<LengthUnit> unit;
+        std::optional<Length> blindSlatThickness;
+        std::optional<Length> blindCurvature;
+        std::optional<Length> blindWidth;
+        std::optional<Length> blindSpacing;
+        std::optional<double> blindAngle;
+        std::optional<double> diffusingGlassCoverageFraction;
+        std::optional<double> wovenShadeOpennessFraction;
+        std::optional<Length> wovenShadeThreadDiameter;
+        std::optional<Length> wovenShadeThreadSpacing;
+        std::optional<Length> wovenShadeThickness;
+        std::optional<Length> cellularShadeCellHeight;
+        std::optional<Length> cellularShadeInnerWallLength;
+        std::optional<LengthWithCavity> cellularShadeSideWallLength;
+        std::optional<LengthWithCavity> pleatedShadeCellHeight;
+        std::optional<LengthWithCavity> pleatedShadeCellSideWallLength;
+        std::optional<Length> mgfBlock;
+    };
+
     struct ThetaBounds
     {
         std::optional<double> lowerTheta;
