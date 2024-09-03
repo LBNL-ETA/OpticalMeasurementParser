@@ -67,4 +67,11 @@ namespace BSDFXML
         std::optional<std::string> Name;
         std::vector<AngleBasisBlock> Blocks;
     };
+
+    struct DataDefinition
+    {
+        std::optional<IncidentDataStructure> IncidentDataStructure;
+        std::vector<AngleBasis> AngleBasis;
+        std::optional<std::string> Comments;
+    };
 }   // namespace BSDFXML

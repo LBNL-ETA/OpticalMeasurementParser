@@ -4,7 +4,6 @@
 
 using namespace BSDFXML;
 
-// Unit tests for WindowElementType enumeration
 TEST(EnumConversionTest, WindowElementTypeToString)
 {
     EXPECT_EQ(windowElementToString(WindowElementType::Unknown), "Unknown");
@@ -23,7 +22,6 @@ TEST(EnumConversionTest, WindowElementFromString)
               WindowElementType::Unknown);   // Test for default case
 }
 
-// Unit tests for DeviceType enumeration
 TEST(EnumConversionTest, DeviceTypeToString)
 {
     EXPECT_EQ(DeviceTypeToString(DeviceType::Unknown), "Unknown");
@@ -57,7 +55,6 @@ TEST(EnumConversionTest, DeviceTypeFromString)
               DeviceType::Unknown);   // Test for default case
 }
 
-// Unit tests for IncidentDataStructure enumeration
 TEST(EnumConversionTest, IncidentDataStructureToString)
 {
     EXPECT_EQ(IncidentDataStructureToString(IncidentDataStructure::Unknown), "Unknown");
@@ -70,4 +67,58 @@ TEST(EnumConversionTest, IncidentDataStructureFromString)
     EXPECT_EQ(IncidentDataStructureFromString("Columns"), IncidentDataStructure::Columns);
     EXPECT_EQ(IncidentDataStructureFromString("NonExistentValue"),
               IncidentDataStructure::Unknown);   // Test for default case
+}
+
+TEST(EnumConversionTest, WavelengthDataDirectionToString)
+{
+    EXPECT_EQ(WavelengthDataDirectionToString(WavelengthDataDirection::Unknown), "Unknown");
+    EXPECT_EQ(WavelengthDataDirectionToString(WavelengthDataDirection::TransmissionFront),
+              "Transmission Front");
+    EXPECT_EQ(WavelengthDataDirectionToString(WavelengthDataDirection::TransmissionBack),
+              "Transmission Back");
+    EXPECT_EQ(WavelengthDataDirectionToString(WavelengthDataDirection::ReflectionFront),
+              "Reflection Front");
+    EXPECT_EQ(WavelengthDataDirectionToString(WavelengthDataDirection::ReflectionBack),
+              "Reflection Back");
+    EXPECT_EQ(WavelengthDataDirectionToString(WavelengthDataDirection::AbsorbedFront),
+              "Absorbed Front");
+    EXPECT_EQ(WavelengthDataDirectionToString(WavelengthDataDirection::AbsorbedBack),
+              "Absorbed Back");
+}
+
+TEST(EnumConversionTest, WavelengthDataDirectionFromString)
+{
+    EXPECT_EQ(WavelengthDataDirectionFromString("Unknown"), WavelengthDataDirection::Unknown);
+    EXPECT_EQ(WavelengthDataDirectionFromString("Transmission Front"),
+              WavelengthDataDirection::TransmissionFront);
+    EXPECT_EQ(WavelengthDataDirectionFromString("Transmission Back"),
+              WavelengthDataDirection::TransmissionBack);
+    EXPECT_EQ(WavelengthDataDirectionFromString("Reflection Front"),
+              WavelengthDataDirection::ReflectionFront);
+    EXPECT_EQ(WavelengthDataDirectionFromString("Reflection Back"),
+              WavelengthDataDirection::ReflectionBack);
+    EXPECT_EQ(WavelengthDataDirectionFromString("Absorbed Front"),
+              WavelengthDataDirection::AbsorbedFront);
+    EXPECT_EQ(WavelengthDataDirectionFromString("Absorbed Back"),
+              WavelengthDataDirection::AbsorbedBack);
+    EXPECT_EQ(WavelengthDataDirectionFromString("NonExistentValue"),
+              WavelengthDataDirection::Unknown);   // Test for default case
+}
+
+TEST(EnumConversionTest, ScatteringDataTypeToString)
+{
+    EXPECT_EQ(ScatteringDataTypeToString(ScatteringDataType::Unknown), "Unknown");
+    EXPECT_EQ(ScatteringDataTypeToString(ScatteringDataType::BTDF), "BTDF");
+    EXPECT_EQ(ScatteringDataTypeToString(ScatteringDataType::FractionalDiffuse), "Fractional Diffuse");
+    EXPECT_EQ(ScatteringDataTypeToString(ScatteringDataType::FractionalSpecular), "Fractional Specular");
+}
+
+TEST(EnumConversionTest, ScatteringDataTypeFromString)
+{
+    EXPECT_EQ(ScatteringDataTypeFromString("Unknown"), ScatteringDataType::Unknown);
+    EXPECT_EQ(ScatteringDataTypeFromString("BTDF"), ScatteringDataType::BTDF);
+    EXPECT_EQ(ScatteringDataTypeFromString("Fractional Diffuse"), ScatteringDataType::FractionalDiffuse);
+    EXPECT_EQ(ScatteringDataTypeFromString("Fractional Specular"), ScatteringDataType::FractionalSpecular);
+    EXPECT_EQ(ScatteringDataTypeFromString("NonExistentValue"),
+              ScatteringDataType::Unknown);   // Test for default case
 }

@@ -54,4 +54,37 @@ namespace BSDFXML
     {
         return FileParse::enumToString(type, IncidentDataStructureStrings);
     }
+
+    const std::array<std::string, 7> WavelengthDataDirectionStrings = {"Unknown",
+                                                                       "Transmission Front",
+                                                                       "Transmission Back",
+                                                                       "Reflection Front",
+                                                                       "Reflection Back",
+                                                                       "Absorbed Front",
+                                                                       "Absorbed Back"};
+
+    WavelengthDataDirection WavelengthDataDirectionFromString(std::string_view type)
+    {
+        return FileParse::enumFromString(
+          type, WavelengthDataDirectionStrings, WavelengthDataDirection::Unknown);
+    }
+
+    std::string WavelengthDataDirectionToString(WavelengthDataDirection type)
+    {
+        return FileParse::enumToString(type, WavelengthDataDirectionStrings);
+    }
+
+    const std::array<std::string, 4> ScatteringDataTypeStrings = {
+      "Unknown", "BTDF", "Fractional Diffuse", "Fractional Specular"};
+
+    ScatteringDataType ScatteringDataTypeFromString(std::string_view type)
+    {
+        return FileParse::enumFromString(
+          type, ScatteringDataTypeStrings, ScatteringDataType::Unknown);
+    }
+
+    std::string ScatteringDataTypeToString(ScatteringDataType type)
+    {
+        return FileParse::enumToString(type, ScatteringDataTypeStrings);
+    }
 }   // namespace BSDFXML

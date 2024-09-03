@@ -162,7 +162,7 @@ namespace BSDFXML
     const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::AngleBasis & angleBasis)
     {
         node >> FileParse::Child{"Name", angleBasis.Name};
-        node >> angleBasis.Blocks;
+        node >> FileParse::Child{"AngleBasisBlock", angleBasis.Blocks};
 
         return node;
     }
@@ -171,7 +171,34 @@ namespace BSDFXML
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::AngleBasis & angleBasis)
     {
         node << FileParse::Child{"Name", angleBasis.Name};
-        node << angleBasis.Blocks;
+        node << FileParse::Child{"AngleBasisBlock", angleBasis.Blocks};
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    const NodeAdapter & operator>>(const NodeAdapter & node,
+                                   BSDFXML::DataDefinition & dataDefinition)
+    {
+        FileParse::deserializeEnum(node,
+                                   "IncidentDataStructure",
+                                   dataDefinition.IncidentDataStructure,
+                                   BSDFXML::IncidentDataStructureFromString);
+        node >> FileParse::Child{"AngleBasis", dataDefinition.AngleBasis};
+        node >> FileParse::Child{"Comments", dataDefinition.Comments};
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::DataDefinition & dataDefinition)
+    {
+        FileParse::serializeEnum(node,
+                                 "IncidentDataStructure",
+                                 dataDefinition.IncidentDataStructure,
+                                 BSDFXML::IncidentDataStructureToString);
+        node << FileParse::Child{"AngleBasis", dataDefinition.AngleBasis};
+        node << FileParse::Child{"Comments", dataDefinition.Comments};
 
         return node;
     }

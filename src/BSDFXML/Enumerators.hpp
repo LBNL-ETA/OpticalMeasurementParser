@@ -45,4 +45,29 @@ namespace BSDFXML
 
     IncidentDataStructure IncidentDataStructureFromString(std::string_view type);
     std::string IncidentDataStructureToString(IncidentDataStructure type);
+
+    enum class WavelengthDataDirection
+    {
+        Unknown,
+        TransmissionFront,
+        TransmissionBack,
+        ReflectionFront,
+        ReflectionBack,
+        AbsorbedFront,
+        AbsorbedBack
+    };
+
+    WavelengthDataDirection WavelengthDataDirectionFromString(std::string_view type);
+    std::string WavelengthDataDirectionToString(WavelengthDataDirection type);
+
+    enum class ScatteringDataType
+    {
+        Unknown,
+        BTDF,
+        FractionalDiffuse,
+        FractionalSpecular
+    };
+
+    ScatteringDataType ScatteringDataTypeFromString(std::string_view type);
+    std::string ScatteringDataTypeToString(ScatteringDataType type);
 }   // namespace BSDFXML
