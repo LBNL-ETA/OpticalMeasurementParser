@@ -31,6 +31,26 @@ namespace BSDFXML
     }
 
     template<typename NodeAdapter>
+    const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::Wavelength & wavelength)
+    {
+        FileParse::loadAttribute(node, "unit", wavelength.unit);
+        FileParse::loadAttribute(node, "type", wavelength.type);
+        node >> wavelength.value;
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::Wavelength & wavelength)
+    {
+        FileParse::saveAttribute(node, "unit", wavelength.unit);
+        FileParse::saveAttribute(node, "type", wavelength.type);
+        node << wavelength.value;
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
     const NodeAdapter & operator>>(const NodeAdapter & node,
                                    BSDFXML::OpticalProperties & opticalProperties)
     {
@@ -356,5 +376,19 @@ namespace BSDFXML
 
         return node;
     }
+
+        template<typename NodeAdapter>
+        const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::WavelengthData & wavelengthData)
+        {
+            node >> FileParse::Child{"LayerNumber", wavelengthData.layerNumber};
+            node >> FileParse::Child{"Angle", wavelengthData.angle};
+            node >> FileParse::Child{"Wavelength", wavelengthData.wavelength};
+            node >> FileParse::Child{"SourceSpectrum", wavelengthData.sourceSpectrum};
+            node >> FileParse::Child{"DetectorSpectrum", wavelengthData.detectorSpectrum};
+            node >> FileParse::Child{"WavelengthDataBlock", wavelengthData.blocks};
+            node >> FileParse::Child{"Comments", wavelengthData.comments};
+
+            return node;
+        }
 
 }   // namespace BSDFXML

@@ -15,6 +15,13 @@ namespace BSDFXML
         std::string unit;
     };
 
+    struct Wavelength
+    {
+        std::string value;
+        std::string unit;
+        std::optional<std::string> type;
+    };
+
     struct OpticalProperties
     {
         std::optional<double> transmittance;
@@ -84,5 +91,16 @@ namespace BSDFXML
         std::optional<std::string> rowAngleBasis;
         std::optional<ScatteringDataType> scatteringDataType;
         ScatteringData scatteringData;
+    };
+
+    struct WavelengthData
+    {
+        std::optional<std::string> layerNumber;
+        std::optional<std::string> angle;
+        std::optional<Wavelength> wavelength;
+        std::optional<std::string> sourceSpectrum;
+        std::optional<std::string> detectorSpectrum;
+        std::vector<WavelengthDataBlock> blocks;
+        std::optional<std::string> comments;
     };
 }   // namespace BSDFXML
