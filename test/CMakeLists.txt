@@ -29,7 +29,8 @@ if(DOWNLOAD_GTEST STREQUAL ON)
 
 endif()
 
-add_executable(${PROJECT_TEST_NAME} 
+add_executable(${PROJECT_TEST_NAME}
+		BSDFXMLEnumerators.unit.cpp
 		invalid_xml.unit.cpp
 		InputDifferentEmissivities.unit.cpp
 		InputInvertedEmissivities.unit.cpp
