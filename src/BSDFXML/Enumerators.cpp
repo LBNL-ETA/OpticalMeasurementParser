@@ -87,4 +87,52 @@ namespace BSDFXML
     {
         return FileParse::enumToString(type, ScatteringDataTypeStrings);
     }
+
+    const std::array<std::string, 3> FileTypeStrings = {"Unknown", "BSDF", "NonBSDF"};
+
+    FileType FileTypeFromString(std::string_view type)
+    {
+        return FileParse::enumFromString(type, FileTypeStrings, FileType::Unknown);
+    }
+
+    std::string FileTypeToString(FileType type)
+    {
+        return FileParse::enumToString(type, FileTypeStrings);
+    }
+
+    const std::array<std::string, 3> WavelengthUnitStrings = {"Unknown", "Integral", "Nanometer"};
+
+    WavelengthUnit WavelengthUnitFromString(std::string_view type)
+    {
+        return FileParse::enumFromString(type, WavelengthUnitStrings, WavelengthUnit::Unknown);
+    }
+
+    std::string WavelengthUnitToString(WavelengthUnit type)
+    {
+        return FileParse::enumToString(type, WavelengthUnitStrings);
+    }
+
+    const std::array<std::string, 3> LengthUnitStrings = {"Unknown", "Meter", "Millimeter"};
+
+    LengthUnit LengthUnitFromString(std::string_view type)
+    {
+        return FileParse::enumFromString(type, LengthUnitStrings, LengthUnit::Unknown);
+    }
+
+    std::string LengthUnitToString(LengthUnit type)
+    {
+        return FileParse::enumToString(type, LengthUnitStrings);
+    }
+
+    const std::array<std::string, 2> ConductivityUnitStrings = {"Unknown", "WPerMeterK"};
+
+    ConductivityUnit ConductivityUnitFromString(std::string_view type)
+    {
+        return FileParse::enumFromString(type, ConductivityUnitStrings, ConductivityUnit::Unknown);
+    }
+
+    std::string ConductivityUnitToString(ConductivityUnit type)
+    {
+        return FileParse::enumToString(type, ConductivityUnitStrings);
+    }
 }   // namespace BSDFXML

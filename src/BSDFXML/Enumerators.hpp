@@ -70,4 +70,43 @@ namespace BSDFXML
 
     ScatteringDataType ScatteringDataTypeFromString(std::string_view type);
     std::string ScatteringDataTypeToString(ScatteringDataType type);
+
+    enum class FileType
+    {
+        Unknown,
+        BSDF,
+        NonBSDF
+    };
+
+    FileType FileTypeFromString(std::string_view type);
+    std::string FileTypeToString(FileType type);
+
+    enum class WavelengthUnit
+    {
+        Unknown,
+        Integral,
+        Nanometer
+    };
+
+    WavelengthUnit WavelengthUnitFromString(std::string_view type);
+    std::string WavelengthUnitToString(WavelengthUnit type);
+
+    enum class LengthUnit
+    {
+        Unknown,
+        Meter,
+        Millimeter
+    };
+
+    LengthUnit LengthUnitFromString(std::string_view type);
+    std::string LengthUnitToString(LengthUnit type);
+
+    enum class ConductivityUnit
+    {
+        Unknown,
+        WPerMeterKelvin
+    };
+
+    ConductivityUnit ConductivityUnitFromString(std::string_view type);
+    std::string ConductivityUnitToString(ConductivityUnit type);
 }   // namespace BSDFXML

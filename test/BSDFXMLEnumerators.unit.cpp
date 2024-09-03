@@ -109,16 +109,82 @@ TEST(EnumConversionTest, ScatteringDataTypeToString)
 {
     EXPECT_EQ(ScatteringDataTypeToString(ScatteringDataType::Unknown), "Unknown");
     EXPECT_EQ(ScatteringDataTypeToString(ScatteringDataType::BTDF), "BTDF");
-    EXPECT_EQ(ScatteringDataTypeToString(ScatteringDataType::FractionalDiffuse), "Fractional Diffuse");
-    EXPECT_EQ(ScatteringDataTypeToString(ScatteringDataType::FractionalSpecular), "Fractional Specular");
+    EXPECT_EQ(ScatteringDataTypeToString(ScatteringDataType::FractionalDiffuse),
+              "Fractional Diffuse");
+    EXPECT_EQ(ScatteringDataTypeToString(ScatteringDataType::FractionalSpecular),
+              "Fractional Specular");
 }
 
 TEST(EnumConversionTest, ScatteringDataTypeFromString)
 {
     EXPECT_EQ(ScatteringDataTypeFromString("Unknown"), ScatteringDataType::Unknown);
     EXPECT_EQ(ScatteringDataTypeFromString("BTDF"), ScatteringDataType::BTDF);
-    EXPECT_EQ(ScatteringDataTypeFromString("Fractional Diffuse"), ScatteringDataType::FractionalDiffuse);
-    EXPECT_EQ(ScatteringDataTypeFromString("Fractional Specular"), ScatteringDataType::FractionalSpecular);
+    EXPECT_EQ(ScatteringDataTypeFromString("Fractional Diffuse"),
+              ScatteringDataType::FractionalDiffuse);
+    EXPECT_EQ(ScatteringDataTypeFromString("Fractional Specular"),
+              ScatteringDataType::FractionalSpecular);
     EXPECT_EQ(ScatteringDataTypeFromString("NonExistentValue"),
               ScatteringDataType::Unknown);   // Test for default case
+}
+
+TEST(EnumConversionTest, FileTypeToString)
+{
+    EXPECT_EQ(FileTypeToString(FileType::Unknown), "Unknown");
+    EXPECT_EQ(FileTypeToString(FileType::BSDF), "BSDF");
+    EXPECT_EQ(FileTypeToString(FileType::NonBSDF), "NonBSDF");
+}
+
+TEST(EnumConversionTest, FileTypeFromString)
+{
+    EXPECT_EQ(FileTypeFromString("Unknown"), FileType::Unknown);
+    EXPECT_EQ(FileTypeFromString("BSDF"), FileType::BSDF);
+    EXPECT_EQ(FileTypeFromString("NonBSDF"), FileType::NonBSDF);
+    EXPECT_EQ(FileTypeFromString("NonExistentValue"),
+              FileType::Unknown);   // Test for default case
+}
+
+TEST(EnumConversionTest, WavelengthUnitToString)
+{
+    EXPECT_EQ(WavelengthUnitToString(WavelengthUnit::Unknown), "Unknown");
+    EXPECT_EQ(WavelengthUnitToString(WavelengthUnit::Integral), "Integral");
+    EXPECT_EQ(WavelengthUnitToString(WavelengthUnit::Nanometer), "Nanometer");
+}
+
+TEST(EnumConversionTest, WavelengthUnitFromString)
+{
+    EXPECT_EQ(WavelengthUnitFromString("Unknown"), WavelengthUnit::Unknown);
+    EXPECT_EQ(WavelengthUnitFromString("Integral"), WavelengthUnit::Integral);
+    EXPECT_EQ(WavelengthUnitFromString("Nanometer"), WavelengthUnit::Nanometer);
+    EXPECT_EQ(WavelengthUnitFromString("NonExistentValue"),
+              WavelengthUnit::Unknown);   // Test for default case
+}
+
+TEST(EnumConversionTest, LengthUnitToString)
+{
+    EXPECT_EQ(LengthUnitToString(LengthUnit::Unknown), "Unknown");
+    EXPECT_EQ(LengthUnitToString(LengthUnit::Meter), "Meter");
+    EXPECT_EQ(LengthUnitToString(LengthUnit::Millimeter), "Millimeter");
+}
+
+TEST(EnumConversionTest, LengthUnitFromString)
+{
+    EXPECT_EQ(LengthUnitFromString("Unknown"), LengthUnit::Unknown);
+    EXPECT_EQ(LengthUnitFromString("Meter"), LengthUnit::Meter);
+    EXPECT_EQ(LengthUnitFromString("Millimeter"), LengthUnit::Millimeter);
+    EXPECT_EQ(LengthUnitFromString("NonExistentValue"),
+              LengthUnit::Unknown);   // Test for default case
+}
+
+TEST(EnumConversionTest, ConductivityUnitToString)
+{
+    EXPECT_EQ(ConductivityUnitToString(ConductivityUnit::Unknown), "Unknown");
+    EXPECT_EQ(ConductivityUnitToString(ConductivityUnit::WPerMeterKelvin), "WPerMeterK");
+}
+
+TEST(EnumConversionTest, ConductivityUnitFromString)
+{
+    EXPECT_EQ(ConductivityUnitFromString("Unknown"), ConductivityUnit::Unknown);
+    EXPECT_EQ(ConductivityUnitFromString("WPerMeterK"), ConductivityUnit::WPerMeterKelvin);
+    EXPECT_EQ(ConductivityUnitFromString("NonExistentValue"),
+              ConductivityUnit::Unknown);   // Test for default case
 }
