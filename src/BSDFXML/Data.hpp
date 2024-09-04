@@ -141,4 +141,25 @@ namespace BSDFXML
         std::vector<WavelengthDataBlock> blocks;
         std::optional<std::string> comments;
     };
+
+    struct Layer
+    {
+        std::vector<Material> materials;
+        std::vector<Geometry> geometry;
+        std::vector<DataDefinition> dataDefinitions;
+        std::vector<WavelengthData> wavelengthData;
+    };
+
+    struct Optical
+    {
+        Layer layer;
+    };
+
+    struct WindowElement
+    {
+        WindowElementType windowElementType{WindowElementType::Unknown};
+        std::optional<FileType> fileType;
+        std::optional<std::string> Checksum;
+        Optical optical;
+    };
 }   // namespace BSDFXML

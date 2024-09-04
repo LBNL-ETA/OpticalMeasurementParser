@@ -1,8 +1,9 @@
 #pragma once
 
+#include <algorithm>
+
 #include <fileParse/Optional.hxx>
 #include <fileParse/Variant.hxx>
-#include <fileParse/Enum.hxx>
 #include <fileParse/Attributes.hxx>
 #include <fileParse/Vector.hxx>
 #include <fileParse/StringConversion.hxx>
@@ -10,11 +11,15 @@
 #include "Data.hpp"
 #include "Enumerators.hpp"
 
+#include "EnumSerializers.hpp"
+
 namespace BSDFXML
 {
     template<typename NodeAdapter>
     const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::Thickness & thickness)
     {
+        using FileParse::operator>>; // operators for basic C++ types are in the FileParse namespace
+
         FileParse::loadAttribute(node, "unit", thickness.unit);
         node >> thickness.value;
 
@@ -24,6 +29,8 @@ namespace BSDFXML
     template<typename NodeAdapter>
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::Thickness & thickness)
     {
+        using FileParse::operator<<; // operators for basic C++ types are in the FileParse namespace
+
         FileParse::saveAttribute(node, "unit", thickness.unit);
         node << thickness.value;
 
@@ -82,8 +89,7 @@ namespace BSDFXML
         node >> Child{"ProductName", material.productName};
         node >> Child{"Manufacturer", material.manufacturer};
         node >> Child{"Thickness", material.thickness};
-        FileParse::deserializeEnum(
-          node, "DeviceType", material.deviceType, BSDFXML::DeviceTypeFromString);
+        node >> Child{"DeviceType", material.deviceType};
         node >> Child{"ThermalConductivity", material.thermalConductivity};
         node >> Child{"AirPermeability", material.airPermeability};
         node >> Child{"EmissivityFront", material.emissivityFront};
@@ -111,8 +117,7 @@ namespace BSDFXML
         node << Child{"ProductName", material.productName};
         node << Child{"Manufacturer", material.manufacturer};
         node << Child{"Thickness", material.thickness};
-        FileParse::serializeEnum(
-          node, "DeviceType", material.deviceType, BSDFXML::DeviceTypeToString);
+        node << Child{"DeviceType", material.deviceType};
         node << Child{"ThermalConductivity", material.thermalConductivity};
         node << Child{"AirPermeability", material.airPermeability};
         node << Child{"EmissivityFront", material.emissivityFront};
@@ -400,16 +405,7 @@ namespace BSDFXML
         std::string serializeRow(const std::vector<double> & row)
         {
             std::ostringstream rowStream;
-
-            for(std::size_t i = 0; i < row.size(); ++i)
-            {
-                rowStream << row[i];
-                if(i < row.size() - 1)   // Add a comma between elements, but not after the last one
-                {
-                    rowStream << ", ";
-                }
-            }
-
+            std::copy(row.begin(), row.end(), std::ostream_iterator<double>(rowStream, ", "));
             return rowStream.str();
         }
 
@@ -418,10 +414,9 @@ namespace BSDFXML
         {
             std::ostringstream outputStream;
 
-            for(const auto & row : scatteringData)
-            {
-                outputStream << serializeRow(row) << "\n";   // Serialize each row and add a newline
-            }
+            std::for_each(scatteringData.begin(), scatteringData.end(), [&](const auto & row) {
+                outputStream << serializeRow(row) << "\n";
+            });
 
             return outputStream.str();
         }
@@ -499,6 +494,66 @@ namespace BSDFXML
         node << FileParse::Child{"DetectorSpectrum", wavelengthData.detectorSpectrum};
         node << FileParse::Child{"WavelengthDataBlock", wavelengthData.blocks};
         node << FileParse::Child{"Comments", wavelengthData.comments};
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::Layer & layer)
+    {
+        node >> FileParse::Child{"Material", layer.materials};
+        //node >> FileParse::Child{"Geometry", layer.geometry};
+        //node >> FileParse::Child{"DataDefinition", layer.dataDefinitions};
+        //node >> FileParse::Child{"WavelengthData", layer.wavelengthData};
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::Layer & layer)
+    {
+        node << FileParse::Child{"Material", layer.materials};
+        //node << FileParse::Child{"Geometry", layer.geometry};
+        //node << FileParse::Child{"DataDefinition", layer.dataDefinitions};
+        //node << FileParse::Child{"WavelengthData", layer.wavelengthData};
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::Optical & optical)
+    {
+        node >> FileParse::Child{"Layer", optical.layer};
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::Optical & optical)
+    {
+        node << FileParse::Child{"Layer", optical.layer};
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::WindowElement & windowElement)
+    {
+        node >> FileParse::Child{"WindowElementType", windowElement.windowElementType};
+        node >> FileParse::Child{"FileType", windowElement.fileType};
+        node >> FileParse::Child{"Checksum", windowElement.Checksum};
+        node >> FileParse::Child{"Optical", windowElement.optical};
+
+        return node;
+    }
+
+    template<typename NodeAdapter>
+    NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::WindowElement & windowElement)
+    {
+        node << FileParse::Child{"WindowElementType", windowElement.windowElementType};
+        node << FileParse::Child{"FileType", windowElement.fileType};
+        node << FileParse::Child{"Checksum", windowElement.Checksum};
+        node << FileParse::Child{"Optical", windowElement.optical};
 
         return node;
     }

@@ -2,8 +2,11 @@ set( CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON )
 
 add_library( ${LIB_NAME}
         BSDFXML/Data.hpp
+        BSDFXML/DB.cpp
+        BSDFXML/DB.hpp
         BSDFXML/Enumerators.hpp
         BSDFXML/Enumerators.cpp
+        BSDFXML/EnumSerializers.hpp
         BSDFXML/Serializers.hpp
         Serializers.hpp
 		Parser.hpp

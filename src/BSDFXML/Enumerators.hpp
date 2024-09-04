@@ -16,8 +16,8 @@ namespace BSDFXML
         Material
     };
 
-    WindowElementType windowElementFromString(std::string_view type);
-    std::string windowElementToString(WindowElementType type);
+    WindowElementType windowElementTypeFromString(std::string_view type);
+    std::string windowElementTypeToString(WindowElementType type);
 
     enum class DeviceType
     {

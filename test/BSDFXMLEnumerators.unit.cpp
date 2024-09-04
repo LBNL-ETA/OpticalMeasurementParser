@@ -6,19 +6,19 @@ using namespace BSDFXML;
 
 TEST(EnumConversionTest, WindowElementTypeToString)
 {
-    EXPECT_EQ(windowElementToString(WindowElementType::Unknown), "Unknown");
-    EXPECT_EQ(windowElementToString(WindowElementType::System), "System");
-    EXPECT_EQ(windowElementToString(WindowElementType::Layer), "Layer");
-    EXPECT_EQ(windowElementToString(WindowElementType::Material), "Material");
+    EXPECT_EQ(windowElementTypeToString(WindowElementType::Unknown), "Unknown");
+    EXPECT_EQ(windowElementTypeToString(WindowElementType::System), "System");
+    EXPECT_EQ(windowElementTypeToString(WindowElementType::Layer), "Layer");
+    EXPECT_EQ(windowElementTypeToString(WindowElementType::Material), "Material");
 }
 
 TEST(EnumConversionTest, WindowElementFromString)
 {
-    EXPECT_EQ(windowElementFromString("Unknown"), WindowElementType::Unknown);
-    EXPECT_EQ(windowElementFromString("System"), WindowElementType::System);
-    EXPECT_EQ(windowElementFromString("Layer"), WindowElementType::Layer);
-    EXPECT_EQ(windowElementFromString("Material"), WindowElementType::Material);
-    EXPECT_EQ(windowElementFromString("NonExistentValue"),
+    EXPECT_EQ(windowElementTypeFromString("Unknown"), WindowElementType::Unknown);
+    EXPECT_EQ(windowElementTypeFromString("System"), WindowElementType::System);
+    EXPECT_EQ(windowElementTypeFromString("Layer"), WindowElementType::Layer);
+    EXPECT_EQ(windowElementTypeFromString("Material"), WindowElementType::Material);
+    EXPECT_EQ(windowElementTypeFromString("NonExistentValue"),
               WindowElementType::Unknown);   // Test for default case
 }
 

@@ -9,13 +9,13 @@ namespace BSDFXML
     const std::array<std::string, 4> WindowElementTypeStrings = {
       "Unknown", "System", "Layer", "Material"};
 
-    WindowElementType windowElementFromString(std::string_view type)
+    WindowElementType windowElementTypeFromString(std::string_view type)
     {
         return FileParse::enumFromString(
           type, WindowElementTypeStrings, WindowElementType::Unknown);
     }
 
-    std::string windowElementToString(WindowElementType type)
+    std::string windowElementTypeToString(WindowElementType type)
     {
         return FileParse::enumToString(type, WindowElementTypeStrings);
     }
