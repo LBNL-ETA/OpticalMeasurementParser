@@ -58,6 +58,8 @@ namespace BSDFXML
     template<typename NodeAdapter>
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::Wavelength & wavelength)
     {
+        using FileParse::operator<<;
+
         FileParse::saveAttribute<NodeAdapter, BSDFXML::LengthUnit>(
           node, "unit", wavelength.unit, LengthUnitToString);
         FileParse::saveAttribute(node, "type", wavelength.type);
@@ -457,17 +459,11 @@ namespace BSDFXML
     const NodeAdapter & operator>>(const NodeAdapter & node,
                                    BSDFXML::WavelengthDataBlock & wavelengthDataBlock)
     {
-        FileParse::deserializeEnum(node,
-                                   "WavelengthDataDirection",
-                                   wavelengthDataBlock.wavelengthDataDirection,
-                                   BSDFXML::WavelengthDataDirectionFromString);
+        node >> FileParse::Child{"WavelengthDataDirection", wavelengthDataBlock.wavelengthDataDirection};
         node >> FileParse::Child{"ColumnAngleBasis", wavelengthDataBlock.columnAngleBasis};
         node >> FileParse::Child{"RowAngleBasis", wavelengthDataBlock.rowAngleBasis};
-        FileParse::deserializeEnum(node,
-                                   "ScatteringDataType",
-                                   wavelengthDataBlock.scatteringDataType,
-                                   BSDFXML::ScatteringDataTypeFromString);
-        node >> FileParse::Child{"ScatteringData", wavelengthDataBlock.scatteringData};
+        node >> FileParse::Child{"ScatteringDataType", wavelengthDataBlock.scatteringDataType};
+        //node >> FileParse::Child{"ScatteringData", wavelengthDataBlock.scatteringData};
 
         return node;
     }
@@ -476,17 +472,11 @@ namespace BSDFXML
     NodeAdapter & operator<<(NodeAdapter & node,
                              const BSDFXML::WavelengthDataBlock & wavelengthDataBlock)
     {
-        FileParse::serializeEnum(node,
-                                 "WavelengthDataDirection",
-                                 wavelengthDataBlock.wavelengthDataDirection,
-                                 BSDFXML::WavelengthDataDirectionToString);
+        node << FileParse::Child{"WavelengthDataDirection", wavelengthDataBlock.wavelengthDataDirection};
         node << FileParse::Child{"ColumnAngleBasis", wavelengthDataBlock.columnAngleBasis};
         node << FileParse::Child{"RowAngleBasis", wavelengthDataBlock.rowAngleBasis};
-        FileParse::serializeEnum(node,
-                                 "ScatteringDataType",
-                                 wavelengthDataBlock.scatteringDataType,
-                                 BSDFXML::ScatteringDataTypeToString);
-        node << FileParse::Child{"ScatteringData", wavelengthDataBlock.scatteringData};
+        node << FileParse::Child{"ScatteringDataType", wavelengthDataBlock.scatteringDataType};
+        // node << FileParse::Child{"ScatteringData", wavelengthDataBlock.scatteringData};
 
         return node;
     }
@@ -526,7 +516,7 @@ namespace BSDFXML
         node >> FileParse::Child{"Material", layer.materials};
         node >> FileParse::Child{"Geometry", layer.geometry};
         node >> FileParse::Child{"DataDefinition", layer.dataDefinitions};
-        // node >> FileParse::Child{"WavelengthData", layer.wavelengthData};
+        node >> FileParse::Child{"WavelengthData", layer.wavelengthData};
 
         return node;
     }
@@ -537,7 +527,7 @@ namespace BSDFXML
         node << FileParse::Child{"Material", layer.materials};
         node << FileParse::Child{"Geometry", layer.geometry};
         node << FileParse::Child{"DataDefinition", layer.dataDefinitions};
-        // node << FileParse::Child{"WavelengthData", layer.wavelengthData};
+        node << FileParse::Child{"WavelengthData", layer.wavelengthData};
 
         return node;
     }
