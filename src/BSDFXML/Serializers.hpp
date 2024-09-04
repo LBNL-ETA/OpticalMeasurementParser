@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include <fileParse/Common.hxx>
 #include <fileParse/Optional.hxx>
 #include <fileParse/Variant.hxx>
 #include <fileParse/Attributes.hxx>
