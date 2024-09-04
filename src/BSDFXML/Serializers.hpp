@@ -175,9 +175,13 @@ namespace BSDFXML
     const NodeAdapter & operator>>(const NodeAdapter & node,
                                    BSDFXML::LengthWithCavity & lengthWithCavity)
     {
+        using FileParse::operator>>;   // operators for basic C++ types are in the FileParse
+                                       // namespace
+
         node >> lengthWithCavity.value;
         FileParse::loadAttribute(node, "cavity", lengthWithCavity.cavity);
-        FileParse::loadAttribute(node, "unit", lengthWithCavity.unit, LengthUnitFromString);
+        FileParse::loadAttribute<NodeAdapter, BSDFXML::LengthUnit>(
+          node, "unit", lengthWithCavity.unit, LengthUnitFromString);
 
         return node;
     }
@@ -185,9 +189,13 @@ namespace BSDFXML
     template<typename NodeAdapter>
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::LengthWithCavity & lengthWithCavity)
     {
+        using FileParse::operator<<;   // operators for basic C++ types are in the FileParse
+                                       // namespace
+
         node << lengthWithCavity.value;
         FileParse::saveAttribute(node, "cavity", lengthWithCavity.cavity);
-        FileParse::saveAttribute(node, "unit", lengthWithCavity.unit, LengthUnitToString);
+        FileParse::saveAttribute<NodeAdapter, BSDFXML::LengthUnit>(
+          node, "unit", lengthWithCavity.unit, LengthUnitToString);
 
         return node;
     }
@@ -212,13 +220,12 @@ namespace BSDFXML
         node >> FileParse::Child{"CellularShadeCellHeight", geometry.cellularShadeCellHeight};
         node >> FileParse::Child{"CellularShadeInnerWallLength",
                                  geometry.cellularShadeInnerWallLength};
-        // node
-        //   >> FileParse::Child{"CellularShadeSideWallLength",
-        //   geometry.cellularShadeSideWallLength};
-        //  node >> FileParse::Child{"PleatedShadeCellHeight", geometry.pleatedShadeCellHeight};
-        //  node >> FileParse::Child{"PleatedShadeCellSideWallLength",
-        //                           geometry.pleatedShadeCellSideWallLength};
-        //  node >> FileParse::Child{"MgfBlock", geometry.mgfBlock};
+        node
+          >> FileParse::Child{"CellularShadeSideWallLength", geometry.cellularShadeSideWallLength};
+        node >> FileParse::Child{"PleatedShadeCellHeight", geometry.pleatedShadeCellHeight};
+        node >> FileParse::Child{"PleatedShadeCellSideWallLength",
+                                 geometry.pleatedShadeCellSideWallLength};
+        node >> FileParse::Child{"MgfBlock", geometry.mgfBlock};
 
         return node;
     }
@@ -243,12 +250,12 @@ namespace BSDFXML
         node << FileParse::Child{"CellularShadeCellHeight", geometry.cellularShadeCellHeight};
         node << FileParse::Child{"CellularShadeInnerWallLength",
                                  geometry.cellularShadeInnerWallLength};
-        // node << FileParse::Child{"CellularShadeSideWallLength",
-        //                          geometry.cellularShadeSideWallLength};
-        // node << FileParse::Child{"PleatedShadeCellHeight", geometry.pleatedShadeCellHeight};
-        // node << FileParse::Child{"PleatedShadeCellSideWallLength",
-        //                          geometry.pleatedShadeCellSideWallLength};
-        // node << FileParse::Child{"MgfBlock", geometry.mgfBlock};
+        node << FileParse::Child{"CellularShadeSideWallLength",
+                                 geometry.cellularShadeSideWallLength};
+        node << FileParse::Child{"PleatedShadeCellHeight", geometry.pleatedShadeCellHeight};
+        node << FileParse::Child{"PleatedShadeCellSideWallLength",
+                                 geometry.pleatedShadeCellSideWallLength};
+        node << FileParse::Child{"MgfBlock", geometry.mgfBlock};
 
         return node;
     }

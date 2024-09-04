@@ -66,7 +66,7 @@ namespace BSDFXML
     {
         double value;
         std::optional<int> cavity;
-        std::string unit;
+        LengthUnit unit;
     };
 
     struct Geometry
