@@ -12,13 +12,13 @@ namespace BSDFXML
     struct Thickness
     {
         double value;
-        std::string unit;
+        LengthUnit unit;
     };
 
     struct Wavelength
     {
         std::string value;
-        std::string unit;
+        LengthUnit unit;
         std::optional<std::string> type;
     };
 
@@ -59,7 +59,7 @@ namespace BSDFXML
     struct Length
     {
         double value;
-        std::string unit;
+        LengthUnit unit;
     };
 
     struct LengthWithCavity
