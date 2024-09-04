@@ -284,7 +284,7 @@ namespace BSDFXML
     const NodeAdapter & operator>>(const NodeAdapter & node,
                                    BSDFXML::AngleBasisBlock & angleBasisBlock)
     {
-        node >> angleBasisBlock.theta;
+        node >> FileParse::Child{"Theta", angleBasisBlock.theta};
         node >> FileParse::Child{"Phi", angleBasisBlock.phi};
         node >> FileParse::Child{"nPhis", angleBasisBlock.nPhis};
         FileParse::deserializeOptionalVariant(
@@ -297,7 +297,8 @@ namespace BSDFXML
     template<typename NodeAdapter>
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::AngleBasisBlock & angleBasisBlock)
     {
-        node << angleBasisBlock.theta;
+
+        node << FileParse::Child{"Theta", angleBasisBlock.theta};
         node << FileParse::Child{"Phi", angleBasisBlock.phi};
         node << FileParse::Child{"nPhis", angleBasisBlock.nPhis};
         FileParse::serializeOptionalVariant(
@@ -330,10 +331,7 @@ namespace BSDFXML
     const NodeAdapter & operator>>(const NodeAdapter & node,
                                    BSDFXML::DataDefinition & dataDefinition)
     {
-        FileParse::deserializeEnum(node,
-                                   "IncidentDataStructure",
-                                   dataDefinition.incidentDataStructure,
-                                   BSDFXML::IncidentDataStructureFromString);
+        node >> FileParse::Child{"IncidentDataStructure", dataDefinition.incidentDataStructure};
         node >> FileParse::Child{"AngleBasis", dataDefinition.angleBasis};
         node >> FileParse::Child{"Comments", dataDefinition.comments};
 
@@ -343,10 +341,7 @@ namespace BSDFXML
     template<typename NodeAdapter>
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::DataDefinition & dataDefinition)
     {
-        FileParse::serializeEnum(node,
-                                 "IncidentDataStructure",
-                                 dataDefinition.incidentDataStructure,
-                                 BSDFXML::IncidentDataStructureToString);
+        node << FileParse::Child{"IncidentDataStructure", dataDefinition.incidentDataStructure};
         node << FileParse::Child{"AngleBasis", dataDefinition.angleBasis};
         node << FileParse::Child{"Comments", dataDefinition.comments};
 
@@ -530,7 +525,7 @@ namespace BSDFXML
     {
         node >> FileParse::Child{"Material", layer.materials};
         node >> FileParse::Child{"Geometry", layer.geometry};
-        // node >> FileParse::Child{"DataDefinition", layer.dataDefinitions};
+        node >> FileParse::Child{"DataDefinition", layer.dataDefinitions};
         // node >> FileParse::Child{"WavelengthData", layer.wavelengthData};
 
         return node;
@@ -541,7 +536,7 @@ namespace BSDFXML
     {
         node << FileParse::Child{"Material", layer.materials};
         node << FileParse::Child{"Geometry", layer.geometry};
-        // node << FileParse::Child{"DataDefinition", layer.dataDefinitions};
+        node << FileParse::Child{"DataDefinition", layer.dataDefinitions};
         // node << FileParse::Child{"WavelengthData", layer.wavelengthData};
 
         return node;
