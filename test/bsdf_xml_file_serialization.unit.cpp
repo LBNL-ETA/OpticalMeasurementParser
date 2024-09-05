@@ -21,4 +21,5 @@ TEST(BSDFXMLFileSerialization, Load2011SA1Small)
 
     ASSERT_TRUE(product.has_value());
     EXPECT_EQ(BSDFXML::WindowElementType::System, product->windowElementType);
+    
 }

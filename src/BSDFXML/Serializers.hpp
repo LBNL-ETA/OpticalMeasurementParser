@@ -464,7 +464,9 @@ namespace BSDFXML
         node >> FileParse::Child{"ColumnAngleBasis", wavelengthDataBlock.columnAngleBasis};
         node >> FileParse::Child{"RowAngleBasis", wavelengthDataBlock.rowAngleBasis};
         node >> FileParse::Child{"ScatteringDataType", wavelengthDataBlock.scatteringDataType};
-        //node >> FileParse::Child{"ScatteringData", wavelengthDataBlock.scatteringData};
+        // Child node name is moved down to the ScatteringData serializer since compiler cannot resolve
+        // between serializer of std::vector<std::vector<double>> and Child<std::vector<T>> defined in FileParse
+        node >> wavelengthDataBlock.scatteringData;
 
         return node;
     }
@@ -477,7 +479,9 @@ namespace BSDFXML
         node << FileParse::Child{"ColumnAngleBasis", wavelengthDataBlock.columnAngleBasis};
         node << FileParse::Child{"RowAngleBasis", wavelengthDataBlock.rowAngleBasis};
         node << FileParse::Child{"ScatteringDataType", wavelengthDataBlock.scatteringDataType};
-        // node << FileParse::Child{"ScatteringData", wavelengthDataBlock.scatteringData};
+        // Child node name is moved down to the ScatteringData serializer since compiler cannot resolve
+        // between serializer of std::vector<std::vector<double>> and Child<std::vector<T>> defined in FileParse
+        node << wavelengthDataBlock.scatteringData;
 
         return node;
     }
