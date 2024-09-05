@@ -48,8 +48,8 @@ namespace BSDFXML
         using FileParse::operator>>;   // operators for basic C++ types are in the FileParse
                                        // namespace
 
-        FileParse::loadAttribute<NodeAdapter, BSDFXML::LengthUnit>(
-          node, "unit", wavelength.unit, LengthUnitFromString);
+        FileParse::loadAttribute<NodeAdapter, BSDFXML::WavelengthUnit>(
+          node, "unit", wavelength.unit, WavelengthUnitFromString);
         FileParse::loadAttribute(node, "type", wavelength.type);
         node >> wavelength.value;
 
@@ -61,8 +61,8 @@ namespace BSDFXML
     {
         using FileParse::operator<<;
 
-        FileParse::saveAttribute<NodeAdapter, BSDFXML::LengthUnit>(
-          node, "unit", wavelength.unit, LengthUnitToString);
+        FileParse::saveAttribute<NodeAdapter, BSDFXML::WavelengthUnit>(
+          node, "unit", wavelength.unit, WavelengthUnitToString);
         FileParse::saveAttribute(node, "type", wavelength.type);
         node << wavelength.value;
 

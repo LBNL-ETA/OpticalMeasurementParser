@@ -77,3 +77,48 @@ TEST(BSDFXMLFileSerialization, Load2011SA1SmallDataDefintion)
 
     Helper::compareDataDefinition(expectedDataDefinition, product->optical.layer.dataDefinition.value());
 }
+
+TEST(BSDFXMLFileSerialization, Load2011SA1SmallWavelengthData)
+{
+    SCOPED_TRACE("Begin Test: Load 2011-SA1-Small.XML");
+    std::filesystem::path product_path(test_dir);
+    product_path /= "products";
+    product_path /= "2011-SA1-Small.XML";
+
+    auto product = BSDFXML::loadWindowElementFromFile(product_path.string());
+
+    ASSERT_TRUE(product.has_value());
+    EXPECT_EQ(BSDFXML::WindowElementType::System, product->windowElementType);
+
+    // Prepare the expected WavelengthData objects
+    BSDFXML::WavelengthData expectedData1;
+    expectedData1.layerNumber = "System";
+    expectedData1.wavelength = BSDFXML::Wavelength{"Visible", BSDFXML::WavelengthUnit::Integral};
+    expectedData1.sourceSpectrum = "CIE Illuminant D65 1nm.ssp";
+    expectedData1.detectorSpectrum = "ASTM E308 1931 Y.dsp";
+
+    BSDFXML::WavelengthData expectedData2 = expectedData1;
+
+    BSDFXML::WavelengthDataBlock block1;
+    block1.wavelengthDataDirection = BSDFXML::WavelengthDataDirection::TransmissionFront;
+    block1.columnAngleBasis = "LBNL/Klems Full";
+    block1.rowAngleBasis = "LBNL/Klems Full";
+    block1.scatteringDataType = BSDFXML::ScatteringDataType::BTDF;
+    block1.scatteringData = {{2.063833, 0.014938}, {0.014954, 2.027935}};
+    expectedData1.blocks.push_back(block1);
+
+    BSDFXML::WavelengthDataBlock block2;
+    block2.wavelengthDataDirection = BSDFXML::WavelengthDataDirection::TransmissionBack;
+    block2.columnAngleBasis = "LBNL/Klems Full";
+    block2.rowAngleBasis = "LBNL/Klems Full";
+    block2.scatteringDataType = BSDFXML::ScatteringDataType::BTDF;
+    block2.scatteringData = {{2.063833, 0.014938}, {0.014954, 2.027935}};
+    expectedData2.blocks.push_back(block2);
+
+    // Ensure that the actual data has two WavelengthData objects
+    ASSERT_EQ(product->optical.layer.wavelengthData.size(), 2);
+
+    // Compare the actual data with the expected data
+    Helper::compareWavelengthData(expectedData1, product->optical.layer.wavelengthData[0]);
+    Helper::compareWavelengthData(expectedData2, product->optical.layer.wavelengthData[1]);
+}

@@ -33,4 +33,24 @@ namespace Helper
             EXPECT_FALSE(actual.has_value());
         }
     }
+
+    template <typename T>
+    void compareVector(const std::vector<T> & expected, const std::vector<T> & actual)
+    {
+        ASSERT_EQ(expected.size(), actual.size());
+        for(size_t i = 0; i < expected.size(); ++i)
+        {
+            EXPECT_EQ(expected[i], actual[i]);
+        }
+    }
+
+    template <>
+    void compareVector(const std::vector<double> & expected, const std::vector<double> & actual)
+    {
+        ASSERT_EQ(expected.size(), actual.size());
+        for(size_t i = 0; i < expected.size(); ++i)
+        {
+            EXPECT_DOUBLE_EQ(expected[i], actual[i]);
+        }
+    }
 }

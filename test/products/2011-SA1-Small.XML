@@ -105,9 +105,9 @@ BSDF-v1.4.xsd">
 					<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
 					<ScatteringDataType>BTDF</ScatteringDataType>
 					<ScatteringData>
-			2.063833,   0.014938,
-			0.014954,   2.027935,
-		</ScatteringData>
+						2.063833,   0.014938,
+						0.014954,   2.027935,
+					</ScatteringData>
 				</WavelengthDataBlock>
 			</WavelengthData>
 			<WavelengthData>
@@ -121,105 +121,9 @@ BSDF-v1.4.xsd">
 					<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
 					<ScatteringDataType>BTDF</ScatteringDataType>
 					<ScatteringData>
-			2.063833,   0.014938,
-			0.014954,   2.027935,
-		</ScatteringData>
-				</WavelengthDataBlock>
-			</WavelengthData>
-			<WavelengthData>
-				<LayerNumber>System</LayerNumber>
-				<Wavelength unit="Integral">Visible</Wavelength>
-				<SourceSpectrum>CIE Illuminant D65 1nm.ssp</SourceSpectrum>
-				<DetectorSpectrum>ASTM E308 1931 Y.dsp</DetectorSpectrum>
-				<WavelengthDataBlock>
-					<WavelengthDataDirection>Reflection Front</WavelengthDataDirection>
-					<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
-					<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
-					<ScatteringDataType>BTDF</ScatteringDataType>
-					<ScatteringData>
-			0.153571,   0.154227,
-			0.153571,   0.154227,
-		</ScatteringData>
-				</WavelengthDataBlock>
-			</WavelengthData>
-			<WavelengthData>
-				<LayerNumber>System</LayerNumber>
-				<Wavelength unit="Integral">Visible</Wavelength>
-				<SourceSpectrum>CIE Illuminant D65 1nm.ssp</SourceSpectrum>
-				<DetectorSpectrum>ASTM E308 1931 Y.dsp</DetectorSpectrum>
-				<WavelengthDataBlock>
-					<WavelengthDataDirection>Reflection Back</WavelengthDataDirection>
-					<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
-					<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
-					<ScatteringDataType>BTDF</ScatteringDataType>
-					<ScatteringData>
-			0.178254,   0.178873,
-			0.178254,   0.178873,
-		</ScatteringData>
-				</WavelengthDataBlock>
-			</WavelengthData>
-			<WavelengthData>
-				<LayerNumber>System</LayerNumber>
-				<Wavelength unit="Integral">Solar</Wavelength>
-				<SourceSpectrum>ISO8859-1</SourceSpectrum>
-				<DetectorSpectrum>None</DetectorSpectrum>
-				<WavelengthDataBlock>
-					<WavelengthDataDirection>Transmission Front</WavelengthDataDirection>
-					<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
-					<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
-					<ScatteringDataType>BTDF</ScatteringDataType>
-					<ScatteringData>
-			2.033760,   0.022174,
-			0.022252,   2.009060,
-		</ScatteringData>
-				</WavelengthDataBlock>
-			</WavelengthData>
-			<WavelengthData>
-				<LayerNumber>System</LayerNumber>
-				<Wavelength unit="Integral">Solar</Wavelength>
-				<SourceSpectrum>ISO8859-1</SourceSpectrum>
-				<DetectorSpectrum>None</DetectorSpectrum>
-				<WavelengthDataBlock>
-					<WavelengthDataDirection>Transmission Back</WavelengthDataDirection>
-					<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
-					<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
-					<ScatteringDataType>BTDF</ScatteringDataType>
-					<ScatteringData>
-			2.033760,   0.021508, 
-			0.021750,   2.009060, 
-		</ScatteringData>
-				</WavelengthDataBlock>
-			</WavelengthData>
-			<WavelengthData>
-				<LayerNumber>System</LayerNumber>
-				<Wavelength unit="Integral">Solar</Wavelength>
-				<SourceSpectrum>ISO8859-1</SourceSpectrum>
-				<DetectorSpectrum>None</DetectorSpectrum>
-				<WavelengthDataBlock>
-					<WavelengthDataDirection>Reflection Front</WavelengthDataDirection>
-					<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
-					<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
-					<ScatteringDataType>BTDF</ScatteringDataType>
-					<ScatteringData>
-			0.148154,   0.148805,
-			0.148154,   0.148805,
-		</ScatteringData>
-				</WavelengthDataBlock>
-			</WavelengthData>
-			<WavelengthData>
-				<LayerNumber>System</LayerNumber>
-				<Wavelength unit="Integral">Solar</Wavelength>
-				<SourceSpectrum>ISO8859-1</SourceSpectrum>
-				<DetectorSpectrum>None</DetectorSpectrum>
-				<WavelengthDataBlock>
-					<WavelengthDataDirection>Reflection Back</WavelengthDataDirection>
-					<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
-					<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
-					<ScatteringDataType>BTDF</ScatteringDataType>
-					<ScatteringData>
-			0.167364,   0.167990, 
-			0.167364,   0.167990, 
-		</ScatteringData>
+						2.063833,   0.014938,
+						0.014954,   2.027935,
+					</ScatteringData>
 				</WavelengthDataBlock>
 			</WavelengthData>
 		</Layer>

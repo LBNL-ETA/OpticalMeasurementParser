@@ -25,6 +25,27 @@ namespace Helper
         }
     }
 
+    void compareWavelength(const BSDFXML::Wavelength & expected, const BSDFXML::Wavelength & actual)
+    {
+        EXPECT_EQ(expected.value, actual.value);
+        EXPECT_EQ(expected.unit, actual.unit);
+        compareOptional(expected.type, actual.type);
+    }
+
+    void compareWavelength(const std::optional<BSDFXML::Wavelength> & expected,
+                                   const std::optional<BSDFXML::Wavelength> & actual)
+    {
+        if(expected.has_value())
+        {
+            ASSERT_TRUE(actual.has_value());
+            compareWavelength(expected.value(), actual.value());
+        }
+        else
+        {
+            EXPECT_FALSE(actual.has_value());
+        }
+    }
+
     void compareMaterial(const BSDFXML::Material & expected, const BSDFXML::Material & actual)
     {
         EXPECT_EQ(expected.name, actual.name);
@@ -106,5 +127,41 @@ namespace Helper
     {
         EXPECT_EQ(expected.incidentDataStructure, actual.incidentDataStructure);
         compareAngleBasis(expected.angleBasis, actual.angleBasis);
+    }
+
+    void compareScatteringData(const BSDFXML::ScatteringData & expected,
+                               const BSDFXML::ScatteringData & actual)
+    {
+        ASSERT_EQ(expected.size(), actual.size());
+        for(size_t i = 0; i < expected.size(); ++i)
+        {
+            compareVector(expected[i], actual[i]);
+        }
+    }
+
+    void compareWavelengthDataBlock(const BSDFXML::WavelengthDataBlock & expected,
+                                    const BSDFXML::WavelengthDataBlock & actual)
+    {
+        compareOptional(expected.wavelengthDataDirection, actual.wavelengthDataDirection);
+        compareOptional(expected.columnAngleBasis, actual.columnAngleBasis);
+        compareOptional(expected.rowAngleBasis, actual.rowAngleBasis);
+        compareOptional(expected.scatteringDataType, actual.scatteringDataType);
+        compareScatteringData(expected.scatteringData, actual.scatteringData);
+    }
+
+    void compareWavelengthData(const BSDFXML::WavelengthData & expected,
+                               const BSDFXML::WavelengthData & actual)
+    {
+        compareOptional(expected.layerNumber, actual.layerNumber);
+        compareOptional(expected.angle, actual.angle);
+        compareWavelength(expected.wavelength, actual.wavelength);
+        compareOptional(expected.sourceSpectrum, actual.sourceSpectrum);
+        compareOptional(expected.detectorSpectrum, actual.detectorSpectrum);
+        ASSERT_EQ(expected.blocks.size(), actual.blocks.size());
+        for(size_t i = 0; i < expected.blocks.size(); ++i)
+        {
+            compareWavelengthDataBlock(expected.blocks[i], actual.blocks[i]);
+        }
+        compareOptional(expected.comments, actual.comments);
     }
 }   // namespace Helper

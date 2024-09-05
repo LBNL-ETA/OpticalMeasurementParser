@@ -18,7 +18,7 @@ namespace BSDFXML
     struct Wavelength
     {
         std::string value;
-        LengthUnit unit;
+        WavelengthUnit unit;
         std::optional<std::string> type;
     };
 
@@ -147,7 +147,7 @@ namespace BSDFXML
         std::optional<Material> material;
         std::optional<Geometry> geometry;
         std::optional<DataDefinition> dataDefinition;
-        std::optional<WavelengthData> wavelengthData;
+        std::vector<WavelengthData> wavelengthData;
     };
 
     struct Optical
