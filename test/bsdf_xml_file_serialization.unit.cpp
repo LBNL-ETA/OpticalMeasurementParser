@@ -7,10 +7,9 @@
 #include "BSDFXML/Parser.hpp"
 
 #include "paths.h"
+#include "test/helper/BSDFXML/TestHelper.hpp"
 
-// extern std::string test_dir;
-
-TEST(BSDFXMLFileSerialization, Load2011SA1Small)
+TEST(BSDFXMLFileSerialization, Load2011SA1SmallMaterial)
 {
     SCOPED_TRACE("Begin Test: Load 2011-SA1-Small.XML");
     std::filesystem::path product_path(test_dir);
@@ -22,44 +21,59 @@ TEST(BSDFXMLFileSerialization, Load2011SA1Small)
     ASSERT_TRUE(product.has_value());
     EXPECT_EQ(BSDFXML::WindowElementType::System, product->windowElementType);
     ASSERT_TRUE(product->optical.layer.material.has_value());
-    auto & mat{product->optical.layer.material.value()};
-    EXPECT_EQ("Satine 5500 5%, White Pearl", mat.name);
-    EXPECT_EQ("Nysan", mat.manufacturer);
 
-    ASSERT_TRUE(mat.thickness.has_value());
-    EXPECT_DOUBLE_EQ(1.0, mat.thickness->value);
-    EXPECT_EQ(BSDFXML::LengthUnit::Millimeter, mat.thickness->unit);
+    // Define the expected material for comparison
+    BSDFXML::Material expectedMaterial;
+    expectedMaterial.name = "Satine 5500 5%, White Pearl";
+    expectedMaterial.manufacturer = "Nysan";
+    expectedMaterial.thickness = BSDFXML::Thickness{1.0, BSDFXML::LengthUnit::Millimeter};
+    expectedMaterial.deviceType = BSDFXML::DeviceType::Other;
+    expectedMaterial.thermalConductivity = 0.15;
+    expectedMaterial.airPermeability = std::nullopt;
+    expectedMaterial.emissivityFront = 0.79626;
+    expectedMaterial.emissivityBack = 0.79626;
+    expectedMaterial.TIR = 0.10916;
+    expectedMaterial.effectiveOpennessFraction = std::nullopt;
+    expectedMaterial.permeabilityFactor = 0.049855;
+    expectedMaterial.AERCAcceptance = "@";
 
-    ASSERT_TRUE(mat.deviceType.has_value());
-    EXPECT_EQ(BSDFXML::DeviceType::Other, mat.deviceType.value());
+    Helper::compareMaterial(expectedMaterial, product->optical.layer.material.value());
+}
 
-    ASSERT_TRUE(mat.thermalConductivity.has_value());
-    EXPECT_DOUBLE_EQ(0.15, mat.thermalConductivity.value());
+TEST(BSDFXMLFileSerialization, Load2011SA1SmallDataDefintion)
+{
+    SCOPED_TRACE("Begin Test: Load 2011-SA1-Small.XML");
+    std::filesystem::path product_path(test_dir);
+    product_path /= "products";
+    product_path /= "2011-SA1-Small.XML";
 
-    EXPECT_TRUE(!mat.airPermeability.has_value());
+    auto product = BSDFXML::loadWindowElementFromFile(product_path.string());
 
-    ASSERT_TRUE(mat.emissivityFront.has_value());
-    EXPECT_DOUBLE_EQ(0.79626, mat.emissivityFront.value());
+    ASSERT_TRUE(product.has_value());
+    EXPECT_EQ(BSDFXML::WindowElementType::System, product->windowElementType);
+    ASSERT_TRUE(product->optical.layer.dataDefinition.has_value());
 
-    ASSERT_TRUE(mat.emissivityBack.has_value());
-    EXPECT_DOUBLE_EQ(0.79626, mat.emissivityBack.value());
+    BSDFXML::DataDefinition expectedDataDefinition;
+    expectedDataDefinition.incidentDataStructure = BSDFXML::IncidentDataStructure::Columns;
 
-    ASSERT_TRUE(mat.TIR.has_value());
-    EXPECT_DOUBLE_EQ(0.10916, mat.TIR.value());
+    // Set expected values for AngleBasis
+    BSDFXML::AngleBasis angleBasis;
+    angleBasis.name = "LBNL/Klems Full";
 
-    EXPECT_TRUE(!mat.effectiveOpennessFraction.has_value());
+    // Fill expected blocks for AngleBasis
+    angleBasis.blocks = {
+        {0, std::nullopt, 1, BSDFXML::ThetaBounds{0, 5, std::nullopt}, std::nullopt},
+        {10, std::nullopt, 8, BSDFXML::ThetaBounds{5, 15, std::nullopt}, std::nullopt},
+        {20, std::nullopt, 16, BSDFXML::ThetaBounds{15, 25, std::nullopt}, std::nullopt},
+        {30, std::nullopt, 20, BSDFXML::ThetaBounds{25, 35, std::nullopt}, std::nullopt},
+        {40, std::nullopt, 24, BSDFXML::ThetaBounds{35, 45, std::nullopt}, std::nullopt},
+        {50, std::nullopt, 24, BSDFXML::ThetaBounds{45, 55, std::nullopt}, std::nullopt},
+        {60, std::nullopt, 24, BSDFXML::ThetaBounds{55, 65, std::nullopt}, std::nullopt},
+        {70, std::nullopt, 16, BSDFXML::ThetaBounds{65, 75, std::nullopt}, std::nullopt},
+        {82.5, std::nullopt, 12, BSDFXML::ThetaBounds{75, 90, std::nullopt}, std::nullopt}
+    };
 
-    ASSERT_TRUE(mat.permeabilityFactor.has_value());
-    EXPECT_DOUBLE_EQ(0.049855, mat.permeabilityFactor.value());
+    expectedDataDefinition.angleBasis = angleBasis;
 
-    ASSERT_TRUE(!mat.opticalProperties.has_value());
-    ASSERT_TRUE(!mat.color.has_value());
-
-    ASSERT_TRUE(mat.AERCAcceptance.has_value());
-    EXPECT_EQ("@", mat.AERCAcceptance.value());
-
-    ASSERT_TRUE(!mat.comments.has_value());
-    ASSERT_TRUE(!mat.width.has_value());
-    ASSERT_TRUE(!mat.height.has_value());
-    ASSERT_TRUE(!mat.openness.has_value());
+    Helper::compareDataDefinition(expectedDataDefinition, product->optical.layer.dataDefinition.value());
 }

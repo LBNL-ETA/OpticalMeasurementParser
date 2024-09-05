@@ -116,7 +116,7 @@ namespace BSDFXML
     struct DataDefinition
     {
         std::optional<IncidentDataStructure> incidentDataStructure;
-        std::vector<AngleBasis> angleBasis;
+        AngleBasis angleBasis;
         std::optional<std::string> comments;
     };
 

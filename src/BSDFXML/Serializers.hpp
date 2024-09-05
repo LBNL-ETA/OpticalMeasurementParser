@@ -315,7 +315,7 @@ namespace BSDFXML
     template<typename NodeAdapter>
     const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::AngleBasis & angleBasis)
     {
-        node >> FileParse::Child{"Name", angleBasis.name};
+        node >> FileParse::Child{"AngleBasisName", angleBasis.name};
         node >> FileParse::Child{"AngleBasisBlock", angleBasis.blocks};
 
         return node;
@@ -324,7 +324,7 @@ namespace BSDFXML
     template<typename NodeAdapter>
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::AngleBasis & angleBasis)
     {
-        node << FileParse::Child{"Name", angleBasis.name};
+        node << FileParse::Child{"AngleBasisName", angleBasis.name};
         node << FileParse::Child{"AngleBasisBlock", angleBasis.blocks};
 
         return node;
