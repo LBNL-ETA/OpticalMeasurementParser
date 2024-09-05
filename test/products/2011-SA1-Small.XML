@@ -8,91 +8,91 @@ BSDF-v1.4.xsd">
 			<Name>Satine 5500 5%, White Pearl </Name>
 			<Manufacturer>Nysan</Manufacturer>
 			<Thickness unit="Millimeter">1</Thickness>
-			<deviceType>Other</deviceType>
-			<thermalConductivity>0.15</thermalConductivity>
-			<emissivityFront>0.79626</emissivityFront>
-			<emissivityBack>0.79626</emissivityBack>
+			<DeviceType>Other</DeviceType>
+			<ThermalConductivity>0.15</ThermalConductivity>
+			<EmissivityFront>0.79626</EmissivityFront>
+			<EmissivityBack>0.79626</EmissivityBack>
 			<TIR>0.10916</TIR>
-			<permeabilityFactor>0.049855</permeabilityFactor>
+			<PermeabilityFactor>0.049855</PermeabilityFactor>
 			<AERCAcceptance>@</AERCAcceptance>
 		</Material>
 		<DataDefinition>
-			<incidentDataStructure>Columns</incidentDataStructure>
-			<angleBasis>
+			<IncidentDataStructure>Columns</IncidentDataStructure>
+			<AngleBasis>
 			<AngleBasisName>LBNL/Klems Full</AngleBasisName>
 			<AngleBasisBlock>
-				<theta>0</theta>
+				<Theta>0</Theta>
 				<ThetaBounds>
-					<lowerTheta>0</lowerTheta>
-					<upperTheta>5</upperTheta>
+					<LowerTheta>0</LowerTheta>
+					<UpperTheta>5</UpperTheta>
 				</ThetaBounds>
 				<nPhis>1</nPhis>
 			</AngleBasisBlock>
 			<AngleBasisBlock>
-				<theta>10</theta>
+				<Theta>10</Theta>
 				<ThetaBounds>
-					<lowerTheta>5</lowerTheta>
-					<upperTheta>15</upperTheta>
+					<LowerTheta>5</LowerTheta>
+					<UpperTheta>15</UpperTheta>
 				</ThetaBounds>
 				<nPhis>8</nPhis>
 			</AngleBasisBlock>
 			<AngleBasisBlock>
-				<theta>20</theta>
+				<Theta>20</Theta>
 				<ThetaBounds>
-					<lowerTheta>15</lowerTheta>
-					<upperTheta>25</upperTheta>
+					<LowerTheta>15</LowerTheta>
+					<UpperTheta>25</UpperTheta>
 				</ThetaBounds>
 				<nPhis>16</nPhis>
 			</AngleBasisBlock>
 			<AngleBasisBlock>
-				<theta>30</theta>
+				<Theta>30</Theta>
 				<ThetaBounds>
-					<lowerTheta>25</lowerTheta>
-					<upperTheta>35</upperTheta>
+					<LowerTheta>25</LowerTheta>
+					<UpperTheta>35</UpperTheta>
 				</ThetaBounds>
 				<nPhis>20</nPhis>
 			</AngleBasisBlock>
 			<AngleBasisBlock>
-				<theta>40</theta>
+				<Theta>40</Theta>
 				<ThetaBounds>
-					<lowerTheta>35</lowerTheta>
-					<upperTheta>45</upperTheta>
+					<LowerTheta>35</LowerTheta>
+					<UpperTheta>45</UpperTheta>
 				</ThetaBounds>
 				<nPhis>24</nPhis>
 			</AngleBasisBlock>
 			<AngleBasisBlock>
-				<theta>50</theta>
+				<Theta>50</Theta>
 				<ThetaBounds>
-					<lowerTheta>45</lowerTheta>
-					<upperTheta>55</upperTheta>
+					<LowerTheta>45</LowerTheta>
+					<UpperTheta>55</UpperTheta>
 				</ThetaBounds>
 				<nPhis>24</nPhis>
 			</AngleBasisBlock>
 			<AngleBasisBlock>
-				<theta>60</theta>
+				<Theta>60</Theta>
 				<ThetaBounds>
-					<lowerTheta>55</lowerTheta>
-					<upperTheta>65</upperTheta>
+					<LowerTheta>55</LowerTheta>
+					<UpperTheta>65</UpperTheta>
 				</ThetaBounds>
 				<nPhis>24</nPhis>
 			</AngleBasisBlock>
 			<AngleBasisBlock>
-				<theta>70</theta>
+				<Theta>70</Theta>
 				<ThetaBounds>
-					<lowerTheta>65</lowerTheta>
-					<upperTheta>75</upperTheta>
+					<LowerTheta>65</LowerTheta>
+					<UpperTheta>75</UpperTheta>
 				</ThetaBounds>
 				<nPhis>16</nPhis>
 			</AngleBasisBlock>
 			<AngleBasisBlock>
-				<theta>82.5</theta>
+				<Theta>82.5</Theta>
 				<ThetaBounds>
-					<lowerTheta>75</lowerTheta>
-					<upperTheta>90</upperTheta>
+					<LowerTheta>75</LowerTheta>
+					<UpperTheta>90</UpperTheta>
 				</ThetaBounds>
 				<nPhis>12</nPhis>
 			</AngleBasisBlock>
-		</angleBasis>
+		</AngleBasis>
 	</DataDefinition>
 	<WavelengthData>
 	<LayerNumber>System</LayerNumber>
@@ -101,7 +101,7 @@ BSDF-v1.4.xsd">
 	<DetectorSpectrum>ASTM E308 1931 Y.dsp</DetectorSpectrum>
 	<WavelengthDataBlock>
 		<WavelengthDataDirection>Transmission Front</WavelengthDataDirection>
-		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
 		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
 		<ScatteringDataType>BTDF</ScatteringDataType>
 		<ScatteringData>
@@ -117,7 +117,7 @@ BSDF-v1.4.xsd">
 	<DetectorSpectrum>ASTM E308 1931 Y.dsp</DetectorSpectrum>
 	<WavelengthDataBlock>
 		<WavelengthDataDirection>Transmission Back</WavelengthDataDirection>
-		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
 		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
 		<ScatteringDataType>BTDF</ScatteringDataType>
 		<ScatteringData>
@@ -133,7 +133,7 @@ BSDF-v1.4.xsd">
 	<DetectorSpectrum>ASTM E308 1931 Y.dsp</DetectorSpectrum>
 	<WavelengthDataBlock>
 		<WavelengthDataDirection>Reflection Front</WavelengthDataDirection>
-		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
 		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
 		<ScatteringDataType>BTDF</ScatteringDataType>
 		<ScatteringData>
@@ -149,7 +149,7 @@ BSDF-v1.4.xsd">
 	<DetectorSpectrum>ASTM E308 1931 Y.dsp</DetectorSpectrum>
 	<WavelengthDataBlock>
 		<WavelengthDataDirection>Reflection Back</WavelengthDataDirection>
-		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
 		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
 		<ScatteringDataType>BTDF</ScatteringDataType>
 		<ScatteringData>
@@ -165,7 +165,7 @@ BSDF-v1.4.xsd">
 	<DetectorSpectrum>None</DetectorSpectrum>
 	<WavelengthDataBlock>
 		<WavelengthDataDirection>Transmission Front</WavelengthDataDirection>
-		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
 		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
 		<ScatteringDataType>BTDF</ScatteringDataType>
 		<ScatteringData>
@@ -181,7 +181,7 @@ BSDF-v1.4.xsd">
 	<DetectorSpectrum>None</DetectorSpectrum>
 	<WavelengthDataBlock>
 		<WavelengthDataDirection>Transmission Back</WavelengthDataDirection>
-		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
 		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
 		<ScatteringDataType>BTDF</ScatteringDataType>
 		<ScatteringData>
@@ -197,7 +197,7 @@ BSDF-v1.4.xsd">
 	<DetectorSpectrum>None</DetectorSpectrum>
 	<WavelengthDataBlock>
 		<WavelengthDataDirection>Reflection Front</WavelengthDataDirection>
-		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
 		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
 		<ScatteringDataType>BTDF</ScatteringDataType>
 		<ScatteringData>
@@ -213,7 +213,7 @@ BSDF-v1.4.xsd">
 	<DetectorSpectrum>None</DetectorSpectrum>
 	<WavelengthDataBlock>
 		<WavelengthDataDirection>Reflection Back</WavelengthDataDirection>
-		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<ColumnAngleBasis>LBNL/Klems Full</ColumnAngleBasis>
 		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
 		<ScatteringDataType>BTDF</ScatteringDataType>
 		<ScatteringData>

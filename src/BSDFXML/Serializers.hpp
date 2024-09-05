@@ -518,9 +518,9 @@ namespace BSDFXML
     template<typename NodeAdapter>
     const NodeAdapter & operator>>(const NodeAdapter & node, BSDFXML::Layer & layer)
     {
-        node >> FileParse::Child{"Material", layer.materials};
+        node >> FileParse::Child{"Material", layer.material};
         node >> FileParse::Child{"Geometry", layer.geometry};
-        node >> FileParse::Child{"DataDefinition", layer.dataDefinitions};
+        node >> FileParse::Child{"DataDefinition", layer.dataDefinition};
         node >> FileParse::Child{"WavelengthData", layer.wavelengthData};
 
         return node;
@@ -529,9 +529,9 @@ namespace BSDFXML
     template<typename NodeAdapter>
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::Layer & layer)
     {
-        node << FileParse::Child{"Material", layer.materials};
+        node << FileParse::Child{"Material", layer.material};
         node << FileParse::Child{"Geometry", layer.geometry};
-        node << FileParse::Child{"DataDefinition", layer.dataDefinitions};
+        node << FileParse::Child{"DataDefinition", layer.dataDefinition};
         node << FileParse::Child{"WavelengthData", layer.wavelengthData};
 
         return node;

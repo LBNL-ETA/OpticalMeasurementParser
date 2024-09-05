@@ -144,10 +144,10 @@ namespace BSDFXML
 
     struct Layer
     {
-        std::vector<Material> materials;
-        std::vector<Geometry> geometry;
-        std::vector<DataDefinition> dataDefinitions;
-        std::vector<WavelengthData> wavelengthData;
+        std::optional<Material> material;
+        std::optional<Geometry> geometry;
+        std::optional<DataDefinition> dataDefinition;
+        std::optional<WavelengthData> wavelengthData;
     };
 
     struct Optical
