@@ -30,6 +30,7 @@ if(DOWNLOAD_GTEST STREQUAL ON)
 endif()
 
 add_executable(${PROJECT_TEST_NAME}
+		bsdf_xml_file_serialization.unit.cpp
 		BSDFXMLEnumerators.unit.cpp
 		invalid_xml.unit.cpp
 		InputDifferentEmissivities.unit.cpp

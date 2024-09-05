@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WindowElement xmlns="http://windows.lbl.gov" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://windows.lbl.gov
+BSDF-v1.4.xsd">
+	<WindowElementType>System</WindowElementType>
+	<Optical>
+		<Layer>
+		<Material>
+			<Name>Satine 5500 5%, White Pearl </Name>
+			<Manufacturer>Nysan</Manufacturer>
+			<Thickness unit="Millimeter">1</Thickness>
+			<deviceType>Other</deviceType>
+			<thermalConductivity>0.15</thermalConductivity>
+			<emissivityFront>0.79626</emissivityFront>
+			<emissivityBack>0.79626</emissivityBack>
+			<TIR>0.10916</TIR>
+			<permeabilityFactor>0.049855</permeabilityFactor>
+			<AERCAcceptance>@</AERCAcceptance>
+		</Material>
+		<DataDefinition>
+			<incidentDataStructure>Columns</incidentDataStructure>
+			<angleBasis>
+			<AngleBasisName>LBNL/Klems Full</AngleBasisName>
+			<AngleBasisBlock>
+				<theta>0</theta>
+				<ThetaBounds>
+					<lowerTheta>0</lowerTheta>
+					<upperTheta>5</upperTheta>
+				</ThetaBounds>
+				<nPhis>1</nPhis>
+			</AngleBasisBlock>
+			<AngleBasisBlock>
+				<theta>10</theta>
+				<ThetaBounds>
+					<lowerTheta>5</lowerTheta>
+					<upperTheta>15</upperTheta>
+				</ThetaBounds>
+				<nPhis>8</nPhis>
+			</AngleBasisBlock>
+			<AngleBasisBlock>
+				<theta>20</theta>
+				<ThetaBounds>
+					<lowerTheta>15</lowerTheta>
+					<upperTheta>25</upperTheta>
+				</ThetaBounds>
+				<nPhis>16</nPhis>
+			</AngleBasisBlock>
+			<AngleBasisBlock>
+				<theta>30</theta>
+				<ThetaBounds>
+					<lowerTheta>25</lowerTheta>
+					<upperTheta>35</upperTheta>
+				</ThetaBounds>
+				<nPhis>20</nPhis>
+			</AngleBasisBlock>
+			<AngleBasisBlock>
+				<theta>40</theta>
+				<ThetaBounds>
+					<lowerTheta>35</lowerTheta>
+					<upperTheta>45</upperTheta>
+				</ThetaBounds>
+				<nPhis>24</nPhis>
+			</AngleBasisBlock>
+			<AngleBasisBlock>
+				<theta>50</theta>
+				<ThetaBounds>
+					<lowerTheta>45</lowerTheta>
+					<upperTheta>55</upperTheta>
+				</ThetaBounds>
+				<nPhis>24</nPhis>
+			</AngleBasisBlock>
+			<AngleBasisBlock>
+				<theta>60</theta>
+				<ThetaBounds>
+					<lowerTheta>55</lowerTheta>
+					<upperTheta>65</upperTheta>
+				</ThetaBounds>
+				<nPhis>24</nPhis>
+			</AngleBasisBlock>
+			<AngleBasisBlock>
+				<theta>70</theta>
+				<ThetaBounds>
+					<lowerTheta>65</lowerTheta>
+					<upperTheta>75</upperTheta>
+				</ThetaBounds>
+				<nPhis>16</nPhis>
+			</AngleBasisBlock>
+			<AngleBasisBlock>
+				<theta>82.5</theta>
+				<ThetaBounds>
+					<lowerTheta>75</lowerTheta>
+					<upperTheta>90</upperTheta>
+				</ThetaBounds>
+				<nPhis>12</nPhis>
+			</AngleBasisBlock>
+		</angleBasis>
+	</DataDefinition>
+	<WavelengthData>
+	<LayerNumber>System</LayerNumber>
+	<Wavelength unit="Integral">Visible</Wavelength>
+	<SourceSpectrum>CIE Illuminant D65 1nm.ssp</SourceSpectrum>
+	<DetectorSpectrum>ASTM E308 1931 Y.dsp</DetectorSpectrum>
+	<WavelengthDataBlock>
+		<WavelengthDataDirection>Transmission Front</WavelengthDataDirection>
+		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
+		<ScatteringDataType>BTDF</ScatteringDataType>
+		<ScatteringData>
+			2.063833,   0.014938,
+			0.014954,   2.027935,
+		</ScatteringData>
+	</WavelengthDataBlock>
+	</WavelengthData>
+	<WavelengthData>
+	<LayerNumber>System</LayerNumber>
+	<Wavelength unit="Integral">Visible</Wavelength>
+	<SourceSpectrum>CIE Illuminant D65 1nm.ssp</SourceSpectrum>
+	<DetectorSpectrum>ASTM E308 1931 Y.dsp</DetectorSpectrum>
+	<WavelengthDataBlock>
+		<WavelengthDataDirection>Transmission Back</WavelengthDataDirection>
+		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
+		<ScatteringDataType>BTDF</ScatteringDataType>
+		<ScatteringData>
+			2.063833,   0.014938,
+			0.014954,   2.027935,
+		</ScatteringData>
+	</WavelengthDataBlock>
+	</WavelengthData>
+	<WavelengthData>
+	<LayerNumber>System</LayerNumber>
+	<Wavelength unit="Integral">Visible</Wavelength>
+	<SourceSpectrum>CIE Illuminant D65 1nm.ssp</SourceSpectrum>
+	<DetectorSpectrum>ASTM E308 1931 Y.dsp</DetectorSpectrum>
+	<WavelengthDataBlock>
+		<WavelengthDataDirection>Reflection Front</WavelengthDataDirection>
+		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
+		<ScatteringDataType>BTDF</ScatteringDataType>
+		<ScatteringData>
+			0.153571,   0.154227,
+			0.153571,   0.154227,
+		</ScatteringData>
+	</WavelengthDataBlock>
+	</WavelengthData>
+	<WavelengthData>
+	<LayerNumber>System</LayerNumber>
+	<Wavelength unit="Integral">Visible</Wavelength>
+	<SourceSpectrum>CIE Illuminant D65 1nm.ssp</SourceSpectrum>
+	<DetectorSpectrum>ASTM E308 1931 Y.dsp</DetectorSpectrum>
+	<WavelengthDataBlock>
+		<WavelengthDataDirection>Reflection Back</WavelengthDataDirection>
+		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
+		<ScatteringDataType>BTDF</ScatteringDataType>
+		<ScatteringData>
+			0.178254,   0.178873,
+			0.178254,   0.178873,
+		</ScatteringData>
+	</WavelengthDataBlock>
+	</WavelengthData>
+	<WavelengthData>
+	<LayerNumber>System</LayerNumber>
+	<Wavelength unit="Integral">Solar</Wavelength>
+	<SourceSpectrum>ISO8859-1</SourceSpectrum>
+	<DetectorSpectrum>None</DetectorSpectrum>
+	<WavelengthDataBlock>
+		<WavelengthDataDirection>Transmission Front</WavelengthDataDirection>
+		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
+		<ScatteringDataType>BTDF</ScatteringDataType>
+		<ScatteringData>
+			2.033760,   0.022174,
+			0.022252,   2.009060,
+		</ScatteringData>
+	</WavelengthDataBlock>
+	</WavelengthData>
+	<WavelengthData>
+	<LayerNumber>System</LayerNumber>
+	<Wavelength unit="Integral">Solar</Wavelength>
+	<SourceSpectrum>ISO8859-1</SourceSpectrum>
+	<DetectorSpectrum>None</DetectorSpectrum>
+	<WavelengthDataBlock>
+		<WavelengthDataDirection>Transmission Back</WavelengthDataDirection>
+		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
+		<ScatteringDataType>BTDF</ScatteringDataType>
+		<ScatteringData>
+			2.033760,   0.021508, 
+			0.021750,   2.009060, 
+		</ScatteringData>
+	</WavelengthDataBlock>
+	</WavelengthData>
+	<WavelengthData>
+	<LayerNumber>System</LayerNumber>
+	<Wavelength unit="Integral">Solar</Wavelength>
+	<SourceSpectrum>ISO8859-1</SourceSpectrum>
+	<DetectorSpectrum>None</DetectorSpectrum>
+	<WavelengthDataBlock>
+		<WavelengthDataDirection>Reflection Front</WavelengthDataDirection>
+		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
+		<ScatteringDataType>BTDF</ScatteringDataType>
+		<ScatteringData>
+			0.148154,   0.148805,
+			0.148154,   0.148805,
+		</ScatteringData>
+	</WavelengthDataBlock>
+	</WavelengthData>
+	<WavelengthData>
+	<LayerNumber>System</LayerNumber>
+	<Wavelength unit="Integral">Solar</Wavelength>
+	<SourceSpectrum>ISO8859-1</SourceSpectrum>
+	<DetectorSpectrum>None</DetectorSpectrum>
+	<WavelengthDataBlock>
+		<WavelengthDataDirection>Reflection Back</WavelengthDataDirection>
+		<columnAngleBasis>LBNL/Klems Full</columnAngleBasis>
+		<RowAngleBasis>LBNL/Klems Full</RowAngleBasis>
+		<ScatteringDataType>BTDF</ScatteringDataType>
+		<ScatteringData>
+			0.167364,   0.167990, 
+			0.167364,   0.167990, 
+		</ScatteringData>
+	</WavelengthDataBlock>
+	</WavelengthData>
+</Layer>
+</Optical>
+</WindowElement>

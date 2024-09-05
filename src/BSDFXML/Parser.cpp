@@ -1,13 +1,14 @@
 #include <fileParse/FileDataHandler.hxx>
+#include <fileParse/XMLNodeAdapter.hxx>
 
-#include "DB.hpp"
+#include "Parser.hpp"
 #include "Serializers.hpp"
 
 namespace BSDFXML
 {
     const std::string topNodeName = "WindowElement";
 
-    WindowElement loadWindowElementFromFile(std::string_view fileName)
+    std::optional<WindowElement> loadWindowElementFromFile(std::string_view fileName)
     {
         return Common::loadFromXMLFile<WindowElement>(fileName, topNodeName);
     }
