@@ -135,7 +135,7 @@ namespace Helper
         ASSERT_EQ(expected.size(), actual.size());
         for(size_t i = 0; i < expected.size(); ++i)
         {
-            compareVector(expected[i], actual[i]);
+            compareVector(expected[i], actual[i], 1e-5); // saved only up to 5 decimal places
         }
     }
 

@@ -14,9 +14,9 @@ add_library( ${LIB_NAME}
 		ProductData.hpp
 		ProductData.cpp)
 
-target_link_libraries(${LIB_NAME} PUBLIC nlohmann_json::nlohmann_json)
-target_link_libraries(${LIB_NAME} PUBLIC xmlParser)
-target_link_libraries(${LIB_NAME} PUBLIC FileParse)
+target_link_libraries(${LIB_NAME} PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(${LIB_NAME} PRIVATE xmlParser)
+target_link_libraries(${LIB_NAME} PRIVATE FileParse)
 
 if(NOT "${fPIC}")
   set(fPIC ON)

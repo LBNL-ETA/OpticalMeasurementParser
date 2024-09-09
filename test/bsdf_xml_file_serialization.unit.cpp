@@ -62,20 +62,20 @@ TEST(BSDFXMLFileSerialization, Load2011SA1SmallDataDefintion)
 
     // Fill expected blocks for AngleBasis
     angleBasis.blocks = {
-        {0, std::nullopt, 1, BSDFXML::ThetaBounds{0, 5, std::nullopt}, std::nullopt},
-        {10, std::nullopt, 8, BSDFXML::ThetaBounds{5, 15, std::nullopt}, std::nullopt},
-        {20, std::nullopt, 16, BSDFXML::ThetaBounds{15, 25, std::nullopt}, std::nullopt},
-        {30, std::nullopt, 20, BSDFXML::ThetaBounds{25, 35, std::nullopt}, std::nullopt},
-        {40, std::nullopt, 24, BSDFXML::ThetaBounds{35, 45, std::nullopt}, std::nullopt},
-        {50, std::nullopt, 24, BSDFXML::ThetaBounds{45, 55, std::nullopt}, std::nullopt},
-        {60, std::nullopt, 24, BSDFXML::ThetaBounds{55, 65, std::nullopt}, std::nullopt},
-        {70, std::nullopt, 16, BSDFXML::ThetaBounds{65, 75, std::nullopt}, std::nullopt},
-        {82.5, std::nullopt, 12, BSDFXML::ThetaBounds{75, 90, std::nullopt}, std::nullopt}
-    };
+      {0, std::nullopt, 1, BSDFXML::ThetaBounds{0, 5, std::nullopt}, std::nullopt},
+      {10, std::nullopt, 8, BSDFXML::ThetaBounds{5, 15, std::nullopt}, std::nullopt},
+      {20, std::nullopt, 16, BSDFXML::ThetaBounds{15, 25, std::nullopt}, std::nullopt},
+      {30, std::nullopt, 20, BSDFXML::ThetaBounds{25, 35, std::nullopt}, std::nullopt},
+      {40, std::nullopt, 24, BSDFXML::ThetaBounds{35, 45, std::nullopt}, std::nullopt},
+      {50, std::nullopt, 24, BSDFXML::ThetaBounds{45, 55, std::nullopt}, std::nullopt},
+      {60, std::nullopt, 24, BSDFXML::ThetaBounds{55, 65, std::nullopt}, std::nullopt},
+      {70, std::nullopt, 16, BSDFXML::ThetaBounds{65, 75, std::nullopt}, std::nullopt},
+      {82.5, std::nullopt, 12, BSDFXML::ThetaBounds{75, 90, std::nullopt}, std::nullopt}};
 
     expectedDataDefinition.angleBasis = angleBasis;
 
-    Helper::compareDataDefinition(expectedDataDefinition, product->optical.layer.dataDefinition.value());
+    Helper::compareDataDefinition(expectedDataDefinition,
+                                  product->optical.layer.dataDefinition.value());
 }
 
 TEST(BSDFXMLFileSerialization, Load2011SA1SmallWavelengthData)
@@ -121,4 +121,43 @@ TEST(BSDFXMLFileSerialization, Load2011SA1SmallWavelengthData)
     // Compare the actual data with the expected data
     Helper::compareWavelengthData(expectedData1, product->optical.layer.wavelengthData[0]);
     Helper::compareWavelengthData(expectedData2, product->optical.layer.wavelengthData[1]);
+}
+
+TEST(BSDFXMLFileSerialization, Save2011SA1Small)
+{
+    SCOPED_TRACE("Begin Test: Save 2011-SA1-Small.XML");
+    std::filesystem::path product_path(test_dir);
+    product_path /= "products";
+    product_path /= "2011-SA1-Small.XML";
+
+    // Load the XML file to create a product object
+    auto product = BSDFXML::loadWindowElementFromFile(product_path.string());
+    ASSERT_TRUE(product.has_value());
+
+    // Save the product object to a temporary file
+    std::filesystem::path temp_path = "temp_2011-SA1-Small.xml";
+      //std::filesystem::temp_directory_path() / "temp_2011-SA1-Small.xml";
+    ASSERT_TRUE(BSDFXML::saveToFile(*product, temp_path.string()) == 0);
+
+    // Load the serialized file back
+    auto serialized_product = BSDFXML::loadWindowElementFromFile(temp_path.string());
+    ASSERT_TRUE(serialized_product.has_value());
+
+    // Compare the original product with the serialized product
+    EXPECT_EQ(product->windowElementType, serialized_product->windowElementType);
+    Helper::compareMaterial(product->optical.layer.material.value(),
+                            serialized_product->optical.layer.material.value());
+    Helper::compareDataDefinition(product->optical.layer.dataDefinition.value(),
+                                  serialized_product->optical.layer.dataDefinition.value());
+
+    ASSERT_EQ(product->optical.layer.wavelengthData.size(),
+              serialized_product->optical.layer.wavelengthData.size());
+    for(size_t i = 0; i < product->optical.layer.wavelengthData.size(); ++i)
+    {
+        Helper::compareWavelengthData(product->optical.layer.wavelengthData[i],
+                                      serialized_product->optical.layer.wavelengthData[i]);
+    }
+
+    // Clean up: remove the temporary file
+    std::filesystem::remove(temp_path);
 }

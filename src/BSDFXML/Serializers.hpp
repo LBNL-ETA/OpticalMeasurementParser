@@ -136,7 +136,7 @@ namespace BSDFXML
         node << Child{"EmissivityBack", material.emissivityBack};
         node << Child{"TIR", material.TIR};
         node << Child{"EffectiveOpennessFraction", material.effectiveOpennessFraction};
-        node << Child{"permeabilityFactor", material.permeabilityFactor};
+        node << Child{"PermeabilityFactor", material.permeabilityFactor};
         node << Child{"OpticalProperties", material.opticalProperties};
         node << Child{"Color", material.color};
         node << Child{"AERCAcceptance", material.AERCAcceptance};
@@ -306,7 +306,6 @@ namespace BSDFXML
         node << FileParse::Child{"nPhis", angleBasisBlock.nPhis};
         FileParse::serializeOptionalVariant(
           node, {"SolidAngle", "ThetaBounds"}, angleBasisBlock.bounds);
-        node << FileParse::Child{"Bounds", angleBasisBlock.bounds};
         node << FileParse::Child{"Comments", angleBasisBlock.comments};
 
         return node;
