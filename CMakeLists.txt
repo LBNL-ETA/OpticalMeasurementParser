@@ -38,7 +38,22 @@ set( BUILD_FileParse_tests OFF CACHE BOOL "")
 
 include(CMakeLists-nlohmann_json.txt)
 include(CMakeLists-xmlParser.txt)
-include(CMakeLists-FileParse.txt)
+#include(CMakeLists-FileParse.txt)
+
+include(FetchContent)
+
+FetchContent_Declare(
+	FileParse
+	GIT_REPOSITORY https://github.com/LBNL-ETA/FileParse.git
+	GIT_TAG BaseLoaderRoutines
+	)
+
+# Make FileParse available to the current project
+FetchContent_MakeAvailable(FileParse)
+
+# Set include directories for FileParse
+set(FileParse_INCLUDE_DIRS "${fileparse_SOURCE_DIR}/include")
+include_directories(${FileParse_INCLUDE_DIRS})
 
 add_subdirectory( src )
 
