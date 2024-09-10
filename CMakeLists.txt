@@ -40,29 +40,35 @@ set(BUILD_FileParse_tests OFF CACHE BOOL "")
 
 include(FetchContent)
 
-# Fetch external dependencies
-FetchContent_Declare(
-    nlohmann_json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG "db53bda"
-)
+if(NOT TARGET nlohmann_json)
+    FetchContent_Declare(
+        nlohmann_json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG "db53bda"
+    )
 
-FetchContent_Declare(
-    xmlParser
-    GIT_REPOSITORY https://github.com/LBNL-ETA/XMLParser.git
-    GIT_TAG "v1.0.1"
-)
+    FetchContent_MakeAvailable(nlohmann_json)
+endif()
 
-FetchContent_Declare(
-    FileParse
-    GIT_REPOSITORY https://github.com/LBNL-ETA/FileParse.git
-    GIT_TAG BaseLoaderRoutines
-)
+if(NOT TARGET xmlParser)
+    FetchContent_Declare(
+        xmlParser
+        GIT_REPOSITORY https://github.com/LBNL-ETA/XMLParser.git
+        GIT_TAG "v1.0.1"
+    )
 
-FetchContent_MakeAvailable(nlohmann_json xmlParser FileParse)
+    FetchContent_MakeAvailable(xmlParser)
+endif()
 
-# Correct alias names
-add_library(FileParseAlias_OpticalMeasurementParser ALIAS FileParse)
+if(NOT TARGET FileParse)
+    FetchContent_Declare(
+        FileParse
+        GIT_REPOSITORY https://github.com/LBNL-ETA/FileParse.git
+        GIT_TAG BaseLoaderRoutines
+    )
+
+    FetchContent_MakeAvailable(FileParse)
+endif()
 
 # Set include directories for FileParse
 set(FileParse_INCLUDE_DIRS "${fileparse_SOURCE_DIR}/include")
