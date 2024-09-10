@@ -50,7 +50,7 @@ FetchContent_Declare(
 FetchContent_Declare(
     xmlParser
     GIT_REPOSITORY https://github.com/LBNL-ETA/XMLParser.git
-    GIT_TAG "v0.0.3"
+    GIT_TAG "v1.0.1"
 )
 
 FetchContent_Declare(
