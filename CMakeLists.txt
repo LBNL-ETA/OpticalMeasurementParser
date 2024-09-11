@@ -36,7 +36,6 @@ else()
 endif()
 
 set(JSON_BuildTests OFF CACHE BOOL "")
-set(BUILD_FileParse_tests OFF CACHE BOOL "")
 
 include(FetchContent)
 
@@ -61,6 +60,8 @@ if(NOT TARGET xmlParser)
 endif()
 
 if(NOT TARGET FileParse)
+    set(BUILD_FileParse_tests OFF CACHE BOOL "Build FileParse tests" FORCE)
+
     FetchContent_Declare(
         FileParse
         GIT_REPOSITORY https://github.com/LBNL-ETA/FileParse.git
