@@ -300,7 +300,6 @@ namespace BSDFXML
     template<typename NodeAdapter>
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::AngleBasisBlock & angleBasisBlock)
     {
-
         node << FileParse::Child{"Theta", angleBasisBlock.theta};
         node << FileParse::Child{"Phi", angleBasisBlock.phi};
         node << FileParse::Child{"nPhis", angleBasisBlock.nPhis};
@@ -390,26 +389,26 @@ namespace BSDFXML
 
             return row;
         }
-
-        /// Parses a string representation of scattering data into a vector of vectors of doubles.
-        inline BSDFXML::ScatteringData parseScatteringData(const std::string & value)
-        {
-            BSDFXML::ScatteringData scatteringData;
-            std::istringstream inputStream(value);
-            std::string line;
-
-            while(std::getline(inputStream, line))
-            {
-                auto row = parseRow(line);
-                if(!row.empty())
-                {
-                    scatteringData.push_back(row);
-                }
-            }
-
-            return scatteringData;
-        }
     }   // namespace
+
+    /// Parses a string representation of scattering data into a vector of vectors of doubles.
+    inline BSDFXML::ScatteringData parseScatteringData(const std::string & value)
+    {
+        BSDFXML::ScatteringData scatteringData;
+        std::istringstream inputStream(value);
+        std::string line;
+
+        while(std::getline(inputStream, line))
+        {
+            auto row = parseRow(line);
+            if(!row.empty())
+            {
+                scatteringData.push_back(row);
+            }
+        }
+
+        return scatteringData;
+    }
 
     template<typename NodeAdapter>
     const NodeAdapter & operator>>(const NodeAdapter & node,
@@ -432,19 +431,19 @@ namespace BSDFXML
             std::copy(row.begin(), row.end(), std::ostream_iterator<double>(rowStream, ", "));
             return rowStream.str();
         }
-
-        /// Serializes the entire ScatteringData into a single string.
-        std::string serializeScatteringData(const BSDFXML::ScatteringData & scatteringData)
-        {
-            std::ostringstream outputStream;
-
-            std::for_each(scatteringData.begin(), scatteringData.end(), [&](const auto & row) {
-                outputStream << serializeRow(row) << "\n";
-            });
-
-            return outputStream.str();
-        }
     }   // anonymous namespace
+
+    /// Serializes the entire ScatteringData into a single string.
+    std::string serializeScatteringData(const BSDFXML::ScatteringData & scatteringData)
+    {
+        std::ostringstream outputStream;
+
+        std::for_each(scatteringData.begin(), scatteringData.end(), [&](const auto & row) {
+            outputStream << serializeRow(row) << "\n";
+        });
+
+        return outputStream.str();
+    }
 
     template<typename NodeAdapter>
     NodeAdapter & operator<<(NodeAdapter & node, const BSDFXML::ScatteringData & scatteringData)
@@ -459,12 +458,14 @@ namespace BSDFXML
     const NodeAdapter & operator>>(const NodeAdapter & node,
                                    BSDFXML::WavelengthDataBlock & wavelengthDataBlock)
     {
-        node >> FileParse::Child{"WavelengthDataDirection", wavelengthDataBlock.wavelengthDataDirection};
+        node >> FileParse::Child{"WavelengthDataDirection",
+                                 wavelengthDataBlock.wavelengthDataDirection};
         node >> FileParse::Child{"ColumnAngleBasis", wavelengthDataBlock.columnAngleBasis};
         node >> FileParse::Child{"RowAngleBasis", wavelengthDataBlock.rowAngleBasis};
         node >> FileParse::Child{"ScatteringDataType", wavelengthDataBlock.scatteringDataType};
-        // Child node name is moved down to the ScatteringData serializer since compiler cannot resolve
-        // between serializer of std::vector<std::vector<double>> and Child<std::vector<T>> defined in FileParse
+        // Child node name is moved down to the ScatteringData serializer since compiler cannot
+        // resolve between serializer of std::vector<std::vector<double>> and Child<std::vector<T>>
+        // defined in FileParse
         node >> wavelengthDataBlock.scatteringData;
 
         return node;
@@ -474,12 +475,14 @@ namespace BSDFXML
     NodeAdapter & operator<<(NodeAdapter & node,
                              const BSDFXML::WavelengthDataBlock & wavelengthDataBlock)
     {
-        node << FileParse::Child{"WavelengthDataDirection", wavelengthDataBlock.wavelengthDataDirection};
+        node << FileParse::Child{"WavelengthDataDirection",
+                                 wavelengthDataBlock.wavelengthDataDirection};
         node << FileParse::Child{"ColumnAngleBasis", wavelengthDataBlock.columnAngleBasis};
         node << FileParse::Child{"RowAngleBasis", wavelengthDataBlock.rowAngleBasis};
         node << FileParse::Child{"ScatteringDataType", wavelengthDataBlock.scatteringDataType};
-        // Child node name is moved down to the ScatteringData serializer since compiler cannot resolve
-        // between serializer of std::vector<std::vector<double>> and Child<std::vector<T>> defined in FileParse
+        // Child node name is moved down to the ScatteringData serializer since compiler cannot
+        // resolve between serializer of std::vector<std::vector<double>> and Child<std::vector<T>>
+        // defined in FileParse
         node << wavelengthDataBlock.scatteringData;
 
         return node;
