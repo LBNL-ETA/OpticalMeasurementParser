@@ -20,7 +20,7 @@ namespace BSDFXML
         return FileParse::enumToString(type, WindowElementTypeStrings);
     }
 
-    const std::array<std::string, 11> DeviceTypeStrings = {"Unknown",
+    const std::array<std::string, 12> DeviceTypeStrings = {"Unknown",
                                                            "Venetian blind horizontal",
                                                            "Venetian blind vertical",
                                                            "Woven shade",
@@ -29,6 +29,7 @@ namespace BSDFXML
                                                            "Fritted Glass",
                                                            "Cellular Shade",
                                                            "Pleated Shade",
+                                                           "Louvered Shutter",
                                                            "Solid Layer",
                                                            "Other"};
 

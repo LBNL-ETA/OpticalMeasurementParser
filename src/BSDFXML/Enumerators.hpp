@@ -30,6 +30,7 @@ namespace BSDFXML
         FrittedGlass,
         CellularShade,
         PleatedShade,
+        LouveredShutter,
         SolidLayer,
         Other
     };
