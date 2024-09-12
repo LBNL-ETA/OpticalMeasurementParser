@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <regex>
 
 #include <fileParse/Common.hxx>
 #include <fileParse/Optional.hxx>
@@ -363,31 +364,29 @@ namespace BSDFXML
         }
 
         /// Parses a single line of comma-separated values into a vector of doubles.
-        inline std::vector<double> parseRow(const std::string & line)
+        std::vector<double> parseRow(const std::string & line)
         {
-            std::vector<double> row;
-            std::istringstream lineStream(line);
-            std::string cell;
+            std::vector<double> result;
+            std::regex regex("[,\t]");   // Regular expression to match commas or tabs
+            std::sregex_token_iterator iter(line.begin(), line.end(), regex, -1);
+            std::sregex_token_iterator end;
 
-            while(std::getline(lineStream, cell, ','))
+            for(; iter != end; ++iter)
             {
-                cell = trimWhitespace(cell);
-
-                if(!cell.empty())
+                try
                 {
-                    try
+                    if(!iter->str().empty())
                     {
-                        // Convert cell to double and add to row
-                        row.push_back(FileParse::from_string<double>(cell));
+                        result.push_back(std::stod(iter->str()));
                     }
-                    catch(const std::exception &)
-                    {
-                        // Handle conversion error if necessary
-                    }
+                }
+                catch(const std::invalid_argument &)
+                {
+                    // Handle conversion error if needed
                 }
             }
 
-            return row;
+            return result;
         }
     }   // namespace
 
