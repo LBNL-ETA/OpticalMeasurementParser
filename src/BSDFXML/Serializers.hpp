@@ -434,7 +434,7 @@ namespace BSDFXML
     }   // anonymous namespace
 
     /// Serializes the entire ScatteringData into a single string.
-    std::string serializeScatteringData(const BSDFXML::ScatteringData & scatteringData)
+    inline std::string serializeScatteringData(const BSDFXML::ScatteringData & scatteringData)
     {
         std::ostringstream outputStream;
 
