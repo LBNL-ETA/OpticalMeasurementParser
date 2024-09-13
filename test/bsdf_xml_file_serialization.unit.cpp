@@ -103,7 +103,7 @@ TEST(BSDFXMLFileSerialization, Load2011SA1SmallWavelengthDataCommaSeparated)
     block1.rowAngleBasis = "LBNL/Klems Full";
     block1.scatteringDataType = BSDFXML::ScatteringDataType::BTDF;
     block1.scatteringData = {{2.063833, 0.014938}, {0.014954, 2.027935}};
-    expectedData1.blocks.push_back(block1);
+    expectedData1.block = block1;
 
     BSDFXML::WavelengthDataBlock block2;
     block2.wavelengthDataDirection = BSDFXML::WavelengthDataDirection::TransmissionBack;
@@ -111,7 +111,7 @@ TEST(BSDFXMLFileSerialization, Load2011SA1SmallWavelengthDataCommaSeparated)
     block2.rowAngleBasis = "LBNL/Klems Full";
     block2.scatteringDataType = BSDFXML::ScatteringDataType::BTDF;
     block2.scatteringData = {{2.063833, 0.014938}, {0.014954, 2.027935}};
-    expectedData2.blocks.push_back(block2);
+    expectedData2.block = block2;
 
     // Ensure that the actual data has two WavelengthData objects
     ASSERT_EQ(product->optical.layer.wavelengthData.size(), 2);
@@ -148,7 +148,7 @@ TEST(BSDFXMLFileSerialization, Load2011SA1SmallWavelengthDataTabSeparated)
     block1.rowAngleBasis = "LBNL/Klems Full";
     block1.scatteringDataType = BSDFXML::ScatteringDataType::BTDF;
     block1.scatteringData = {{2.063833, 0.014938}, {0.014954, 2.027935}};
-    expectedData1.blocks.push_back(block1);
+    expectedData1.block = block1;
 
     BSDFXML::WavelengthDataBlock block2;
     block2.wavelengthDataDirection = BSDFXML::WavelengthDataDirection::TransmissionBack;
@@ -156,7 +156,7 @@ TEST(BSDFXMLFileSerialization, Load2011SA1SmallWavelengthDataTabSeparated)
     block2.rowAngleBasis = "LBNL/Klems Full";
     block2.scatteringDataType = BSDFXML::ScatteringDataType::BTDF;
     block2.scatteringData = {{2.063833, 0.014938}, {0.014954, 2.027935}};
-    expectedData2.blocks.push_back(block2);
+    expectedData2.block = block2;
 
     // Ensure that the actual data has two WavelengthData objects
     ASSERT_EQ(product->optical.layer.wavelengthData.size(), 2);

@@ -499,7 +499,7 @@ namespace BSDFXML
         node >> FileParse::Child{"Wavelength", wavelengthData.wavelength};
         node >> FileParse::Child{"SourceSpectrum", wavelengthData.sourceSpectrum};
         node >> FileParse::Child{"DetectorSpectrum", wavelengthData.detectorSpectrum};
-        node >> FileParse::Child{"WavelengthDataBlock", wavelengthData.blocks};
+        node >> FileParse::Child{"WavelengthDataBlock", wavelengthData.block};
         node >> FileParse::Child{"Comments", wavelengthData.comments};
 
         return node;
@@ -513,7 +513,7 @@ namespace BSDFXML
         node << FileParse::Child{"Wavelength", wavelengthData.wavelength};
         node << FileParse::Child{"SourceSpectrum", wavelengthData.sourceSpectrum};
         node << FileParse::Child{"DetectorSpectrum", wavelengthData.detectorSpectrum};
-        node << FileParse::Child{"WavelengthDataBlock", wavelengthData.blocks};
+        node << FileParse::Child{"WavelengthDataBlock", wavelengthData.block};
         node << FileParse::Child{"Comments", wavelengthData.comments};
 
         return node;

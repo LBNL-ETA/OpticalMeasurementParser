@@ -138,7 +138,7 @@ namespace BSDFXML
         std::optional<Wavelength> wavelength;
         std::optional<std::string> sourceSpectrum;
         std::optional<std::string> detectorSpectrum;
-        std::vector<WavelengthDataBlock> blocks;
+        WavelengthDataBlock block;
         std::optional<std::string> comments;
     };
 

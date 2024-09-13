@@ -157,11 +157,8 @@ namespace Helper
         compareWavelength(expected.wavelength, actual.wavelength);
         compareOptional(expected.sourceSpectrum, actual.sourceSpectrum);
         compareOptional(expected.detectorSpectrum, actual.detectorSpectrum);
-        ASSERT_EQ(expected.blocks.size(), actual.blocks.size());
-        for(size_t i = 0; i < expected.blocks.size(); ++i)
-        {
-            compareWavelengthDataBlock(expected.blocks[i], actual.blocks[i]);
-        }
+        compareWavelengthDataBlock(expected.block, actual.block);
+
         compareOptional(expected.comments, actual.comments);
     }
 }   // namespace Helper
