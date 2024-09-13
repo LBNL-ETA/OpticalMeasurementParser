@@ -437,6 +437,9 @@ namespace BSDFXML
     {
         std::ostringstream outputStream;
 
+        // Adding new line at the beginning of the matrix so that it looks nicely formatted
+        outputStream << "\n";
+
         std::for_each(scatteringData.begin(), scatteringData.end(), [&](const auto & row) {
             outputStream << serializeRow(row) << "\n";
         });

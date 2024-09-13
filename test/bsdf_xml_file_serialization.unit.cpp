@@ -1,7 +1,5 @@
 #include <memory>
 #include <gtest/gtest.h>
-#include <memory>
-#include <sstream>
 #include <filesystem>
 
 #include "BSDFXML/Parser.hpp"
@@ -9,12 +7,12 @@
 #include "paths.h"
 #include "test/helper/BSDFXML/TestHelper.hpp"
 
-TEST(BSDFXMLFileSerialization, Load2011SA1SmallMaterial)
+TEST(BSDFXMLFileSerialization, Load2011SA1SmallMaterialCommaSeparated)
 {
-    SCOPED_TRACE("Begin Test: Load 2011-SA1-Small.XML");
+    SCOPED_TRACE("Begin Test: Load 2011-SA1-Small-CommaSeparated.XML");
     std::filesystem::path product_path(test_dir);
     product_path /= "products";
-    product_path /= "2011-SA1-Small.XML";
+    product_path /= "2011-SA1-Small-CommaSeparated.XML";
 
     auto product = BSDFXML::loadWindowElementFromFile(product_path.string());
 
@@ -40,12 +38,12 @@ TEST(BSDFXMLFileSerialization, Load2011SA1SmallMaterial)
     Helper::compareMaterial(expectedMaterial, product->optical.layer.material.value());
 }
 
-TEST(BSDFXMLFileSerialization, Load2011SA1SmallDataDefintion)
+TEST(BSDFXMLFileSerialization, Load2011SA1SmallDataDefinitionsCommaSeparated)
 {
-    SCOPED_TRACE("Begin Test: Load 2011-SA1-Small.XML");
+    SCOPED_TRACE("Begin Test: Load 2011-SA1-Small-CommaSeparated.XML");
     std::filesystem::path product_path(test_dir);
     product_path /= "products";
-    product_path /= "2011-SA1-Small.XML";
+    product_path /= "2011-SA1-Small-CommaSeparated.XML";
 
     auto product = BSDFXML::loadWindowElementFromFile(product_path.string());
 
@@ -78,12 +76,57 @@ TEST(BSDFXMLFileSerialization, Load2011SA1SmallDataDefintion)
                                   product->optical.layer.dataDefinition.value());
 }
 
-TEST(BSDFXMLFileSerialization, Load2011SA1SmallWavelengthData)
+TEST(BSDFXMLFileSerialization, Load2011SA1SmallWavelengthDataCommaSeparated)
 {
-    SCOPED_TRACE("Begin Test: Load 2011-SA1-Small.XML");
+    SCOPED_TRACE("Begin Test: Load 2011-SA1-Small-CommaSeparated.XML");
     std::filesystem::path product_path(test_dir);
     product_path /= "products";
-    product_path /= "2011-SA1-Small.XML";
+    product_path /= "2011-SA1-Small-CommaSeparated.XML";
+
+    auto product = BSDFXML::loadWindowElementFromFile(product_path.string());
+
+    ASSERT_TRUE(product.has_value());
+    EXPECT_EQ(BSDFXML::WindowElementType::System, product->windowElementType);
+
+    // Prepare the expected WavelengthData objects
+    BSDFXML::WavelengthData expectedData1;
+    expectedData1.layerNumber = "System";
+    expectedData1.wavelength = BSDFXML::Wavelength{"Visible", BSDFXML::WavelengthUnit::Integral};
+    expectedData1.sourceSpectrum = "CIE Illuminant D65 1nm.ssp";
+    expectedData1.detectorSpectrum = "ASTM E308 1931 Y.dsp";
+
+    BSDFXML::WavelengthData expectedData2 = expectedData1;
+
+    BSDFXML::WavelengthDataBlock block1;
+    block1.wavelengthDataDirection = BSDFXML::WavelengthDataDirection::TransmissionFront;
+    block1.columnAngleBasis = "LBNL/Klems Full";
+    block1.rowAngleBasis = "LBNL/Klems Full";
+    block1.scatteringDataType = BSDFXML::ScatteringDataType::BTDF;
+    block1.scatteringData = {{2.063833, 0.014938}, {0.014954, 2.027935}};
+    expectedData1.blocks.push_back(block1);
+
+    BSDFXML::WavelengthDataBlock block2;
+    block2.wavelengthDataDirection = BSDFXML::WavelengthDataDirection::TransmissionBack;
+    block2.columnAngleBasis = "LBNL/Klems Full";
+    block2.rowAngleBasis = "LBNL/Klems Full";
+    block2.scatteringDataType = BSDFXML::ScatteringDataType::BTDF;
+    block2.scatteringData = {{2.063833, 0.014938}, {0.014954, 2.027935}};
+    expectedData2.blocks.push_back(block2);
+
+    // Ensure that the actual data has two WavelengthData objects
+    ASSERT_EQ(product->optical.layer.wavelengthData.size(), 2);
+
+    // Compare the actual data with the expected data
+    Helper::compareWavelengthData(expectedData1, product->optical.layer.wavelengthData[0]);
+    Helper::compareWavelengthData(expectedData2, product->optical.layer.wavelengthData[1]);
+}
+
+TEST(BSDFXMLFileSerialization, Load2011SA1SmallWavelengthDataTabSeparated)
+{
+    SCOPED_TRACE("Begin Test: Load 2011-SA1-Small-TabSeparated.XML");
+    std::filesystem::path product_path(test_dir);
+    product_path /= "products";
+    product_path /= "2011-SA1-Small-CommaSeparated.XML";
 
     auto product = BSDFXML::loadWindowElementFromFile(product_path.string());
 
@@ -125,10 +168,10 @@ TEST(BSDFXMLFileSerialization, Load2011SA1SmallWavelengthData)
 
 TEST(BSDFXMLFileSerialization, Save2011SA1Small)
 {
-    SCOPED_TRACE("Begin Test: Save 2011-SA1-Small.XML");
+    SCOPED_TRACE("Begin Test: Save 2011-SA1-Small-CommaSeparated.XML");
     std::filesystem::path product_path(test_dir);
     product_path /= "products";
-    product_path /= "2011-SA1-Small.XML";
+    product_path /= "2011-SA1-Small-CommaSeparated.XML";
 
     // Load the XML file to create a product object
     auto product = BSDFXML::loadWindowElementFromFile(product_path.string());
@@ -158,6 +201,5 @@ TEST(BSDFXMLFileSerialization, Save2011SA1Small)
                                       serialized_product->optical.layer.wavelengthData[i]);
     }
 
-    // Clean up: remove the temporary file
     std::filesystem::remove(temp_path);
 }
