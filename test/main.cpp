@@ -10,7 +10,7 @@ int main( int argc, char* argv[] ) {
   ::testing::GTEST_FLAG(catch_exceptions) = false;
 #endif
 	::testing::InitGoogleTest( &argc, argv );
-	test_dir = argv[1];
+	test_dir = TEST_DATA_DIR;
 	return RUN_ALL_TESTS();
 }
 

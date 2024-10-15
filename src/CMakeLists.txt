@@ -1,13 +1,22 @@
 set( CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON )
 
-add_library( ${LIB_NAME} 
+add_library( ${LIB_NAME}
+        BSDFXML/Data.hpp
+        BSDFXML/Parser.cpp
+        BSDFXML/Parser.hpp
+        BSDFXML/Enumerators.hpp
+        BSDFXML/Enumerators.cpp
+        BSDFXML/EnumSerializers.hpp
+        BSDFXML/Serializers.hpp
+        Serializers.hpp
 		Parser.hpp
 		Parser.cpp
 		ProductData.hpp
 		ProductData.cpp)
 
-target_link_libraries(${LIB_NAME} PUBLIC nlohmann_json::nlohmann_json)
-target_link_libraries(${LIB_NAME} PUBLIC xmlParser)
+target_link_libraries(${LIB_NAME} PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(${LIB_NAME} PRIVATE xmlParser)
+target_link_libraries(${LIB_NAME} PRIVATE FileParse)
 
 if(NOT "${fPIC}")
   set(fPIC ON)

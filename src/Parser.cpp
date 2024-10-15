@@ -881,13 +881,13 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         auto thicknessUnitStr = matNode.getChildNode("Thickness").getAttribute("unit");
         product.thicknessUnit = thicknessUnitStr;
         product.thickness = thickness;
-        product.frontEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityFront"));
-        product.backEmissivity = parseOptionalDoubleNode(matNode.getChildNode("EmissivityBack"));
+        product.frontEmissivity = parseOptionalDoubleNode(matNode.getChildNode("emissivityFront"));
+        product.backEmissivity = parseOptionalDoubleNode(matNode.getChildNode("emissivityBack"));
         product.IRTransmittance = parseOptionalDoubleNode(matNode.getChildNode("TIR"));
-        product.conductivity = parseOptionalDoubleNode(matNode.getChildNode("ThermalConductivity"));
-        auto opennessNode = matNode.getChildNode("PermeabilityFactor");
+        product.conductivity = parseOptionalDoubleNode(matNode.getChildNode("thermalConductivity"));
+        auto opennessNode = matNode.getChildNode("permeabilityFactor");
 
-        auto xEffectiveOpenness = matNode.getChildNode("EffectiveOpennessFraction");
+        auto xEffectiveOpenness = matNode.getChildNode("effectiveOpennessFraction");
         if(!xEffectiveOpenness.isEmpty() && opennessNode.isEmpty())
         {
             opennessNode = xEffectiveOpenness;
@@ -957,7 +957,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
             std::vector<std::vector<double>> bsdf = convertToSquareMatrix(splitData);
 
             std::string columnAngleBasisName =
-              wavelengthDataBlockNode.getChildNode("ColumnAngleBasis").getText();
+              wavelengthDataBlockNode.getChildNode("columnAngleBasis").getText();
             std::string rowAngleBasisName =
               wavelengthDataBlockNode.getChildNode("RowAngleBasis").getText();
 
