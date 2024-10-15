@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <regex>
+#include <iterator>
 
 #include <fileParse/Common.hxx>
 #include <fileParse/Optional.hxx>
