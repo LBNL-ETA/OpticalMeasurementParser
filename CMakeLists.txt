@@ -71,6 +71,18 @@ if(NOT TARGET FileParse)
     FetchContent_MakeAvailable(FileParse)
 endif()
 
+if(NOT TARGET BSDFXMLParser)
+    set(BUILD_BSDFXMLParser_tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
+
+    FetchContent_Declare(
+        BSDFXMLParser
+        GIT_REPOSITORY https://github.com/LBNL-ETA/BSDFXMLParser.git
+        GIT_TAG "main"
+    )
+
+    FetchContent_MakeAvailable(FileParse)
+endif()
+
 # Set include directories for FileParse
 set(FileParse_INCLUDE_DIRS "${fileparse_SOURCE_DIR}/include")
 include_directories(${FileParse_INCLUDE_DIRS})

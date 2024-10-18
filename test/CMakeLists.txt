@@ -22,9 +22,7 @@ if(DOWNLOAD_GTEST STREQUAL ON AND NOT TARGET gtest)
 endif()
 
 add_executable(${PROJECT_TEST_NAME}
-    bsdf_xml_file_serialization.unit.cpp
-    BSDFXMLEnumerators.unit.cpp
-    invalid_xml.unit.cpp
+        invalid_xml.unit.cpp
     InputDifferentEmissivities.unit.cpp
     InputInvertedEmissivities.unit.cpp
     InputFile1.unit.cpp
@@ -33,10 +31,7 @@ add_executable(${PROJECT_TEST_NAME}
     convert_optics_to_json.unit.cpp
     read_igsdb_shading_layer_json.unit.cpp
     read_bsdf_xml_file.unit.cpp
-    helper/Common.hpp
-    helper/BSDFXML/TestHelper.hpp
-    helper/BSDFXML/TestHelper.cpp
-    main.cpp
+        main.cpp
     paths.h
 )
 

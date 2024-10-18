@@ -1,15 +1,7 @@
 set( CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON )
 
 add_library( ${LIB_NAME}
-        BSDFXML/Data.hpp
-        BSDFXML/Parser.cpp
-        BSDFXML/Parser.hpp
-        BSDFXML/Enumerators.hpp
-        BSDFXML/Enumerators.cpp
-        BSDFXML/EnumSerializers.hpp
-        BSDFXML/Serializers.hpp
-        Serializers.hpp
-		Parser.hpp
+        Parser.hpp
 		Parser.cpp
 		ProductData.hpp
 		ProductData.cpp)
