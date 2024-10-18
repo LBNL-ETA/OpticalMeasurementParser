@@ -72,7 +72,7 @@ if(NOT TARGET FileParse)
 endif()
 
 if(NOT TARGET BSDFXMLParser)
-    set(BUILD_BSDFXMLParser_tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
+    set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
     FetchContent_Declare(
         BSDFXMLParser
@@ -80,12 +80,12 @@ if(NOT TARGET BSDFXMLParser)
         GIT_TAG "main"
     )
 
-    FetchContent_MakeAvailable(FileParse)
+    FetchContent_MakeAvailable(BSDFXMLParser)
 endif()
 
 # Set include directories for FileParse
-set(FileParse_INCLUDE_DIRS "${fileparse_SOURCE_DIR}/include")
-include_directories(${FileParse_INCLUDE_DIRS})
+set(BSDFXMLParser_INCLUDE_DIRS "${bsdfxmlparser_SOURCE_DIR}/src")
+include_directories(${BSDFXMLParser_INCLUDE_DIRS})
 
 # Add your target
 add_subdirectory(src)

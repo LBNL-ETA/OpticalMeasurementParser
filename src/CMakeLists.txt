@@ -9,6 +9,7 @@ add_library( ${LIB_NAME}
 target_link_libraries(${LIB_NAME} PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(${LIB_NAME} PRIVATE xmlParser)
 target_link_libraries(${LIB_NAME} PRIVATE FileParse)
+target_link_libraries(${LIB_NAME} PRIVATE BSDFXMLParser)
 
 if(NOT "${fPIC}")
   set(fPIC ON)
