@@ -6,7 +6,9 @@
 #include <algorithm>
 #include <nlohmann/json.hpp>
 #include <xmlParser/xmlParser.h>
+#include <bsdfdata/Parser.hpp>
 #include "Parser.hpp"
+#include <factories/bsdfxml.hpp>
 
 namespace OpticsParser
 {
@@ -658,10 +660,9 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
     product.coatingName = get_optional_field<std::string>(product_json, "coating_name");
     product.coatedSide = get_optional_field<std::string>(product_json, "coated_side");
 >>>>>>> origin/WINDOW_8_update_glass_from_IGSDB
-#    endif
+#endif
 
-      std::shared_ptr
-      < ProductGeometry> parseWovenGeometry(nlohmann::json const & geometry_json)
+    std::shared_ptr<ProductGeometry> parseWovenGeometry(nlohmann::json const & geometry_json)
     {
         auto threadDiameter = geometry_json.at("thread_diameter").get<double>();
         auto threadSpacing = geometry_json.at("thread_spacing").get<double>();
@@ -993,6 +994,13 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
 
     ProductData parseBSDFXMLFile(std::string const & fname)
     {
+        auto el = BSDFData::loadWindowElementFromFile(fname);
+        if(el.has_value())
+        {
+            return convert(*el);
+        }
+
+#if 0
         // Checking to see if the file exists this way because sometimes XMLParser
         // tries to open a messagebox and because std::filesystem support is not
         // necessairly universal in users.  This should hopefully ensure an exception
@@ -1009,7 +1017,7 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         XMLParser::XMLNode xWindowElementNode =
           XMLParser::XMLNode::openFileHelperThrows(fname.c_str(), "WindowElement");
         return parseBSDFXML(xWindowElementNode);
+#endif
+        return {};
     }
-
-
 }   // namespace OpticsParser
