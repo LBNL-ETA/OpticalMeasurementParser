@@ -90,7 +90,7 @@ namespace OpticsParser
 
             product.productName = matData.name;
             product.manufacturer = matData.manufacturer.value_or("");
-            auto thickness = matData.thickness;
+
             if(matData.thickness.has_value())
             {
                 product.thicknessUnit = BSDFData::LengthUnitToString(matData.thickness->unit);

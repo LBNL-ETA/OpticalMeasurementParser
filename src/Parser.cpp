@@ -1006,24 +1006,6 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         msg << "Cannot open file: " << fname;
         throw std::runtime_error(msg.str());
 
-#if 0
-        // Checking to see if the file exists this way because sometimes XMLParser
-        // tries to open a messagebox and because std::filesystem support is not
-        // necessairly universal in users.  This should hopefully ensure an exception
-        // for trying to open a file that doesn't exist is propagated through the python
-        // bindings for pywincalc
-        std::ifstream inFile(fname);
-        if(!inFile.is_open())
-        {
-            std::stringstream msg;
-            msg << "Cannot open file: " << fname;
-            throw std::runtime_error(msg.str());
-        }
-        inFile.close();
-        XMLParser::XMLNode xWindowElementNode =
-          XMLParser::XMLNode::openFileHelperThrows(fname.c_str(), "WindowElement");
-        return parseBSDFXML(xWindowElementNode);
-#endif
         return {};
     }
 }   // namespace OpticsParser
