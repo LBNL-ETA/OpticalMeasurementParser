@@ -1000,6 +1000,12 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
             return convert(*el);
         }
 
+        // Tests are designed to throw exceptions if the file is not found.
+        // This will allow tests to pass.
+        std::stringstream msg;
+        msg << "Cannot open file: " << fname;
+        throw std::runtime_error(msg.str());
+
 #if 0
         // Checking to see if the file exists this way because sometimes XMLParser
         // tries to open a messagebox and because std::filesystem support is not
