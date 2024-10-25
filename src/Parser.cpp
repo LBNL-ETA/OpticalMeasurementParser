@@ -1005,7 +1005,5 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         std::stringstream msg;
         msg << "Cannot open file: " << fname;
         throw std::runtime_error(msg.str());
-
-        return {};
     }
 }   // namespace OpticsParser
