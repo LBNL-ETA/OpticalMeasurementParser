@@ -22,7 +22,7 @@ if(DOWNLOAD_GTEST STREQUAL ON AND NOT TARGET gtest)
 endif()
 
 add_executable(${PROJECT_TEST_NAME}
-        invalid_xml.unit.cpp
+    invalid_xml.unit.cpp
     InputDifferentEmissivities.unit.cpp
     InputInvertedEmissivities.unit.cpp
     InputFile1.unit.cpp
@@ -31,8 +31,7 @@ add_executable(${PROJECT_TEST_NAME}
     convert_optics_to_json.unit.cpp
     read_igsdb_shading_layer_json.unit.cpp
     read_bsdf_xml_file.unit.cpp
-        main.cpp
-    paths.h
+    main.cpp
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/src)

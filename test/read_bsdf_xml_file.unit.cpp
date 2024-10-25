@@ -1,27 +1,15 @@
 #include <memory>
 #include <gtest/gtest.h>
-#include <memory>
 #include <sstream>
 #include <filesystem>
 
 #include "Parser.hpp"
 
-#include "paths.h"
 
-extern std::string test_dir;
-
-class TestLoadBSDFXMLFromDisk : public testing::Test
-{
-protected:
-    virtual void SetUp()
-    {}
-};
-
-
-TEST_F(TestLoadBSDFXMLFromDisk, TestLoad2011SA1)
+TEST(TestLoadBSDFXMLFromDisk, TestLoad2011SA1)
 {
     SCOPED_TRACE("Begin Test: Load 2011-SA1.XML");
-    std::filesystem::path product_path(test_dir);
+    std::filesystem::path product_path(TEST_DATA_DIR);
     product_path /= "products";
     product_path /= "2011-SA1.XML";
 
@@ -87,10 +75,10 @@ TEST_F(TestLoadBSDFXMLFromDisk, TestLoad2011SA1)
     EXPECT_EQ(visible.rb.data[0][0], 0.178254);
 }
 
-TEST_F(TestLoadBSDFXMLFromDisk, TestLoadMissingFile)
+TEST(TestLoadBSDFXMLFromDisk, TestLoadMissingFile)
 {
     SCOPED_TRACE("Begin Test: Load missing file");
-    std::filesystem::path product_path(test_dir);
+    std::filesystem::path product_path(TEST_DATA_DIR);
     product_path /= "some_invalid_path";
     product_path /= "2011-SA1.XML";
 

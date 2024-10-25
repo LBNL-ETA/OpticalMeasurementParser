@@ -2,28 +2,15 @@
 #include <gtest/gtest.h>
 #include <memory>
 #include <sstream>
-//#include <filesystem>
 
 #include "Parser.hpp"
 
-#include "paths.h"
 
-extern std::string test_dir;
-
-
-class TestLoadOpticsFileFromDisk : public testing::Test
-{
-protected:
-    virtual void SetUp()
-    {}
-};
-
-
-TEST_F(TestLoadOpticsFileFromDisk, TestLoadClear3)
+TEST(TestLoadOpticsFileFromDisk, TestLoadClear3)
 {
     SCOPED_TRACE("Begin Test: Load CLEAR_3.DAT from disk.");
 
-    std::string clear_3_path(test_dir);
+    std::string clear_3_path(TEST_DATA_DIR);
     clear_3_path += "/products";
     clear_3_path += "/CLEAR_3.DAT";
 
@@ -61,12 +48,12 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadClear3)
     EXPECT_EQ(product.wavelengthUnit, "Microns");
 }
 
-TEST_F(TestLoadOpticsFileFromDisk, TestLoadDiffuseData)
+TEST(TestLoadOpticsFileFromDisk, TestLoadDiffuseData)
 {
     SCOPED_TRACE(
       "Begin Test: Load a file with diffuse data from disk (diffuse_optics_file_2.txt).");
 
-    std::string product_path(test_dir);
+    std::string product_path(TEST_DATA_DIR);
     product_path += "/products";
     product_path += "/diffuse_optics_file_2.txt";
 
@@ -116,11 +103,11 @@ TEST_F(TestLoadOpticsFileFromDisk, TestLoadDiffuseData)
     EXPECT_EQ(product.permeabilityFactor, 0.0);
 }
 
-TEST_F(TestLoadOpticsFileFromDisk, TestMissingFile)
+TEST(TestLoadOpticsFileFromDisk, TestMissingFile)
 {
     SCOPED_TRACE("Begin Test: Load file that doesn't exist.");
 
-    std::string clear_3_path(test_dir);
+    std::string clear_3_path(TEST_DATA_DIR);
     clear_3_path += "/some_invalid_path";
     clear_3_path += "/CLEAR_3.DAT";
 
