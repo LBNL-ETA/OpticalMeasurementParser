@@ -39,49 +39,27 @@ set(JSON_BuildTests OFF CACHE BOOL "")
 
 include(FetchContent)
 
-if(NOT TARGET nlohmann_json)
-    FetchContent_Declare(
-        nlohmann_json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG "db53bda"
-    )
+set(OPTICALMEASUREMENTPARSER_NLOHMANN_VERSION "db53bda")
 
-    FetchContent_MakeAvailable(nlohmann_json)
-endif()
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG ${OPTICALMEASUREMENTPARSER_NLOHMANN_VERSION}
+)
+FetchContent_MakeAvailable(nlohmann_json)
 
-if(NOT TARGET xmlParser)
-    FetchContent_Declare(
-        xmlParser
-        GIT_REPOSITORY https://github.com/LBNL-ETA/XMLParser.git
-        GIT_TAG "v1.0.1"
-    )
 
-    FetchContent_MakeAvailable(xmlParser)
-endif()
+set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
-if(NOT TARGET FileParse)
-    set(BUILD_FileParse_tests OFF CACHE BOOL "Build FileParse tests" FORCE)
+set(OPTICALMEASUREMENTPARSER_BSDFXMLPARSER_VERSION "main")
 
-    FetchContent_Declare(
-        FileParse
-        GIT_REPOSITORY https://github.com/LBNL-ETA/FileParse.git
-        GIT_TAG "main"
-    )
+FetchContent_Declare(
+    BSDFXMLParser
+    GIT_REPOSITORY https://github.com/LBNL-ETA/BSDFXMLParser.git
+    GIT_TAG ${OPTICALMEASUREMENTPARSER_BSDFXMLPARSER_VERSION}
+)
 
-    FetchContent_MakeAvailable(FileParse)
-endif()
-
-if(NOT TARGET BSDFXMLParser)
-    set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
-
-    FetchContent_Declare(
-        BSDFXMLParser
-        GIT_REPOSITORY https://github.com/LBNL-ETA/BSDFXMLParser.git
-        GIT_TAG "main"
-    )
-
-    FetchContent_MakeAvailable(BSDFXMLParser)
-endif()
+FetchContent_MakeAvailable(BSDFXMLParser)
 
 # Set include directories for FileParse
 set(BSDFXMLParser_INCLUDE_DIRS "${bsdfxmlparser_SOURCE_DIR}/src")
