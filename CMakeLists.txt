@@ -39,24 +39,20 @@ set(JSON_BuildTests OFF CACHE BOOL "")
 
 include(FetchContent)
 
-set(OPTICALMEASUREMENTPARSER_NLOHMANN_VERSION "db53bda")
-
 FetchContent_Declare(
     nlohmann_json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG ${OPTICALMEASUREMENTPARSER_NLOHMANN_VERSION}
+    GIT_TAG "db53bda"
 )
 FetchContent_MakeAvailable(nlohmann_json)
 
 
 set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
-set(OPTICALMEASUREMENTPARSER_BSDFXMLPARSER_VERSION "main")
-
 FetchContent_Declare(
     BSDFXMLParser
     GIT_REPOSITORY https://github.com/LBNL-ETA/BSDFXMLParser.git
-    GIT_TAG ${OPTICALMEASUREMENTPARSER_BSDFXMLPARSER_VERSION}
+    GIT_TAG "main"
 )
 
 FetchContent_MakeAvailable(BSDFXMLParser)
