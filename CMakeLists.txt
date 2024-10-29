@@ -43,7 +43,7 @@ if(NOT TARGET nlohmann_json)
     FetchContent_Declare(
         nlohmann_json
         GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG "db53bda"
+        GIT_TAG "v3.11.3"
     )
 
     FetchContent_MakeAvailable(nlohmann_json)
