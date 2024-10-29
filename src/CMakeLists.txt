@@ -37,5 +37,9 @@ if (MSVC)
     target_compile_options(${LIB_NAME} PRIVATE /W4 /WX)
 endif()
 
+if (CMAKE_COMPILER_IS_GNUCC)
+    target_compile_options(nlohmann_json::nlohmann_json INTERFACE -Wno-type-limits)
+endif()
+
 
 target_compile_features(${LIB_NAME} PRIVATE cxx_std_17)
