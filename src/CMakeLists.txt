@@ -13,8 +13,19 @@ add_library( ${LIB_NAME}
 		Parser.cpp
 		ProductData.hpp
 		ProductData.cpp)
+		
+# Create a wrapper interface library for nlohmann_json
+add_library(nlohmann_json_custom INTERFACE)
 
-target_link_libraries(${LIB_NAME} PRIVATE nlohmann_json::nlohmann_json)
+# Link the original nlohmann_json target to the custom one
+target_link_libraries(nlohmann_json_custom INTERFACE nlohmann_json::nlohmann_json)
+
+# Add compile options to suppress the warnings for GCC and Clang
+if (CMAKE_COMPILER_IS_GNUCC)
+    target_compile_options(nlohmann_json_custom INTERFACE -Wno-type-limits)
+endif()
+
+target_link_libraries(${LIB_NAME} PRIVATE nlohmann_json_custom)
 target_link_libraries(${LIB_NAME} PRIVATE xmlParser)
 target_link_libraries(${LIB_NAME} PRIVATE FileParse)
 
@@ -36,10 +47,5 @@ endif()
 if (MSVC)
     target_compile_options(${LIB_NAME} PRIVATE /W4 /WX)
 endif()
-
-if (CMAKE_COMPILER_IS_GNUCC)
-    target_compile_options(nlohmann_json::nlohmann_json INTERFACE -Wno-type-limits)
-endif()
-
 
 target_compile_features(${LIB_NAME} PRIVATE cxx_std_17)
