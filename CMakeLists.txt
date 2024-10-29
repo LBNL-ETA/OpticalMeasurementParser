@@ -39,20 +39,24 @@ set(JSON_BuildTests OFF CACHE BOOL "")
 
 include(FetchContent)
 
+set(nlohmann_Branch "db53bda")
+
 FetchContent_Declare(
     nlohmann_json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG "db53bda"
+    GIT_TAG ${nlohmann_Branch}
 )
 FetchContent_MakeAvailable(nlohmann_json)
 
 
 set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
+set(BSDFXMLParser_Branch "Version_0.0.1")
+
 FetchContent_Declare(
     BSDFXMLParser
     GIT_REPOSITORY https://github.com/LBNL-ETA/BSDFXMLParser.git
-    GIT_TAG "main"
+    GIT_TAG ${BSDFXMLParser_Branch}
 )
 
 FetchContent_MakeAvailable(BSDFXMLParser)
@@ -88,3 +92,7 @@ if(BUILD_Optical_Measurement_Parser_Tests)
     add_test(NAME OpticalMeasurementParser-test
              COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpticalMeasurementParser-test --gtest_catch_exceptions=0)
 endif()
+
+# Setting variable for parent projects so it can be checked if same version is used
+set_property(TARGET ${LIB_NAME} PROPERTY BSDFXMLParser_Branch ${BSDFXMLParser_Branch})
+set_property(TARGET ${LIB_NAME} PROPERTY nlohmann_Branch ${nlohmann_Branch})
