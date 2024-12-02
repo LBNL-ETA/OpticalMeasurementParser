@@ -1,28 +1,16 @@
 #include <memory>
 #include <gtest/gtest.h>
-#include <memory>
 #include <sstream>
 #include <filesystem>
 
 #include "Parser.hpp"
 
-#include "paths.h"
 
-extern std::string test_dir;
-
-class TestLoadJSONFromDisk : public testing::Test
-{
-protected:
-    virtual void SetUp()
-    {}
-};
-
-
-TEST_F(TestLoadJSONFromDisk, TestLoadClear3JSON)
+TEST(TestLoadJSONFromDisk, TestLoadClear3JSON)
 {
     SCOPED_TRACE("Begin Test: Load CLEAR_3.json from disk.");
 
-    std::filesystem::path clear_3_path(test_dir);
+    std::filesystem::path clear_3_path(TEST_DATA_DIR);
     clear_3_path /= "products";
     clear_3_path /= "igsdb_v1_clear_3.json";
 
@@ -48,11 +36,11 @@ TEST_F(TestLoadJSONFromDisk, TestLoadClear3JSON)
     EXPECT_NEAR(measurements[110].directComponent.value().rb, 0.068, 1e-6);
 }
 
-TEST_F(TestLoadJSONFromDisk, TestLoadClear3IGSDBV2JSON)
+TEST(TestLoadJSONFromDisk, TestLoadClear3IGSDBV2JSON)
 {
     SCOPED_TRACE("Begin Test: Load CLEAR_3_IGSDB_v2.json from disk.");
 
-    std::filesystem::path clear_3_path(test_dir);
+    std::filesystem::path clear_3_path(TEST_DATA_DIR);
     clear_3_path /= "products";
     clear_3_path /= "igsdb_v2_clear_3.json";
 
@@ -78,11 +66,11 @@ TEST_F(TestLoadJSONFromDisk, TestLoadClear3IGSDBV2JSON)
     EXPECT_NEAR(measurements[110].directComponent.value().rb, 0.068, 1e-6);
 }
 
-TEST_F(TestLoadJSONFromDisk, TestLoadPVIGSDBV2JSON)
+TEST(TestLoadJSONFromDisk, TestLoadPVIGSDBV2JSON)
 {
     SCOPED_TRACE("Begin Test: Load igsdb_v2_pv.json from disk.");
 
-    std::filesystem::path product_path(test_dir);
+    std::filesystem::path product_path(TEST_DATA_DIR);
     product_path /= "products";
     product_path /= "generic_pv.json";
 
@@ -135,11 +123,11 @@ TEST_F(TestLoadJSONFromDisk, TestLoadPVIGSDBV2JSON)
     EXPECT_NEAR(powerProperties[399].ff, 0.71854149800000000, 1e-6);
 }
 
-TEST_F(TestLoadJSONFromDisk, TestMissingJSONFile)
+TEST(TestLoadJSONFromDisk, TestMissingJSONFile)
 {
     SCOPED_TRACE("Begin Test: Load missing file from disk.");
 
-    std::filesystem::path clear_3_path(test_dir);
+    std::filesystem::path clear_3_path(TEST_DATA_DIR);
     clear_3_path /= "some_invalid_path";
     clear_3_path /= "igsdb_v1_clear_3.json";
 

@@ -6,27 +6,16 @@
 
 #include "Parser.hpp"
 
-#include "paths.h"
-
-extern std::string test_dir;
-
 // Converting to json requires updating and is not currently being
 // used so disabling for now.
 
 #if 0
-class TestConvertOpticsFile : public testing::Test
-{
-protected:
-    virtual void SetUp()
-    {}
-};
 
-
-TEST_F(TestConvertOpticsFile, TestConvertClear3)
+TEST(TestConvertOpticsFile, TestConvertClear3)
 {
     SCOPED_TRACE("Begin Test: Convert CLEAR_3.DAT to json.");
 
-    std::string clear_3_path(test_dir);
+    std::string clear_3_path(TEST_DATA_DIR);
     clear_3_path += "/products";
     clear_3_path += "/CLEAR_3.DAT";
 

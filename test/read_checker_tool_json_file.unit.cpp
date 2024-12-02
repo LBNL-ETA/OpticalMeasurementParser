@@ -6,22 +6,11 @@
 
 #include "Parser.hpp"
 
-#include "paths.h"
-
-extern std::string test_dir;
-
-class TestLoadJSONFromDisk : public testing::Test
-{
-protected:
-	virtual void SetUp()
-	{}
-};
-
 #if 0 // Checkertool json has changed since this test was written.  Disabling until it can be brought in line with current format.
-TEST_F(TestLoadJSONFromDisk, TestLoadCheckerToolJSON)
+TEST(TestLoadJSONFromDisk, TestLoadCheckerToolJSON)
 {
 	SCOPED_TRACE("Begin Test: Load checker tool json format.");
-	std::filesystem::path product_path(test_dir);
+	std::filesystem::path product_path(TEST_DATA_DIR);
 	product_path /= "products";
 	product_path /= "checker_tool_input_example.json";
 

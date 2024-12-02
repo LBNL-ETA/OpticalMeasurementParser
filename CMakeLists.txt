@@ -39,41 +39,31 @@ set(JSON_BuildTests OFF CACHE BOOL "")
 
 include(FetchContent)
 
-if(NOT TARGET nlohmann_json)
-    FetchContent_Declare(
-        nlohmann_json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG "db53bda"
-    )
+set(nlohmann_Branch "v3.11.3")
 
-    FetchContent_MakeAvailable(nlohmann_json)
-endif()
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG ${nlohmann_Branch}
+)
+FetchContent_MakeAvailable(nlohmann_json)
 
-if(NOT TARGET xmlParser)
-    FetchContent_Declare(
-        xmlParser
-        GIT_REPOSITORY https://github.com/LBNL-ETA/XMLParser.git
-        GIT_TAG "v1.0.1"
-    )
 
-    FetchContent_MakeAvailable(xmlParser)
-endif()
+set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
-if(NOT TARGET FileParse)
-    set(BUILD_FileParse_tests OFF CACHE BOOL "Build FileParse tests" FORCE)
+set(BSDFXMLParser_Branch "Version_0.0.1")
 
-    FetchContent_Declare(
-        FileParse
-        GIT_REPOSITORY https://github.com/LBNL-ETA/FileParse.git
-        GIT_TAG "Version_1.0"
-    )
+FetchContent_Declare(
+    BSDFXMLParser
+    GIT_REPOSITORY https://github.com/LBNL-ETA/BSDFXMLParser.git
+    GIT_TAG ${BSDFXMLParser_Branch}
+)
 
-    FetchContent_MakeAvailable(FileParse)
-endif()
+FetchContent_MakeAvailable(BSDFXMLParser)
 
 # Set include directories for FileParse
-set(FileParse_INCLUDE_DIRS "${fileparse_SOURCE_DIR}/include")
-include_directories(${FileParse_INCLUDE_DIRS})
+set(BSDFXMLParser_INCLUDE_DIRS "${bsdfxmlparser_SOURCE_DIR}/src")
+include_directories(${BSDFXMLParser_INCLUDE_DIRS})
 
 # Add your target
 add_subdirectory(src)
@@ -102,3 +92,7 @@ if(BUILD_Optical_Measurement_Parser_Tests)
     add_test(NAME OpticalMeasurementParser-test
              COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpticalMeasurementParser-test --gtest_catch_exceptions=0)
 endif()
+
+# Setting variable for parent projects so it can be checked if same version is used
+set_property(TARGET ${LIB_NAME} PROPERTY BSDFXMLParser_Branch ${BSDFXMLParser_Branch})
+set_property(TARGET ${LIB_NAME} PROPERTY nlohmann_Branch ${nlohmann_Branch})

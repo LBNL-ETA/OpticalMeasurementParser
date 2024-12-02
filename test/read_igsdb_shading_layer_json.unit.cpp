@@ -1,27 +1,14 @@
 #include <memory>
 #include <gtest/gtest.h>
-#include <memory>
-#include <sstream>
 #include <filesystem>
 
 #include "Parser.hpp"
 
-#include "paths.h"
 
-extern std::string test_dir;
-
-class TestLoadIGSDBJSONFromDisk : public testing::Test
-{
-protected:
-    virtual void SetUp()
-    {}
-};
-
-
-TEST_F(TestLoadIGSDBJSONFromDisk, TestLoadIGSDBVenetianShadingLayerJSON)
+TEST(TestLoadIGSDBJSONFromDisk, TestLoadIGSDBVenetianShadingLayerJSON)
 {
     SCOPED_TRACE("Begin Test: Load IGSDB venetian shading layer json format.");
-    std::filesystem::path product_path(test_dir);
+    std::filesystem::path product_path(TEST_DATA_DIR);
     product_path /= "products";
     product_path /= "igsdb_v1_venetian.json";
 
@@ -68,10 +55,10 @@ TEST_F(TestLoadIGSDBJSONFromDisk, TestLoadIGSDBVenetianShadingLayerJSON)
     EXPECT_EQ(materialMeasurements[440].directComponent.value().rb, 0.718999981880188);
 }
 
-TEST_F(TestLoadIGSDBJSONFromDisk, TestLoadIGSDBPerforatedScreenShadingLayerJSON)
+TEST(TestLoadIGSDBJSONFromDisk, TestLoadIGSDBPerforatedScreenShadingLayerJSON)
 {
     SCOPED_TRACE("Begin Test: Load IGSDB perforated shading layer json format.");
-    std::filesystem::path product_path(test_dir);
+    std::filesystem::path product_path(TEST_DATA_DIR);
     product_path /= "products";
     product_path /= "igsdb_v1_perforated.json";
 
