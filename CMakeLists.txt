@@ -51,7 +51,7 @@ FetchContent_MakeAvailable(nlohmann_json)
 
 set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
-set(BSDFXMLParser_Branch "Version_0.0.1")
+set(BSDFXMLParser_Branch "dec_2024_parsing")
 
 FetchContent_Declare(
     BSDFXMLParser
