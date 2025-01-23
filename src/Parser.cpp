@@ -975,9 +975,17 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
 
     ProductData parseBSDFXMLString(std::string const & contents)
     {
-        XMLParser::XMLNode xWindowElementNode =
-          XMLParser::XMLNode::parseString(contents.c_str(), "WindowElement");
-        return parseBSDFXML(xWindowElementNode);
+        auto el = BSDFData::loadWindowElementFromString(contents);
+        if(el.has_value())
+        {
+            return convert(*el);
+        }
+
+        // Tests are designed to throw exceptions if the file is not found.
+        // This will allow tests to pass.
+        std::stringstream msg;
+        msg << "Cannot parse BSDFXML string: " << contents;
+        throw std::runtime_error(msg.str());
     }
 
     ProductData parseBSDFXMLFile(std::string const & fname)
