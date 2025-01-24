@@ -7,24 +7,12 @@
 #include <nlohmann/json.hpp>
 #include <xmlParser/xmlParser.h>
 #include <bsdfdata/Parser.hpp>
+#include <fileParse/StringConversion.hxx>
 #include "Parser.hpp"
 #include <factories/bsdfxml.hpp>
 
 namespace OpticsParser
 {
-    std::string toLower(std::string s)
-    {
-#ifdef _MSC_VER
-#    pragma warning(push)
-#    pragma warning(disable : 4244)
-#endif
-        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif
-        return s;
-    }
-
     ProductData Parser::parseFile(const std::string & inputFile)
     {
         std::string fileName = inputFile.substr(inputFile.find_last_of("/\\") + 1);
@@ -922,18 +910,18 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
             {
                 throw std::runtime_error("XML error: Wavelength unit not found");
             }
-            if(toLower(wavelengthUnit) != "integral")
+            if(FileParse::toLower(wavelengthUnit) != "integral")
             {
                 throw std::runtime_error(
                   "XML error: Only interal wavelength unit is currently supported");
             }
 
             WavelengthBSDFs * currentBandBSDFs;
-            if(toLower(wavelengthRange) == "solar")
+            if(FileParse::toLower(wavelengthRange) == "solar")
             {
                 currentBandBSDFs = &solarBSDFs;
             }
-            else if(toLower(wavelengthRange) == "visible")
+            else if(FileParse::toLower(wavelengthRange) == "visible")
             {
                 currentBandBSDFs = &visibleBSDFs;
             }
@@ -962,19 +950,19 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
             std::string rowAngleBasisName =
               wavelengthDataBlockNode.getChildNode("RowAngleBasis").getText();
 
-            if(toLower(wavelengthDirection) == "transmission front")
+            if(FileParse::toLower(wavelengthDirection) == "transmission front")
             {
                 currentBandBSDFs->tf = BSDF{bsdf, rowAngleBasisName, columnAngleBasisName};
             }
-            else if(toLower(wavelengthDirection) == "transmission back")
+            else if(FileParse::toLower(wavelengthDirection) == "transmission back")
             {
                 currentBandBSDFs->tb = BSDF{bsdf, rowAngleBasisName, columnAngleBasisName};
             }
-            else if(toLower(wavelengthDirection) == "reflection front")
+            else if(FileParse::toLower(wavelengthDirection) == "reflection front")
             {
                 currentBandBSDFs->rf = BSDF{bsdf, rowAngleBasisName, columnAngleBasisName};
             }
-            else if(toLower(wavelengthDirection) == "reflection back")
+            else if(FileParse::toLower(wavelengthDirection) == "reflection back")
             {
                 currentBandBSDFs->rb = BSDF{bsdf, rowAngleBasisName, columnAngleBasisName};
             }
@@ -987,9 +975,17 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
 
     ProductData parseBSDFXMLString(std::string const & contents)
     {
-        XMLParser::XMLNode xWindowElementNode =
-          XMLParser::XMLNode::parseString(contents.c_str(), "WindowElement");
-        return parseBSDFXML(xWindowElementNode);
+        auto el = BSDFData::loadWindowElementFromString(contents);
+        if(el.has_value())
+        {
+            return convert(*el);
+        }
+
+        // Tests are designed to throw exceptions if the file is not found.
+        // This will allow tests to pass.
+        std::stringstream msg;
+        msg << "Cannot parse BSDFXML string: " << contents;
+        throw std::runtime_error(msg.str());
     }
 
     ProductData parseBSDFXMLFile(std::string const & fname)
