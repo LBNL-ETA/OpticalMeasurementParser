@@ -24,6 +24,8 @@ TEST(TestLoadBSDFXMLFromDisk, TestLoad2011SA1)
     EXPECT_EQ(product.IRTransmittance, 0.10916);
     EXPECT_EQ(product.frontEmissivity, 0.79626);
     EXPECT_EQ(product.backEmissivity, 0.79626);
+    ASSERT_TRUE(product.deviceType.has_value());
+    EXPECT_EQ(product.deviceType.value(), BSDFData::DeviceType::Other);
     EXPECT_TRUE(product.measurements.has_value());
     EXPECT_TRUE(std::holds_alternative<OpticsParser::DualBandBSDF>(product.measurements.value()));
     auto & measurements = std::get<OpticsParser::DualBandBSDF>(product.measurements.value());

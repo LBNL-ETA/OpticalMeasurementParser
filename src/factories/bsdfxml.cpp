@@ -118,6 +118,8 @@ namespace OpticsParser
                 product.measurements =
                   DualBandBSDF{bsdfs.at(Helper::Range::Solar), bsdfs.at(Helper::Range::Visible)};
             }
+
+            product.deviceType = matData.deviceType;
         }
 
         return product;

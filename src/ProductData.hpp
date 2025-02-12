@@ -1,5 +1,8 @@
 #pragma once
 
+#include "bsdfdata/Data.hpp"
+
+
 #include <vector>
 #include <string>
 #include <optional>
@@ -223,6 +226,7 @@ namespace OpticsParser
         std::optional<PVPowerProperties> pvPowerProperties;
         std::optional<std::string> thicknessUnit;
         std::optional<CompositionInformation> composition;
+        std::optional<BSDFData::DeviceType> deviceType;
     };
 
     // Converting to json requires updating and is not currently being
