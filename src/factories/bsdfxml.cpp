@@ -78,6 +78,29 @@ namespace OpticsParser
             return result;
         }
 
+        inline std::shared_ptr<LouveredGeometry>
+          createLouveredGeometryIfLouvered(const BSDFData::WindowElement & data,
+                                           const ProductData & product)
+        {
+            // Check if it is a louvered shutter and if geometry is provided
+            if(product.deviceType.has_value()
+               && product.deviceType.value() == BSDFData::DeviceType::LouveredShutter
+               && data.optical.layer.geometry.has_value())
+            {
+                // Build the geometry
+                LouveredGeometry geometry{data.optical.layer.geometry->width.value_or(0),
+                                          data.optical.layer.geometry->height.value_or(0),
+                                          data.optical.layer.geometry->spacing.value_or(0),
+                                          data.optical.layer.geometry->angle.value_or(0)};
+
+                // Return it in a shared_ptr
+                return std::make_shared<LouveredGeometry>(geometry);
+            }
+
+            // Otherwise, return null (no geometry)
+            return nullptr;
+        }
+
     }   // namespace Helper
 
     ProductData convert(const BSDFData::WindowElement & data)
@@ -120,6 +143,8 @@ namespace OpticsParser
             }
 
             product.deviceType = matData.deviceType;
+
+            product.geometry = Helper::createLouveredGeometryIfLouvered(data, product);
         }
 
         return product;
