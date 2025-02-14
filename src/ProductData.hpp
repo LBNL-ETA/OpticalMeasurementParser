@@ -120,6 +120,19 @@ namespace OpticsParser
         std::string perforationType;
     };
 
+    struct LouveredGeometry : ProductGeometry
+    {
+        LouveredGeometry(double slat_width,
+                         double slat_thickness,
+                         double slat_spacing,
+                         double slat_angle);
+
+        double SlatWidth;
+        double SlatThickness;
+        double SlatSpacing;
+        double SlatAngle;
+    };
+
     struct DualBandValues
     {
         std::optional<double> solarTransmittanceFront;
