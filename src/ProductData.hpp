@@ -127,10 +127,10 @@ namespace OpticsParser
                          double slat_spacing,
                          double slat_angle);
 
-        double SlatWidth;
-        double SlatThickness;
-        double SlatSpacing;
-        double SlatAngle;
+        double slatWidth;
+        double slatThickness;
+        double slatSpacing;
+        double slatAngle;
     };
 
     struct DualBandValues
