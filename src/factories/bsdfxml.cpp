@@ -84,7 +84,7 @@ namespace OpticsParser
         {
             // Check if it is a louvered shutter and if geometry is provided
             if(product.deviceType.has_value()
-               && product.deviceType.value() == BSDFData::DeviceType::LouveredShutter
+               && BSDFData::DeviceTypeFromString(product.deviceType.value()) == BSDFData::DeviceType::LouveredShutter
                && data.optical.layer.geometry.has_value())
             {
                 // Build the geometry
@@ -142,7 +142,7 @@ namespace OpticsParser
                   DualBandBSDF{bsdfs.at(Helper::Range::Solar), bsdfs.at(Helper::Range::Visible)};
             }
 
-            product.deviceType = matData.deviceType;
+            product.deviceType = DeviceTypeToString(matData.deviceType.value_or(BSDFData::DeviceType::Unknown));
 
             product.geometry = Helper::createLouveredGeometryIfLouvered(data, product);
         }

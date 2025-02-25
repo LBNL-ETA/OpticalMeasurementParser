@@ -1,8 +1,5 @@
 #pragma once
 
-#include "bsdfdata/Data.hpp"
-
-
 #include <vector>
 #include <string>
 #include <optional>
@@ -233,7 +230,7 @@ namespace OpticsParser
         std::optional<std::string> thicknessUnit{std::nullopt};
         std::shared_ptr<ProductData> materialDefinition{nullptr};
         std::shared_ptr<ProductGeometry> geometry{nullptr};
-        std::optional<BSDFData::DeviceType> deviceType{std::nullopt};
+        std::optional<std::string> deviceType{std::nullopt};
     };
 
     // Converting to json requires updating and is not currently being
