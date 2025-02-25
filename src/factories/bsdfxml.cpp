@@ -84,7 +84,8 @@ namespace OpticsParser
         {
             // Check if it is a louvered shutter and if geometry is provided
             if(product.deviceType.has_value()
-               && BSDFData::DeviceTypeFromString(product.deviceType.value()) == BSDFData::DeviceType::LouveredShutter
+               && BSDFData::DeviceTypeFromString(product.deviceType.value())
+                    == BSDFData::DeviceType::LouveredShutter
                && data.optical.layer.geometry.has_value())
             {
                 // Build the geometry
@@ -119,12 +120,10 @@ namespace OpticsParser
                 product.thicknessUnit = BSDFData::LengthUnitToString(matData.thickness->unit);
                 product.thickness = matData.thickness->value;
             }
-
             product.frontEmissivity = matData.emissivityFront;
             product.backEmissivity = matData.emissivityBack;
             product.IRTransmittance = matData.TIR;
             product.conductivity = matData.thermalConductivity;
-
 
             product.permeabilityFactor = matData.permeabilityFactor;
 
@@ -135,14 +134,14 @@ namespace OpticsParser
 
             const auto bsdfs = Helper::convert(data.optical.layer.wavelengthData);
 
-
             if(bsdfs.count(Helper::Range::Solar) && bsdfs.count(Helper::Range::Visible))
             {
                 product.measurements =
                   DualBandBSDF{bsdfs.at(Helper::Range::Solar), bsdfs.at(Helper::Range::Visible)};
             }
 
-            product.deviceType = DeviceTypeToString(matData.deviceType.value_or(BSDFData::DeviceType::Unknown));
+            product.deviceType =
+              DeviceTypeToString(matData.deviceType.value_or(BSDFData::DeviceType::Unknown));
 
             product.geometry = Helper::createLouveredGeometryIfLouvered(data, product);
         }
