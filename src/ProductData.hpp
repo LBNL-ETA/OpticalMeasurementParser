@@ -117,6 +117,19 @@ namespace OpticsParser
         std::string perforationType;
     };
 
+    struct LouveredGeometry : ProductGeometry
+    {
+        LouveredGeometry(double slat_width,
+                         double slat_thickness,
+                         double slat_spacing,
+                         double slat_angle);
+
+        double slatWidth;
+        double slatThickness;
+        double slatSpacing;
+        double slatAngle;
+    };
+
     struct DualBandValues
     {
         std::optional<double> solarTransmittanceFront;
@@ -160,13 +173,6 @@ namespace OpticsParser
 
     using PVPowerProperties = std::map<double, std::vector<PVPowerProperty>>;
 
-    struct ProductData;
-    struct CompositionInformation
-    {
-        std::shared_ptr<ProductData> material;
-        std::shared_ptr<ProductGeometry> geometry;
-    };
-
     struct ProductData : std::enable_shared_from_this<ProductData>
     {
         ProductData() = default;
@@ -181,48 +187,50 @@ namespace OpticsParser
                     std::string const & manufacturer);
 
         std::string name;
-        std::optional<std::string> productName;
+        std::optional<std::string> productName{std::nullopt};
         std::string productType;
         std::string manufacturer;
-        std::optional<std::string> productSubtype;
-        std::optional<int> nfrcid;
-        std::optional<int> cgdbShadingLayerId;
-        std::optional<int> cgdbShadeMaterialId;
-        std::optional<double> thickness;
-        std::optional<double> conductivity;
-        std::optional<double> IRTransmittance;
-        std::optional<double> frontEmissivity;
-        std::optional<double> backEmissivity;
-        std::optional<std::string> frontEmissivitySource;
-        std::optional<std::string> backEmissivitySource;
-        std::optional<std::string> material;
-        std::optional<std::string> coatingName;
-        std::optional<std::string> coatedSide;
-        std::optional<std::string> substrateFilename;
-        std::optional<std::string> appearance;
-        std::optional<std::string> acceptance;
-        std::optional<std::string> fileName;
-        std::optional<std::string> unitSystem;
-        std::optional<std::string> wavelengthUnit;
-        std::optional<std::variant<std::vector<WLData>, DualBandBSDF>> measurements;
-        std::optional<std::string> extrapolation;
-        std::optional<int> aercID;
-        std::optional<bool> specularity;
-        std::optional<double> permeabilityFactor;
-        std::optional<int> igdbChecksum;
-        std::optional<std::string> igdbDatabaseVersion;
-        std::optional<int> cgdbChecksum;
-        std::optional<std::string> cgdbDatabaseVersion;
-        std::optional<double> density;
-        std::optional<double> youngsModulus;
-        std::optional<std::string> dataFileName;
-        std::optional<double> opticalOpenness;
-        std::optional<DualBandValues> dualBandSpecular;
-        std::optional<DualBandValues> dualBandDiffuse;
-        std::optional<PrecalculatedResults> precalculatedResults;
-        std::optional<PVPowerProperties> pvPowerProperties;
-        std::optional<std::string> thicknessUnit;
-        std::optional<CompositionInformation> composition;
+        std::optional<std::string> productSubtype{std::nullopt};
+        std::optional<int> nfrcid{std::nullopt};
+        std::optional<int> cgdbShadingLayerId{std::nullopt};
+        std::optional<int> cgdbShadeMaterialId{std::nullopt};
+        std::optional<double> thickness{std::nullopt};
+        std::optional<double> conductivity{std::nullopt};
+        std::optional<double> IRTransmittance{std::nullopt};
+        std::optional<double> frontEmissivity{std::nullopt};
+        std::optional<double> backEmissivity{std::nullopt};
+        std::optional<std::string> frontEmissivitySource{std::nullopt};
+        std::optional<std::string> backEmissivitySource{std::nullopt};
+        std::optional<std::string> material{std::nullopt};
+        std::optional<std::string> coatingName{std::nullopt};
+        std::optional<std::string> coatedSide{std::nullopt};
+        std::optional<std::string> substrateFilename{std::nullopt};
+        std::optional<std::string> appearance{std::nullopt};
+        std::optional<std::string> acceptance{std::nullopt};
+        std::optional<std::string> fileName{std::nullopt};
+        std::optional<std::string> unitSystem{std::nullopt};
+        std::optional<std::string> wavelengthUnit{std::nullopt};
+        std::optional<std::variant<std::vector<WLData>, DualBandBSDF>> measurements{std::nullopt};
+        std::optional<std::string> extrapolation{std::nullopt};
+        std::optional<int> aercID{std::nullopt};
+        std::optional<bool> specularity{std::nullopt};
+        std::optional<double> permeabilityFactor{std::nullopt};
+        std::optional<int> igdbChecksum{std::nullopt};
+        std::optional<std::string> igdbDatabaseVersion{std::nullopt};
+        std::optional<int> cgdbChecksum{std::nullopt};
+        std::optional<std::string> cgdbDatabaseVersion{std::nullopt};
+        std::optional<double> density{std::nullopt};
+        std::optional<double> youngsModulus{std::nullopt};
+        std::optional<std::string> dataFileName{std::nullopt};
+        std::optional<double> opticalOpenness{std::nullopt};
+        std::optional<DualBandValues> dualBandSpecular{std::nullopt};
+        std::optional<DualBandValues> dualBandDiffuse{std::nullopt};
+        std::optional<PrecalculatedResults> precalculatedResults{std::nullopt};
+        std::optional<PVPowerProperties> pvPowerProperties{std::nullopt};
+        std::optional<std::string> thicknessUnit{std::nullopt};
+        std::shared_ptr<ProductData> materialDefinition{nullptr};
+        std::shared_ptr<ProductGeometry> geometry{nullptr};
+        std::optional<std::string> deviceType{std::nullopt};
     };
 
     // Converting to json requires updating and is not currently being

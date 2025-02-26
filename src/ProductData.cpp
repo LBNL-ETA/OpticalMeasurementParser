@@ -214,3 +214,13 @@ OpticsParser::PerforatedGeometry::PerforatedGeometry(double spacingX,
     dimensionY(dimensionY),
     perforationType(perforationType)
 {}
+
+OpticsParser::LouveredGeometry::LouveredGeometry(double slat_width,
+                                                 double slat_thickness,
+                                                 double slat_spacing,
+                                                 double slat_angle) :
+    slatWidth(slat_width),
+    slatThickness(slat_thickness),
+    slatSpacing(slat_spacing),
+    slatAngle(slat_angle)
+{}

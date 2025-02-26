@@ -28,12 +28,12 @@ TEST(TestLoadIGSDBJSONFromDisk, TestLoadIGSDBVenetianShadingLayerJSON)
     EXPECT_EQ(product.backEmissivity, std::optional<double>());
     EXPECT_EQ(product.measurements.has_value(), false);
     auto geometry = std::dynamic_pointer_cast<OpticsParser::VenetianGeometry>(
-      product.composition.value().geometry);
+      product.geometry);
     EXPECT_EQ(geometry->slatWidth, 14.8);
     EXPECT_EQ(geometry->slatSpacing, 12.7);
     EXPECT_EQ(geometry->slatCurvature, 33.13057);
     EXPECT_EQ(geometry->numberSegments, 5);
-    auto material = product.composition.value().material;
+    auto material = product.materialDefinition;
     EXPECT_EQ(material->productName.value(), "White Venetian Blind Slat");
     EXPECT_EQ(material->productType, "material");
     EXPECT_EQ(material->manufacturer, "Pella");
@@ -77,13 +77,13 @@ TEST(TestLoadIGSDBJSONFromDisk, TestLoadIGSDBPerforatedScreenShadingLayerJSON)
     EXPECT_EQ(product.backEmissivity, std::optional<double>());
     EXPECT_EQ(product.measurements.has_value(), false);
     auto geometry = std::dynamic_pointer_cast<OpticsParser::PerforatedGeometry>(
-      product.composition.value().geometry);
+      product.geometry);
     EXPECT_EQ(geometry->spacingX, 1.69);
     EXPECT_EQ(geometry->spacingY, 1.69);
     EXPECT_EQ(geometry->dimensionX, 0.58);
     EXPECT_EQ(geometry->dimensionY, 6.35);
     EXPECT_EQ(geometry->perforationType, "Circular");
-    auto material = product.composition.value().material;
+    auto material = product.materialDefinition;
     EXPECT_EQ(material->name, "SCRadiantBarrier.txt");
     EXPECT_EQ(material->productType, "material");
     EXPECT_EQ(material->manufacturer, "Solar Comfort");

@@ -78,6 +78,30 @@ namespace OpticsParser
             return result;
         }
 
+        inline std::shared_ptr<LouveredGeometry>
+          createLouveredGeometryIfLouvered(const BSDFData::WindowElement & data,
+                                           const ProductData & product)
+        {
+            // Check if it is a louvered shutter and if geometry is provided
+            if(product.deviceType.has_value()
+               && BSDFData::DeviceTypeFromString(product.deviceType.value())
+                    == BSDFData::DeviceType::LouveredShutter
+               && data.optical.layer.geometry.has_value())
+            {
+                // Build the geometry
+                LouveredGeometry geometry{data.optical.layer.geometry->width.value_or(0),
+                                          data.optical.layer.geometry->height.value_or(0),
+                                          data.optical.layer.geometry->spacing.value_or(0),
+                                          data.optical.layer.geometry->angle.value_or(0)};
+
+                // Return it in a shared_ptr
+                return std::make_shared<LouveredGeometry>(geometry);
+            }
+
+            // Otherwise, return null (no geometry)
+            return nullptr;
+        }
+
     }   // namespace Helper
 
     ProductData convert(const BSDFData::WindowElement & data)
@@ -96,12 +120,10 @@ namespace OpticsParser
                 product.thicknessUnit = BSDFData::LengthUnitToString(matData.thickness->unit);
                 product.thickness = matData.thickness->value;
             }
-
             product.frontEmissivity = matData.emissivityFront;
             product.backEmissivity = matData.emissivityBack;
             product.IRTransmittance = matData.TIR;
             product.conductivity = matData.thermalConductivity;
-
 
             product.permeabilityFactor = matData.permeabilityFactor;
 
@@ -112,12 +134,16 @@ namespace OpticsParser
 
             const auto bsdfs = Helper::convert(data.optical.layer.wavelengthData);
 
-
             if(bsdfs.count(Helper::Range::Solar) && bsdfs.count(Helper::Range::Visible))
             {
                 product.measurements =
                   DualBandBSDF{bsdfs.at(Helper::Range::Solar), bsdfs.at(Helper::Range::Visible)};
             }
+
+            product.deviceType =
+              DeviceTypeToString(matData.deviceType.value_or(BSDFData::DeviceType::Unknown));
+
+            product.geometry = Helper::createLouveredGeometryIfLouvered(data, product);
         }
 
         return product;

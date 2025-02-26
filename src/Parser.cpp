@@ -705,9 +705,9 @@ OpticsParser::ProductData parseIGSDBJson(nlohmann::json const & product_json)
         auto material =
           std::make_shared<ProductData>(parseIGSDBJsonUncomposedProduct_v1(product_material));
         auto geometry = parseGeometry(subtype, product_geometry);
-        CompositionInformation compositionInformation{material, geometry};
         auto product = parseIGSDBJsonUncomposedProduct_v1(product_json);
-        product.composition = compositionInformation;
+        product.materialDefinition = material;
+        product.geometry = geometry;
         return product;
     }
 
