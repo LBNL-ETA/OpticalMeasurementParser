@@ -8,7 +8,7 @@ if (MSVC)
 endif()
 
 if(NOT "${CMAKE_CXX_STANDARD}")
-    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD 20)
 endif()
 
 if(NOT "${CMAKE_CXX_EXTENSIONS}")
@@ -51,7 +51,7 @@ FetchContent_MakeAvailable(nlohmann_json)
 
 set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
-set(BSDFXMLParser_Branch "Version_0.0.2")
+set(BSDFXMLParser_Branch "CPP20Conversion")
 
 FetchContent_Declare(
     BSDFXMLParser
