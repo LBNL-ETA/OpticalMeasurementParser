@@ -39,7 +39,7 @@ set(JSON_BuildTests OFF CACHE BOOL "")
 
 include(FetchContent)
 
-set(nlohmann_Branch "v3.11.3")
+set(nlohmann_Branch "v3.12.0")
 
 FetchContent_Declare(
     nlohmann_json
