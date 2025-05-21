@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(OpticalMeasurementParser VERSION 2.3.4 LANGUAGES CXX)
+project(OpticalMeasurementParser VERSION 2.3.5 LANGUAGES CXX)
 set(LIB_NAME ${PROJECT_NAME})
 
 if (MSVC)
