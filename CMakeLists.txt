@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(OpticalMeasurementParser VERSION 2.3.5 LANGUAGES CXX)
+project(OpticalMeasurementParser VERSION 2.3.6 LANGUAGES CXX)
 set(LIB_NAME ${PROJECT_NAME})
 
 if (MSVC)
@@ -51,7 +51,7 @@ FetchContent_MakeAvailable(nlohmann_json)
 
 set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
-set(BSDFXMLParser_Branch "Version_0.0.5")
+set(BSDFXMLParser_Branch "Version_0.0.6")
 
 FetchContent_Declare(
     BSDFXMLParser
