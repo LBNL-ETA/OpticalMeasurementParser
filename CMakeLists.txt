@@ -41,25 +41,28 @@ include(FetchContent)
 
 set(nlohmann_Branch "v3.12.0")
 
-FetchContent_Declare(
-    nlohmann_json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG ${nlohmann_Branch}
-)
-FetchContent_MakeAvailable(nlohmann_json)
+if(NOT TARGET nlohmann_json)
+    FetchContent_Declare(
+        nlohmann_json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG ${nlohmann_Branch}
+    )
+    FetchContent_MakeAvailable(nlohmann_json)
+endif()
 
 
 set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
 set(BSDFXMLParser_Branch "feature/disable-wide-char")
 
-FetchContent_Declare(
-    BSDFXMLParser
-    GIT_REPOSITORY https://github.com/LBNL-ETA/BSDFXMLParser.git
-    GIT_TAG ${BSDFXMLParser_Branch}
-)
-
-FetchContent_MakeAvailable(BSDFXMLParser)
+if(NOT TARGET BSDFXMLParser)
+    FetchContent_Declare(
+        BSDFXMLParser
+        GIT_REPOSITORY https://github.com/LBNL-ETA/BSDFXMLParser.git
+        GIT_TAG ${BSDFXMLParser_Branch}
+    )
+    FetchContent_MakeAvailable(BSDFXMLParser)
+endif()
 
 # Set include directories for FileParse
 set(BSDFXMLParser_INCLUDE_DIRS "${bsdfxmlparser_SOURCE_DIR}/src")
