@@ -63,6 +63,7 @@ if(NOT TARGET BSDFXMLParser)
     )
     FetchContent_MakeAvailable(BSDFXMLParser)
 endif()
+FetchContent_GetProperties(BSDFXMLParser)
 
 # Set include directories for FileParse
 set(BSDFXMLParser_INCLUDE_DIRS "${bsdfxmlparser_SOURCE_DIR}/src")
