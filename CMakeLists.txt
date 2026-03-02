@@ -1,11 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(OpticalMeasurementParser VERSION 2.3.6 LANGUAGES CXX)
+project(OpticalMeasurementParser VERSION 2.3.7 LANGUAGES CXX)
 set(LIB_NAME ${PROJECT_NAME})
-
-if (MSVC)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
 
 if(NOT "${CMAKE_CXX_STANDARD}")
     set(CMAKE_CXX_STANDARD 20)
@@ -53,7 +49,7 @@ endif()
 
 set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
-set(BSDFXMLParser_Branch "feature/disable-wide-char")
+set(BSDFXMLParser_Branch "Version_0.0.8")
 
 if(NOT TARGET BSDFXMLParser)
     FetchContent_Declare(
