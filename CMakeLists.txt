@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(OpticalMeasurementParser VERSION 2.3.7 LANGUAGES CXX)
+project(OpticalMeasurementParser VERSION 2.3.8 LANGUAGES CXX)
 set(LIB_NAME ${PROJECT_NAME})
 
 if(NOT "${CMAKE_CXX_STANDARD}")
@@ -49,7 +49,7 @@ endif()
 
 set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
-set(BSDFXMLParser_Branch "Version_0.0.8")
+set(BSDFXMLParser_Branch "Version_0.0.9")
 
 if(NOT TARGET BSDFXMLParser)
     FetchContent_Declare(
@@ -93,6 +93,9 @@ if(BUILD_Optical_Measurement_Parser_Tests)
     add_test(NAME OpticalMeasurementParser-test
              COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OpticalMeasurementParser-test --gtest_catch_exceptions=0)
 endif()
+
+get_property(fileParseFromBSDFXMLParser TARGET BSDFXMLParser PROPERTY FileParse_Branch)
+configure_file(doc/OpticalMeasurementParser.md.in ${CMAKE_CURRENT_SOURCE_DIR}/doc/OpticalMeasurementParser.md @ONLY)
 
 # Setting variable for parent projects so it can be checked if same version is used
 set_property(TARGET ${LIB_NAME} PROPERTY BSDFXMLParser_Branch ${BSDFXMLParser_Branch})

@@ -3,10 +3,10 @@ graph TD
     %% Package definitions
     xmlParser[xmlParser<br/><font color='red'>v1.0.4</font>]
     nlohmann_json_fileparse[nlohmann_json<br/><font color='red'>v3.11.3</font>]
-    nlohmann_json[nlohmann_json<br/><font color='red'>v3.12.0</font>]
-    FileParse[FileParse<br/><font color='red'>Version_1.1.2</font>]
-    BSDFXMLParser[BSDFXMLParser<br/><font color='red'>Version_0.0.9</font>]
-    OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v2.3.8</font>]
+    nlohmann_json[nlohmann_json<br/><font color='red'>@nlohmann_Branch@</font>]
+    FileParse[FileParse<br/><font color='red'>@fileParseFromBSDFXMLParser@</font>]
+    BSDFXMLParser[BSDFXMLParser<br/><font color='red'>@BSDFXMLParser_Branch@</font>]
+    OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v@PROJECT_VERSION@</font>]
 
     %% Package relations
     OpticalMeasurementParser --> nlohmann_json
