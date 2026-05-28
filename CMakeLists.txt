@@ -1,7 +1,22 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(OpticalMeasurementParser VERSION 2.3.8 LANGUAGES CXX)
+project(OpticalMeasurementParser VERSION 2.3.9 LANGUAGES CXX)
 set(LIB_NAME ${PROJECT_NAME})
+
+# Graceful local-sibling fallback: the `local` CMake preset sets
+# FETCHCONTENT_SOURCE_DIR_<NAME> to ${sourceDir}/../<DepName> for each declared
+# dependency. If a sibling working copy is missing, unset that variable here so
+# FetchContent falls back to the declared remote instead of erroring out.
+foreach(_dep NLOHMANN_JSON BSDFXMLPARSER)
+    if(DEFINED FETCHCONTENT_SOURCE_DIR_${_dep})
+        if(NOT EXISTS "${FETCHCONTENT_SOURCE_DIR_${_dep}}/CMakeLists.txt")
+            message(STATUS
+                "Local sibling for ${_dep} not found at "
+                "${FETCHCONTENT_SOURCE_DIR_${_dep}}; falling back to remote.")
+            unset(FETCHCONTENT_SOURCE_DIR_${_dep} CACHE)
+        endif()
+    endif()
+endforeach()
 
 if(NOT "${CMAKE_CXX_STANDARD}")
     set(CMAKE_CXX_STANDARD 20)
@@ -49,7 +64,7 @@ endif()
 
 set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
-set(BSDFXMLParser_Branch "Version_0.0.9")
+set(BSDFXMLParser_Branch "Version_0.0.11")
 
 if(NOT TARGET BSDFXMLParser)
     FetchContent_Declare(

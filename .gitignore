@@ -1,0 +1,23 @@
+# CMake build directories
+build/
+out/
+cmake-build-*/
+
+# Personal CMake presets (per-developer toolchain overrides)
+CMakeUserPresets.json
+
+# IDE / editor metadata
+.idea/
+.vs/
+.vscode/
+
+# OS detritus
+.DS_Store
+Thumbs.db
+
+# Coverage / profiling
+*.gcda
+*.gcno
+*.gcov
+*.profraw
+*.profdata
