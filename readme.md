@@ -31,14 +31,16 @@ Update `GIT_TAG` to the desired release tag.
 
 Dependencies are downloaded automatically via CMake FetchContent on first configure. Tests build by default when OpticalMeasurementParser is the top-level project (`-DBUILD_Optical_Measurement_Parser_Tests=OFF` to disable).
 
+On MSVC, `/MP` (multi-processor compilation) is enabled automatically so the library, tests, and dependencies compile in parallel. On GCC/Clang, pass `--parallel` to `cmake --build`.
+
 ### Presets
 
 `CMakePresets.json` ships four visible configure presets, plus two hidden inheritance bases:
 
 | Preset | When to use it |
 |---|---|
-| `default-debug` / `default-release` | Standard configure on any platform; CI. Fetches all dependencies from declared remotes. Picks the system default compiler (MSVC on Windows, system `cc`/`c++` on Linux/macOS). |
-| `local-debug` / `local-release` | Consume sibling working copies of dependencies instead of fetching them. |
+| `default-debug` / `default-release` | Standard configure on any platform; CI and releases. **Always** fetches every dependency from its declared remote — never touches local disk. Picks the system default compiler (MSVC on Windows, system `cc`/`c++` on Linux/macOS). |
+| `local-debug` / `local-release` | Development mode: build against sibling working copies on disk when present (see below). |
 
 Examples:
 
@@ -48,14 +50,22 @@ cmake --build build/default-release --parallel
 ctest --test-dir build/default-release -C Release --output-on-failure
 ```
 
-`local` expects a sibling directory layout — e.g. `../BSDFXMLParser` and `../json` next to `../OpticalMeasurementParser`. Currently overridden:
+#### Local development mode (`local-*`)
 
-| Dependency | Expected sibling path |
-|------------|----------------------|
+The `local` preset sets a single cache flag, `LBNL_LOCAL_SIBLINGS=ON`. When it is on, each repo's CMakeLists prefers a **sibling working copy** of its *direct* dependencies — e.g. `../BSDFXMLParser`, `../json`, `../googletest` next to `../OpticalMeasurementParser` — over fetching them:
+
+| Direct dependency | Expected sibling path |
+|-------------------|----------------------|
 | BSDFXMLParser | `../BSDFXMLParser` |
 | nlohmann_json | `../json` |
+| googletest | `../googletest` |
 
-Missing siblings fall back to the declared remote automatically, so `local-*` is safe to invoke even if you don't have the siblings checked out.
+Key properties:
+
+- **`default` never uses local repos.** The flag is off, so `default-*` builds are always pure-remote and reproducible — use them for CI and releases. (Build dirs differ per preset, so a prior `local` configure can't leak into a `default` one.)
+- **Per-dependency fallback.** A sibling that isn't checked out falls back to its declared remote independently, so `local-*` is safe to run with any subset of siblings present.
+- **It propagates.** `LBNL_LOCAL_SIBLINGS` is a cache variable, so it cascades into dependency sub-builds. A sibling dependency that also honors the flag wires up *its own* direct deps in turn — so the whole graph resolves from disk (e.g. a local BSDFXMLParser pulls a local FileParse, which pulls a local xmlParser). Each repo only ever names its own direct deps; it never needs to know another repo's internals.
+- **Develop, then release.** Local builds intentionally use your working copies, which may differ from the pinned `GIT_TAG`s. Get the graph green locally, then bump each repo's pinned version and release one at a time.
 
 #### Per-machine compiler presets (`CMakeUserPresets.json`)
 
