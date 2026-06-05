@@ -15,7 +15,7 @@ if(DOWNLOAD_GTEST STREQUAL ON AND NOT TARGET gtest)
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG v1.13.0 # Use the desired version
+        GIT_TAG v1.17.0 # Use the desired version
     )
 
     FetchContent_MakeAvailable(googletest)
