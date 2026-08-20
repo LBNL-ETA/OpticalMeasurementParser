@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(OpticalMeasurementParser VERSION 2.3.10 LANGUAGES CXX)
+project(OpticalMeasurementParser VERSION 2.3.11 LANGUAGES CXX)
 set(LIB_NAME ${PROJECT_NAME})
 
 # Local development mode. The `local` preset sets LBNL_LOCAL_SIBLINGS=ON (a cache
@@ -78,7 +78,7 @@ endif()
 
 set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
-set(BSDFXMLParser_Branch "Version_0.0.12")
+set(BSDFXMLParser_Branch "Version_0.0.13")
 
 if(NOT TARGET BSDFXMLParser)
     FetchContent_Declare(
