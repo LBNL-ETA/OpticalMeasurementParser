@@ -78,7 +78,7 @@ endif()
 
 set(BUILD_BSDFXMLParser_Tests OFF CACHE BOOL "Build BSDFXMLParser tests" FORCE)
 
-set(BSDFXMLParser_Branch "Version_0.0.13")
+set(BSDFXMLParser_Branch "rework/bcs")
 
 if(NOT TARGET BSDFXMLParser)
     FetchContent_Declare(
