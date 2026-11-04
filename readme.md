@@ -27,6 +27,10 @@ target_link_libraries(MyTarget PRIVATE OpticalMeasurementParser)
 
 Update `GIT_TAG` to the desired release tag.
 
+## Dependencies
+
+[Dependency Chart](doc/DependencyChart.md)
+
 ## Building (developers)
 
 Dependencies are downloaded automatically via CMake FetchContent on first configure. Tests build by default when OpticalMeasurementParser is the top-level project (`-DBUILD_Optical_Measurement_Parser_Tests=OFF` to disable).
