@@ -1,17 +1,16 @@
 ```mermaid
 graph TD
     %% Package definitions
-    xmlParser[xmlParser<br/><font color='red'>v1.0.5</font>]
-    nlohmann_json_fileparse[nlohmann_json<br/><font color='red'>v3.12.0</font>]
+    xmlParser[xmlParser<br/><font color='red'>@xmlParser_Branch@</font>]
     nlohmann_json[nlohmann_json<br/><font color='red'>@nlohmann_Branch@</font>]
     FileParse[FileParse<br/><font color='red'>@fileParseFromBSDFXMLParser@</font>]
     BSDFXMLParser[BSDFXMLParser<br/><font color='red'>@BSDFXMLParser_Branch@</font>]
-    OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>v@PROJECT_VERSION@</font>]
+    OpticalMeasurementParser[OpticalMeasurementParser<br/><font color='red'>@Chart_Self@</font>]
 
     %% Package relations
     OpticalMeasurementParser --> nlohmann_json
     OpticalMeasurementParser --> BSDFXMLParser
     BSDFXMLParser --> FileParse
     FileParse --> xmlParser
-    FileParse --> nlohmann_json_fileparse
+    FileParse --> nlohmann_json
 ```

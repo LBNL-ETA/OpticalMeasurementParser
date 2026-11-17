@@ -21,4 +21,4 @@ Thumbs.db
 *.gcov
 *.profraw
 *.profdata
-doc/OpticalMeasurementParser.md
+doc/DependencyChart.md

@@ -124,7 +124,23 @@ if(BUILD_Optical_Measurement_Parser_Tests)
 endif()
 
 get_property(fileParseFromBSDFXMLParser TARGET BSDFXMLParser PROPERTY FileParse_Branch)
-configure_file(doc/OpticalMeasurementParser.md.in ${CMAKE_CURRENT_SOURCE_DIR}/doc/OpticalMeasurementParser.md @ONLY)
+get_property(xmlParser_Branch TARGET FileParse PROPERTY xmlParser_Branch)
+# This project's own box in the dependency chart: the checked-out branch while work is
+# in flight, the version when the checkout sits exactly on a release tag.
+set(Chart_Self "v${PROJECT_VERSION}")
+execute_process(COMMAND git describe --tags --exact-match
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    RESULT_VARIABLE Chart_NotOnTag OUTPUT_QUIET ERROR_QUIET)
+execute_process(COMMAND git rev-parse --abbrev-ref HEAD
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE Chart_Branch OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+if(Chart_Branch STREQUAL "HEAD" AND DEFINED ENV{GITHUB_REF_NAME})
+    set(Chart_Branch "$ENV{GITHUB_REF_NAME}")
+endif()
+if(Chart_NotOnTag AND Chart_Branch AND NOT Chart_Branch STREQUAL "HEAD")
+    set(Chart_Self "${Chart_Branch}")
+endif()
+configure_file(doc/OpticalMeasurementParser.md.in ${CMAKE_CURRENT_SOURCE_DIR}/doc/DependencyChart.md @ONLY)
 
 # Setting variable for parent projects so it can be checked if same version is used
 set_property(TARGET ${LIB_NAME} PROPERTY BSDFXMLParser_Branch ${BSDFXMLParser_Branch})
